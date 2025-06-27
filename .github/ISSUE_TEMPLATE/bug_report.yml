@@ -1,0 +1,106 @@
+name: 🐛 API Discrepancy Report
+description: Report when the OpenAPI specification doesn't match the actual API behavior
+title: "[BUG] "
+labels: ["bug", "api-discrepancy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve the LeadMagic OpenAPI specification! 
+        Please provide as much detail as possible to help us fix the issue.
+
+  - type: dropdown
+    id: endpoint
+    attributes:
+      label: Affected Endpoint
+      description: Which API endpoint has the discrepancy?
+      options:
+        - /credits
+        - /email-validate
+        - /email-finder
+        - /mobile-finder
+        - /personal-email-finder
+        - /b2b-social-email
+        - /b2b-profile
+        - /profile-search
+        - /role-finder
+        - /employee-finder
+        - /company-search
+        - /company-funding
+        - /jobs-finder
+        - /job-country
+        - /job-types
+        - /google/searchads
+        - /meta/searchads
+        - /b2b/searchads
+        - /b2b/ad-details
+        - Other/Multiple
+    validations:
+      required: true
+
+  - type: dropdown
+    id: discrepancy-type
+    attributes:
+      label: Type of Discrepancy
+      description: What kind of issue did you find?
+      options:
+        - Response field missing from spec
+        - Response field in spec but not in API
+        - Wrong field type in spec
+        - Wrong field name in spec
+        - Wrong HTTP status code
+        - Wrong request parameter
+        - Credit cost mismatch
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-spec
+    attributes:
+      label: Current Specification
+      description: What does our OpenAPI specification currently say?
+      placeholder: Copy the relevant part from the YAML/JSON spec
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-api
+    attributes:
+      label: Actual API Response
+      description: What does the actual API return?
+      placeholder: Paste the actual JSON response from the API
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to Reproduce
+      description: Steps to reproduce the discrepancy
+      placeholder: |
+        1. Make API call to ...
+        2. With parameters ...
+        3. Observe response ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: Screenshots, additional examples, related issues, etc.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Verification
+      description: Please confirm the following
+      options:
+        - label: I tested this against the live LeadMagic API
+          required: true
+        - label: I have a valid API key and sufficient credits
+          required: true
+        - label: I checked that this isn't already reported
+          required: true 

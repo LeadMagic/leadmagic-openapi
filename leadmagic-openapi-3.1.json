@@ -1,0 +1,3110 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LeadMagic API",
+    "version": "1.5.0",
+    "description": "A clean, consistent, and well-documented API to access LeadMagic's services, including email finding, validation, company and professional profile enrichment, and advertisement searching.\n\n**Important**: All API endpoints use snake_case for field names in both requests and responses.\n",
+    "contact": {
+      "name": "LeadMagic API Support",
+      "url": "https://leadmagic.io",
+      "email": "support@leadmagic.io"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "summary": "Complete API for LeadMagic data enrichment services"
+  },
+  "servers": [
+    {
+      "url": "https://api.leadmagic.io",
+      "description": "Production API Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key for authentication. Get your API key from your LeadMagic dashboard."
+      }
+    },
+    "schemas": {
+      "Location": {
+        "type": "object",
+        "description": "Geographic location information",
+        "properties": {
+          "name": {
+            "type": "string",
+            "examples": [
+              "boston, massachusetts, united states"
+            ]
+          },
+          "locality": {
+            "type": "string",
+            "examples": [
+              "boston"
+            ]
+          },
+          "region": {
+            "type": "string",
+            "examples": [
+              "massachusetts"
+            ]
+          },
+          "metro": {
+            "type": "string",
+            "examples": [
+              "boston, massachusetts"
+            ]
+          },
+          "country": {
+            "type": "string",
+            "examples": [
+              "united states"
+            ]
+          },
+          "continent": {
+            "type": "string",
+            "examples": [
+              "north america"
+            ]
+          },
+          "street_address": {
+            "type": "string",
+            "examples": [
+              "1 Seaport Lane"
+            ]
+          },
+          "address_line_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "postal_code": {
+            "type": "string",
+            "examples": [
+              "02210"
+            ]
+          },
+          "geo": {
+            "type": "string",
+            "examples": [
+              "42.35,-71.06"
+            ]
+          }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "description": "Company information",
+        "properties": {
+          "company_name": {
+            "type": "string",
+            "examples": [
+              "Leadmagic"
+            ]
+          },
+          "company_industry": {
+            "type": "string",
+            "examples": [
+              "Internet"
+            ]
+          },
+          "company_size": {
+            "type": "string",
+            "examples": [
+              "11-50"
+            ]
+          },
+          "company_founded": {
+            "type": "integer",
+            "examples": [
+              2022
+            ]
+          },
+          "company_type": {
+            "type": "string",
+            "examples": [
+              "private"
+            ]
+          },
+          "company_linkedin_url": {
+            "type": "string",
+            "examples": [
+              "linkedin.com/company/leadmagichq"
+            ]
+          },
+          "company_linkedin_id": {
+            "type": "string",
+            "examples": [
+              "75153174"
+            ]
+          },
+          "company_facebook_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "company_twitter_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "company_location": {
+            "$ref": "#/components/schemas/Location"
+          }
+        }
+      },
+      "DetailedCompany": {
+        "type": "object",
+        "description": "Detailed company information from company search",
+        "properties": {
+          "company_name": {
+            "type": "string",
+            "examples": [
+              "LeadMagic"
+            ]
+          },
+          "company_id": {
+            "type": "integer",
+            "examples": [
+              75153174
+            ]
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "country": {
+                  "type": "string",
+                  "examples": [
+                    "US"
+                  ]
+                },
+                "city": {
+                  "type": "string",
+                  "examples": [
+                    "Boston"
+                  ]
+                },
+                "geographic_area": {
+                  "type": "string",
+                  "examples": [
+                    "Massachusetts"
+                  ]
+                },
+                "postal_code": {
+                  "type": "string",
+                  "examples": [
+                    "02210"
+                  ]
+                },
+                "line1": {
+                  "type": "string",
+                  "examples": [
+                    "1 Seaport Ln"
+                  ]
+                },
+                "line2": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "description": {
+                  "type": "string",
+                  "examples": [
+                    "Headquarters"
+                  ]
+                },
+                "headquarter": {
+                  "type": "boolean"
+                },
+                "localized_name": {
+                  "type": "string",
+                  "examples": [
+                    "Boston"
+                  ]
+                },
+                "latitude": {
+                  "type": "number",
+                  "examples": [
+                    42.36041
+                  ]
+                },
+                "longitude": {
+                  "type": "number",
+                  "examples": [
+                    -71.05798
+                  ]
+                }
+              }
+            }
+          },
+          "employee_count": {
+            "type": "integer",
+            "examples": [
+              9
+            ]
+          },
+          "specialities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "examples": [
+              [
+                "Sales",
+                "Marketing",
+                "ABM",
+                "RevOps"
+              ]
+            ]
+          },
+          "employee_count_range": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "integer",
+                "examples": [
+                  11
+                ]
+              },
+              "end": {
+                "type": "integer",
+                "examples": [
+                  50
+                ]
+              }
+            }
+          },
+          "tagline": {
+            "type": "string",
+            "examples": [
+              "LeadMagic tells you who is interested in your products or services. Engage them and build more pipeline, win more deals"
+            ]
+          },
+          "follower_count": {
+            "type": "integer",
+            "examples": [
+              6096
+            ]
+          },
+          "industry": {
+            "type": "string",
+            "examples": [
+              "Internet"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "examples": [
+              "LeadMagic tells you exactly what businesses are on your website and helps you enrich your contact and company data."
+            ]
+          },
+          "website_url": {
+            "type": "string",
+            "examples": [
+              "https://leadmagic.io"
+            ]
+          },
+          "founded_on": {
+            "type": "object",
+            "properties": {
+              "month": {
+                "type": "integer",
+                "nullable": true
+              },
+              "year": {
+                "type": "integer",
+                "examples": [
+                  2022
+                ]
+              },
+              "day": {
+                "type": "integer",
+                "nullable": true
+              }
+            }
+          },
+          "universal_name": {
+            "type": "string",
+            "examples": [
+              "leadmagichq"
+            ]
+          },
+          "hashtag": {
+            "type": "string",
+            "examples": [
+              "#abm"
+            ]
+          },
+          "industry_v2_taxonomy": {
+            "type": "string",
+            "examples": [
+              "Internet Publishing"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "examples": [
+              "https://www.linkedin.com/company/leadmagichq/"
+            ]
+          },
+          "credits_consumed": {
+            "type": "integer",
+            "examples": [
+              1
+            ]
+          }
+        }
+      },
+      "PersonProfile": {
+        "type": "object",
+        "description": "Personal profile information",
+        "properties": {
+          "profile_url": {
+            "type": "string",
+            "examples": [
+              "https://www.linkedin.com/in/williamhgates/"
+            ]
+          },
+          "first_name": {
+            "type": "string",
+            "examples": [
+              "Bill"
+            ]
+          },
+          "last_name": {
+            "type": "string",
+            "examples": [
+              "Gates"
+            ]
+          },
+          "full_name": {
+            "type": "string",
+            "examples": [
+              "Bill Gates"
+            ]
+          },
+          "public_identifier": {
+            "type": "string",
+            "examples": [
+              "williamhgates"
+            ]
+          },
+          "headline": {
+            "type": "string",
+            "examples": [
+              "Chair, Gates Foundation and Founder, Breakthrough Energy"
+            ]
+          },
+          "company_name": {
+            "type": "string",
+            "examples": [
+              "Gates Foundation"
+            ]
+          },
+          "company_size": {
+            "type": "string",
+            "examples": [
+              "1001-5000"
+            ]
+          },
+          "company_industry": {
+            "type": "string",
+            "examples": [
+              "investment management"
+            ]
+          },
+          "company_linkedin_url": {
+            "type": "string",
+            "examples": [
+              "linkedin.com/company/bill-&-melinda-gates-foundation"
+            ]
+          },
+          "company_website": {
+            "type": "string",
+            "examples": [
+              "gatesfoundation.org"
+            ]
+          },
+          "total_tenure_months": {
+            "type": "string",
+            "examples": [
+              "305"
+            ]
+          },
+          "total_tenure_days": {
+            "type": "string",
+            "examples": [
+              "9150"
+            ]
+          },
+          "total_tenure_years": {
+            "type": "string",
+            "examples": [
+              "25.42"
+            ]
+          },
+          "connections": {
+            "type": "integer",
+            "examples": [
+              8
+            ]
+          },
+          "followers": {
+            "type": "integer",
+            "examples": [
+              37841613
+            ]
+          },
+          "country": {
+            "type": "string",
+            "examples": [
+              "United States"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "examples": [
+              "Seattle, Washington, United States"
+            ]
+          },
+          "about": {
+            "type": "string",
+            "examples": [
+              "Chair of the Gates Foundation. Founder of Breakthrough Energy. Co-founder of Microsoft. Voracious reader. Avid traveler. Active blogger."
+            ]
+          },
+          "experiences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "company_id": {
+                  "type": "string",
+                  "examples": [
+                    "8736"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "examples": [
+                    "Co-chair"
+                  ]
+                },
+                "subtitle": {
+                  "type": "string",
+                  "examples": [
+                    "Gates Foundation"
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "examples": [
+                    "2000 - Present \u00b7 25 yrs 5 mos"
+                  ]
+                }
+              }
+            }
+          },
+          "educations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "examples": [
+                    "Harvard University"
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "examples": [
+                    "1973 - 1975"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "GoogleAd": {
+        "type": "object",
+        "description": "Google advertisement information",
+        "properties": {
+          "advertiser_id": {
+            "type": "string",
+            "examples": [
+              "AR14106062795078369281"
+            ]
+          },
+          "creative_id": {
+            "type": "string",
+            "examples": [
+              "CR14003695067076755457"
+            ]
+          },
+          "advertiser_name": {
+            "type": "string",
+            "examples": [
+              "Gong.io Inc"
+            ]
+          },
+          "format": {
+            "type": "string",
+            "examples": [
+              "Text"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2025-03-06"
+            ]
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date",
+            "examples": [
+              "2025-06-27"
+            ]
+          },
+          "original_url": {
+            "type": "string",
+            "examples": [
+              "https://adstransparency.google.com/advertiser/AR14106062795078369281/creative/CR14003695067076755457?region=anywhere"
+            ]
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "HTML content or JavaScript URL for the ad"
+                },
+                "height": {
+                  "type": "integer",
+                  "nullable": true
+                },
+                "width": {
+                  "type": "integer",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "JobResult": {
+        "type": "object",
+        "description": "Job search result",
+        "properties": {
+          "company": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "examples": [
+                  "Microsoft"
+                ]
+              },
+              "website_url": {
+                "type": "string",
+                "examples": [
+                  "https://www.microsoft.com/"
+                ]
+              },
+              "linkedin_url": {
+                "type": "string",
+                "examples": [
+                  "https://www.linkedin.com/company/microsoft/"
+                ]
+              },
+              "twitter_handle": {
+                "type": "string",
+                "examples": [
+                  "Microsoft"
+                ]
+              },
+              "github_url": {
+                "type": "string",
+                "examples": [
+                  "https://github.com/microsoft"
+                ]
+              },
+              "is_agency": {
+                "type": "boolean",
+                "examples": [
+                  false
+                ]
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "examples": [
+              "Technical Program Manager - Developer (AI)"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "examples": [
+              "Redmond, Washington, United States"
+            ]
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "examples": [
+                    1
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "examples": [
+                    "Full Time"
+                  ]
+                }
+              }
+            }
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "geonameid": {
+                  "type": "integer",
+                  "examples": [
+                    5808079
+                  ]
+                },
+                "asciiname": {
+                  "type": "string",
+                  "examples": [
+                    "Redmond"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "examples": [
+                    "Redmond"
+                  ]
+                },
+                "country": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "examples": [
+                        238
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "examples": [
+                        "US"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "examples": [
+                        "United States"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "has_remote": {
+            "type": "boolean",
+            "examples": [
+              false
+            ]
+          },
+          "published": {
+            "type": "string",
+            "format": "date-time",
+            "examples": [
+              "2025-06-25T20:36:00Z"
+            ]
+          },
+          "expired": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "application_url": {
+            "type": "string",
+            "examples": [
+              "https://jobs.careers.microsoft.com/global/en/job/1833754/"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "examples": [
+              "en"
+            ]
+          },
+          "salary_min": {
+            "type": "string",
+            "examples": [
+              "100600"
+            ]
+          },
+          "salary_max": {
+            "type": "string",
+            "examples": [
+              "215400"
+            ]
+          },
+          "salary_currency": {
+            "type": "string",
+            "examples": [
+              "USD"
+            ]
+          },
+          "experience_level": {
+            "type": "string",
+            "examples": [
+              "Mid Level"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Full job description text"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "examples": [
+              "Bad Request"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "examples": [
+              "API key is missing or invalid."
+            ]
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "paths": {
+    "/credits": {
+      "post": {
+        "summary": "Check Credits",
+        "description": "Check the number of available credits for the authenticated user.",
+        "operationId": "getCredits",
+        "tags": [
+          "Credits"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful credits retrieval.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits": {
+                      "type": "number",
+                      "description": "Available credits balance",
+                      "examples": [
+                        7333.8
+                      ]
+                    }
+                  },
+                  "required": [
+                    "credits"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email-validate": {
+      "post": {
+        "summary": "Email Validation",
+        "description": "Validate an email address for deliverability and retrieve associated company information.",
+        "operationId": "validateEmail",
+        "tags": [
+          "Email"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Email address to validate.",
+                    "examples": [
+                      "jesse@leadmagic.io"
+                    ]
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "description": "First name of the person (optional).",
+                    "examples": [
+                      "Jesse"
+                    ]
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "description": "Last name of the person (optional).",
+                    "examples": [
+                      "Ouellette"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "examples": [
+                        "jesse@leadmagic.io"
+                      ]
+                    },
+                    "email_status": {
+                      "type": "string",
+                      "enum": [
+                        "valid",
+                        "valid_catch_all",
+                        "invalid",
+                        "unknown",
+                        "catch_all"
+                      ],
+                      "examples": [
+                        "valid"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        0.05
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Email is valid."
+                      ]
+                    },
+                    "is_domain_catch_all": {
+                      "type": "boolean",
+                      "examples": [
+                        false
+                      ]
+                    },
+                    "mx_record": {
+                      "type": "string",
+                      "examples": [
+                        "aspmx.l.google.com"
+                      ]
+                    },
+                    "mx_provider": {
+                      "type": "string",
+                      "examples": [
+                        "Google Workspace"
+                      ]
+                    },
+                    "mx_security_gateway": {
+                      "type": "boolean",
+                      "examples": [
+                        false
+                      ]
+                    },
+                    "company_name": {
+                      "type": "string",
+                      "examples": [
+                        "Leadmagic"
+                      ]
+                    },
+                    "company_industry": {
+                      "type": "string",
+                      "examples": [
+                        "Internet"
+                      ]
+                    },
+                    "company_size": {
+                      "type": "string",
+                      "examples": [
+                        "11-50"
+                      ]
+                    },
+                    "company_founded": {
+                      "type": "integer",
+                      "examples": [
+                        2022
+                      ]
+                    },
+                    "company_type": {
+                      "type": "string",
+                      "examples": [
+                        "private"
+                      ]
+                    },
+                    "company_linkedin_url": {
+                      "type": "string",
+                      "examples": [
+                        "linkedin.com/company/leadmagichq"
+                      ]
+                    },
+                    "company_linkedin_id": {
+                      "type": "string",
+                      "examples": [
+                        "75153174"
+                      ]
+                    },
+                    "company_facebook_url": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "company_twitter_url": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "company_location": {
+                      "$ref": "#/components/schemas/Location"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "email_status",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email-finder": {
+      "post": {
+        "summary": "Email Finder",
+        "description": "Finds a verified email address based on a person's name and company.",
+        "operationId": "findEmail",
+        "tags": [
+          "Email"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "last_name"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "description": "The person's first name.",
+                    "examples": [
+                      "Bill"
+                    ]
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "description": "The person's last name.",
+                    "examples": [
+                      "Gates"
+                    ]
+                  },
+                  "domain": {
+                    "type": "string",
+                    "description": "The company's domain name.",
+                    "examples": [
+                      "microsoft.com"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "description": "The company's name (used if domain is unknown).",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful email discovery.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "examples": [
+                        "billg@microsoft.com"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "valid",
+                        "valid_catch_all",
+                        "not_found"
+                      ],
+                      "examples": [
+                        "valid"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Valid email found."
+                      ]
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "examples": [
+                        "Bill"
+                      ]
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "examples": [
+                        "Gates"
+                      ]
+                    },
+                    "domain": {
+                      "type": "string",
+                      "examples": [
+                        "microsoft.com"
+                      ]
+                    },
+                    "is_domain_catch_all": {
+                      "type": "boolean",
+                      "examples": [
+                        false
+                      ]
+                    },
+                    "mx_record": {
+                      "type": "string",
+                      "examples": [
+                        "microsoft-com.mail.protection.outlook.com"
+                      ]
+                    },
+                    "mx_provider": {
+                      "type": "string",
+                      "examples": [
+                        "Microsoft 365"
+                      ]
+                    },
+                    "mx_security_gateway": {
+                      "type": "boolean",
+                      "examples": [
+                        false
+                      ]
+                    },
+                    "company_name": {
+                      "type": "string",
+                      "examples": [
+                        "Microsoft"
+                      ]
+                    },
+                    "company_industry": {
+                      "type": "string",
+                      "examples": [
+                        "Computer Software"
+                      ]
+                    },
+                    "company_size": {
+                      "type": "string",
+                      "examples": [
+                        "10001+"
+                      ]
+                    },
+                    "company_founded": {
+                      "type": "integer",
+                      "examples": [
+                        1975
+                      ]
+                    },
+                    "company_type": {
+                      "type": "string",
+                      "examples": [
+                        "public"
+                      ]
+                    },
+                    "company_linkedin_url": {
+                      "type": "string",
+                      "examples": [
+                        "linkedin.com/company/microsoft"
+                      ]
+                    },
+                    "company_linkedin_id": {
+                      "type": "string",
+                      "examples": [
+                        "1035"
+                      ]
+                    },
+                    "company_location": {
+                      "$ref": "#/components/schemas/Location"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "status",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile-search": {
+      "post": {
+        "summary": "Profile Search",
+        "description": "Provide a B2B profile URL (e.g., LinkedIn) to get full profile details. \nRate limit: 300 requests/minute.\n",
+        "operationId": "searchProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "profile_url"
+                ],
+                "properties": {
+                  "profile_url": {
+                    "type": "string",
+                    "description": "Full URL of the B2B profile.",
+                    "examples": [
+                      "https://www.linkedin.com/in/williamhgates/"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of profile information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        1
+                      ]
+                    }
+                  },
+                  "required": [
+                    "credits_consumed"
+                  ],
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PersonProfile"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company-search": {
+      "post": {
+        "summary": "Company Search",
+        "description": "Search for company details using its domain, name, or profile URL.",
+        "operationId": "searchCompany",
+        "tags": [
+          "Companies"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide at least one of the following to find company details.",
+                "properties": {
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "leadmagic.io"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "Leadmagic"
+                    ]
+                  },
+                  "profile_url": {
+                    "type": "string",
+                    "examples": [
+                      "https://www.linkedin.com/company/leadmagichq"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of company details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    }
+                  },
+                  "required": [
+                    "credits_consumed"
+                  ],
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/DetailedCompany"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs-finder": {
+      "post": {
+        "summary": "Jobs Finder",
+        "description": "Searches for job postings based on various criteria.",
+        "operationId": "findJobs",
+        "tags": [
+          "Jobs"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "company_name": {
+                    "type": "string",
+                    "description": "Filter by company name.",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  },
+                  "company_website": {
+                    "type": "string",
+                    "description": "Filter by company website.",
+                    "examples": [
+                      "microsoft.com"
+                    ]
+                  },
+                  "job_title": {
+                    "type": "string",
+                    "description": "Filter by job title.",
+                    "examples": [
+                      "Developer"
+                    ]
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Filter by job location.",
+                    "examples": [
+                      "New York"
+                    ]
+                  },
+                  "experience_level": {
+                    "type": "string",
+                    "description": "Required experience level.",
+                    "enum": [
+                      "entry",
+                      "mid",
+                      "senior",
+                      "executive"
+                    ],
+                    "examples": [
+                      "senior"
+                    ]
+                  },
+                  "job_description": {
+                    "type": "string",
+                    "description": "Keywords from the job description.",
+                    "examples": [
+                      "python \"software engineer\""
+                    ]
+                  },
+                  "country_id": {
+                    "type": "string",
+                    "description": "Filter jobs by country ID.",
+                    "examples": [
+                      "US"
+                    ]
+                  },
+                  "page": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1,
+                    "examples": [
+                      1
+                    ]
+                  },
+                  "per_page": {
+                    "type": "integer",
+                    "default": 20,
+                    "minimum": 1,
+                    "maximum": 50,
+                    "description": "Number of results per page. Maximum of 50.",
+                    "examples": [
+                      5
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful job search.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_count": {
+                      "type": "integer",
+                      "examples": [
+                        105
+                      ]
+                    },
+                    "page": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    },
+                    "per_page": {
+                      "type": "integer",
+                      "examples": [
+                        5
+                      ]
+                    },
+                    "total_pages": {
+                      "type": "integer",
+                      "examples": [
+                        21
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        5
+                      ]
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/JobResult"
+                      }
+                    }
+                  },
+                  "required": [
+                    "total_count",
+                    "page",
+                    "per_page",
+                    "total_pages",
+                    "credits_consumed",
+                    "results"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/google/searchads": {
+      "post": {
+        "summary": "Google Ads Search",
+        "description": "Search for Google Ads based on a company's domain or name.",
+        "operationId": "searchGoogleAds",
+        "tags": [
+          "Advertisements"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide a company name or domain to search for ads.",
+                "properties": {
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "gong.io"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "gong"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of Google Ads.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        8
+                      ]
+                    },
+                    "ads": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GoogleAd"
+                      }
+                    }
+                  },
+                  "required": [
+                    "credits_consumed",
+                    "ads"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meta/searchads": {
+      "post": {
+        "summary": "Meta (Facebook/Instagram) Ads Search",
+        "description": "Search for Meta Ads based on a company's domain or name.",
+        "operationId": "searchMetaAds",
+        "tags": [
+          "Advertisements"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide a company name or domain to search for ads.",
+                "properties": {
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "gong.io"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "gong"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of Meta Ads.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        2.6
+                      ]
+                    },
+                    "ads": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ad_archive_id": {
+                            "type": "string",
+                            "examples": [
+                              "618153827656899"
+                            ]
+                          },
+                          "page_id": {
+                            "type": "string",
+                            "examples": [
+                              "105549201674375"
+                            ]
+                          },
+                          "page_name": {
+                            "type": "string",
+                            "examples": [
+                              "Lykkedal Retreat"
+                            ]
+                          },
+                          "is_active": {
+                            "type": "boolean"
+                          },
+                          "publisher_platform": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "examples": [
+                              [
+                                "facebook",
+                                "instagram"
+                              ]
+                            ]
+                          },
+                          "snapshot": {
+                            "type": "object",
+                            "properties": {
+                              "body": {
+                                "type": "object",
+                                "properties": {
+                                  "markup": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "cta_text": {
+                                "type": "string"
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "original_image_url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    }
+                                  }
+                                }
+                              },
+                              "videos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "video_hd_url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "credits_consumed",
+                    "ads"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-finder": {
+      "post": {
+        "summary": "Mobile Finder",
+        "description": "Find mobile phone numbers using profile URL, work email, or personal email.",
+        "operationId": "findMobile",
+        "tags": [
+          "Mobile"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide at least one of the following parameters.",
+                "properties": {
+                  "profile_url": {
+                    "type": "string",
+                    "examples": [
+                      "https://www.linkedin.com/in/williamhgates/"
+                    ]
+                  },
+                  "work_email": {
+                    "type": "string",
+                    "examples": [
+                      "jesse@leadmagic.io"
+                    ]
+                  },
+                  "personal_email": {
+                    "type": "string",
+                    "examples": [
+                      "jesse.ouellette@gmail.com"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mobile search response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "mobile not found",
+                        "Mobile found"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        0,
+                        1
+                      ]
+                    },
+                    "mobile_number": {
+                      "type": "string",
+                      "examples": [
+                        "+1234567890"
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/b2b-profile": {
+      "post": {
+        "summary": "Email Address to B2B Profile",
+        "description": "Find B2B profile URL using work email address.",
+        "operationId": "emailToProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "work_email"
+                ],
+                "properties": {
+                  "work_email": {
+                    "type": "string",
+                    "examples": [
+                      "jesse@leadmagic.io"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile URL found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "profile_url": {
+                      "type": "string",
+                      "examples": [
+                        "http://www.linkedin.com/in/jesseouehwx"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Profile URL found"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        10
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/role-finder": {
+      "post": {
+        "summary": "Role Finder",
+        "description": "Find specific roles/positions within a company.",
+        "operationId": "findRole",
+        "tags": [
+          "People"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "job_title"
+                ],
+                "properties": {
+                  "job_title": {
+                    "type": "string",
+                    "examples": [
+                      "Developer"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  },
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "microsoft.com"
+                    ]
+                  },
+                  "company_profile_url": {
+                    "type": "string",
+                    "examples": [
+                      "https://www.linkedin.com/company/microsoft"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Role search response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Role not found.",
+                        "Role found."
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        0,
+                        1
+                      ]
+                    },
+                    "company_name": {
+                      "type": "string",
+                      "examples": [
+                        "Microsoft"
+                      ]
+                    },
+                    "company_website": {
+                      "type": "string",
+                      "examples": [
+                        "microsoft.com"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employee-finder": {
+      "post": {
+        "summary": "Employee Finder",
+        "description": "Find employees of a specific company.",
+        "operationId": "findEmployees",
+        "tags": [
+          "People"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "company_name"
+                ],
+                "properties": {
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  },
+                  "page": {
+                    "type": "integer",
+                    "default": 1,
+                    "minimum": 1,
+                    "examples": [
+                      1
+                    ]
+                  },
+                  "per_page": {
+                    "type": "integer",
+                    "default": 20,
+                    "minimum": 1,
+                    "maximum": 50,
+                    "examples": [
+                      5
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee search results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Data found for the given company."
+                      ]
+                    },
+                    "total_count": {
+                      "type": "integer",
+                      "examples": [
+                        5000
+                      ]
+                    },
+                    "returned_count": {
+                      "type": "integer",
+                      "examples": [
+                        20
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "first_name": {
+                            "type": "string",
+                            "examples": [
+                              "John"
+                            ]
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "examples": [
+                              "Doe"
+                            ]
+                          },
+                          "title": {
+                            "type": "string",
+                            "examples": [
+                              "Senior Software Engineer"
+                            ]
+                          },
+                          "website": {
+                            "type": "string",
+                            "examples": [
+                              "http://www.microsoft.com"
+                            ]
+                          },
+                          "company_name": {
+                            "type": "string",
+                            "examples": [
+                              "Microsoft"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company-funding": {
+      "post": {
+        "summary": "Company Funding",
+        "description": "Get comprehensive funding information, financials, competitors, and company insights.",
+        "operationId": "getCompanyFunding",
+        "tags": [
+          "Companies"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "microsoft.com"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comprehensive company funding and business information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "basicInfo": {
+                      "type": "object",
+                      "properties": {
+                        "companyName": {
+                          "type": "string",
+                          "examples": [
+                            "Microsoft Corp."
+                          ]
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "shortName": {
+                          "type": "string",
+                          "examples": [
+                            "Microsoft"
+                          ]
+                        },
+                        "founded": {
+                          "type": "string",
+                          "examples": [
+                            "1975"
+                          ]
+                        },
+                        "primaryDomain": {
+                          "type": "string",
+                          "examples": [
+                            "microsoft.com"
+                          ]
+                        },
+                        "phone": {
+                          "type": "string",
+                          "examples": [
+                            "1-124-415-8000"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "examples": [
+                            "NEW"
+                          ]
+                        },
+                        "followers": {
+                          "type": "integer",
+                          "examples": [
+                            181691
+                          ]
+                        },
+                        "ownership": {
+                          "type": "string",
+                          "examples": [
+                            "Public"
+                          ]
+                        }
+                      }
+                    },
+                    "financialInfo": {
+                      "type": "object",
+                      "properties": {
+                        "revenue": {
+                          "type": "integer",
+                          "examples": [
+                            270010000000
+                          ]
+                        },
+                        "formattedRevenue": {
+                          "type": "string",
+                          "examples": [
+                            "270B"
+                          ]
+                        },
+                        "totalFunding": {
+                          "type": "integer",
+                          "examples": [
+                            61000000
+                          ]
+                        },
+                        "formattedFunding": {
+                          "type": "string",
+                          "examples": [
+                            "61M"
+                          ]
+                        }
+                      }
+                    },
+                    "companySize": {
+                      "type": "object",
+                      "properties": {
+                        "employees": {
+                          "type": "integer",
+                          "examples": [
+                            221000
+                          ]
+                        },
+                        "employeeRange": {
+                          "type": "string",
+                          "examples": [
+                            "100,000 - 9,999,999"
+                          ]
+                        }
+                      }
+                    },
+                    "topCompetitors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "examples": [
+                              "IBM"
+                            ]
+                          },
+                          "revenue": {
+                            "type": "string",
+                            "examples": [
+                              ""
+                            ]
+                          },
+                          "employees": {
+                            "type": "string",
+                            "examples": [
+                              "311,300"
+                            ]
+                          },
+                          "website": {
+                            "type": "string",
+                            "examples": [
+                              "https://www.ibm.com"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        4
+                      ]
+                    }
+                  },
+                  "required": [
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job-country": {
+      "get": {
+        "summary": "Get Job Countries",
+        "description": "Retrieve list of available countries for job filtering.",
+        "operationId": "getJobCountries",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available countries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "examples": [
+                          "US",
+                          "CA",
+                          "UK"
+                        ]
+                      },
+                      "name": {
+                        "type": "string",
+                        "examples": [
+                          "United States",
+                          "Canada",
+                          "United Kingdom"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job-types": {
+      "get": {
+        "summary": "Get Job Types",
+        "description": "Retrieve list of available job types for filtering.",
+        "operationId": "getJobTypes",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available job types.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "examples": [
+                          1,
+                          2,
+                          3
+                        ]
+                      },
+                      "name": {
+                        "type": "string",
+                        "examples": [
+                          "Full Time",
+                          "Part Time",
+                          "Contract"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/personal-email-finder": {
+      "post": {
+        "summary": "Personal Email Finder",
+        "description": "Find personal email addresses from B2B profile URLs.",
+        "operationId": "findPersonalEmail",
+        "tags": [
+          "Email"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "profile_url"
+                ],
+                "properties": {
+                  "profile_url": {
+                    "type": "string",
+                    "description": "B2B profile URL (e.g., LinkedIn profile)",
+                    "examples": [
+                      "https://www.linkedin.com/in/williamhgates/"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Personal email search response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "personal_email": {
+                      "type": "string",
+                      "examples": [
+                        "bill.gates@gmail.com"
+                      ],
+                      "nullable": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "found",
+                        "not_found"
+                      ],
+                      "examples": [
+                        "found"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Personal email found",
+                        "Personal email not found"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/b2b-social-email": {
+      "post": {
+        "summary": "B2B Social to Email",
+        "description": "Find work email addresses from B2B profile URLs.",
+        "operationId": "socialToWorkEmail",
+        "tags": [
+          "Email"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "profile_url"
+                ],
+                "properties": {
+                  "profile_url": {
+                    "type": "string",
+                    "description": "B2B profile URL (e.g., LinkedIn profile)",
+                    "examples": [
+                      "https://www.linkedin.com/in/williamhgates/"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Work email search response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "work_email": {
+                      "type": "string",
+                      "examples": [
+                        "bill.gates@microsoft.com"
+                      ],
+                      "nullable": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "found",
+                        "not_found"
+                      ],
+                      "examples": [
+                        "found"
+                      ]
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        1
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Work email found",
+                        "Work email not found"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/b2b/searchads": {
+      "post": {
+        "summary": "B2B Ads Search",
+        "description": "Search for B2B Ads based on a company's domain or name.",
+        "operationId": "searchB2BAds",
+        "tags": [
+          "Advertisements"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Provide a company name or domain to search for ads.",
+                "properties": {
+                  "company_domain": {
+                    "type": "string",
+                    "examples": [
+                      "microsoft.com"
+                    ]
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "examples": [
+                      "Microsoft"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of B2B Ads.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "credits_consumed": {
+                      "type": "number",
+                      "examples": [
+                        5
+                      ]
+                    },
+                    "ads": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ad_id": {
+                            "type": "string",
+                            "examples": [
+                              "12345"
+                            ]
+                          },
+                          "company_name": {
+                            "type": "string",
+                            "examples": [
+                              "Microsoft"
+                            ]
+                          },
+                          "ad_title": {
+                            "type": "string",
+                            "examples": [
+                              "Microsoft Azure Cloud Services"
+                            ]
+                          },
+                          "ad_description": {
+                            "type": "string"
+                          },
+                          "ad_url": {
+                            "type": "string",
+                            "format": "uri"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "credits_consumed",
+                    "ads"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/b2b/ad-details": {
+      "post": {
+        "summary": "B2B Ad Details",
+        "description": "Get detailed information about a specific B2B ad.",
+        "operationId": "getB2BAdDetails",
+        "tags": [
+          "Advertisements"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ad_id"
+                ],
+                "properties": {
+                  "ad_id": {
+                    "type": "string",
+                    "description": "LinkedIn ad ID",
+                    "examples": [
+                      "12345"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Detailed B2B ad information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ad_id": {
+                      "type": "string",
+                      "examples": [
+                        "12345"
+                      ]
+                    },
+                    "company_name": {
+                      "type": "string",
+                      "examples": [
+                        "Microsoft"
+                      ]
+                    },
+                    "ad_title": {
+                      "type": "string",
+                      "examples": [
+                        "Microsoft Azure Cloud Services"
+                      ]
+                    },
+                    "ad_description": {
+                      "type": "string"
+                    },
+                    "ad_url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "campaign_info": {
+                      "type": "object",
+                      "properties": {
+                        "campaign_name": {
+                          "type": "string"
+                        },
+                        "start_date": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "end_date": {
+                          "type": "string",
+                          "format": "date",
+                          "nullable": true
+                        }
+                      }
+                    },
+                    "credits_consumed": {
+                      "type": "integer",
+                      "examples": [
+                        2
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ad_id",
+                    "credits_consumed"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Advertisements",
+      "description": "Advertisement intelligence"
+    },
+    {
+      "name": "Companies",
+      "description": "Company information and enrichment"
+    },
+    {
+      "name": "Credits",
+      "description": "Credit management operations"
+    },
+    {
+      "name": "Email",
+      "description": "Email finding and validation"
+    },
+    {
+      "name": "Jobs",
+      "description": "Job posting search"
+    },
+    {
+      "name": "Mobile",
+      "description": "Mobile number finding"
+    },
+    {
+      "name": "People",
+      "description": "People enrichment and search"
+    },
+    {
+      "name": "Profiles",
+      "description": "Professional profile enrichment"
+    }
+  ]
+}
