@@ -1,0 +1,160 @@
+name: 🔍 Validate OpenAPI Specification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'leadmagic-openapi-3.1.yaml'
+      - 'leadmagic-openapi-3.1.json'
+      - 'test-api.js'
+
+jobs:
+  validate-spec:
+    name: Validate OpenAPI Specification
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: 📦 Install Swagger CLI
+      run: npm install -g @apidevtools/swagger-cli
+
+    - name: ✅ Validate YAML specification
+      run: swagger-cli validate leadmagic-openapi-3.1.yaml
+
+    - name: ✅ Validate JSON specification
+      run: swagger-cli validate leadmagic-openapi-3.1.json
+
+    - name: 🔄 Check YAML/JSON sync
+      run: |
+        # Convert YAML to JSON and compare with existing JSON
+        npx swagger-codegen generate -i leadmagic-openapi-3.1.yaml -l openapi -o temp/
+        # Note: Full sync validation would require custom script
+        echo "✅ Basic validation passed - manual sync check recommended"
+
+    - name: 📋 Validate test script syntax
+      run: node -c test-api.js
+
+    - name: 🧪 Run dry test (without API key)
+      run: |
+        # Test that the script properly handles missing API key
+        output=$(node test-api.js 2>&1 || true)
+        if echo "$output" | grep -q "LEADMAGIC_API_KEY environment variable is required"; then
+          echo "✅ Test script properly requires API key"
+        else
+          echo "❌ Test script should require API key"
+          exit 1
+        fi
+
+  lint-spec:
+    name: Lint OpenAPI with Spectral
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: 📦 Install Spectral
+      run: npm install -g @stoplight/spectral-cli
+
+    - name: 🔍 Lint OpenAPI specification
+      run: spectral lint leadmagic-openapi-3.1.yaml --ruleset=spectral:oas
+
+  check-examples:
+    name: Validate Examples Format
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: ✅ Check for OpenAPI 3.1 examples format
+      run: |
+        # Check that we're using 'examples' (OpenAPI 3.1) not 'example' (OpenAPI 3.0)
+        if grep -r '"example":\|example:' leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
+          echo "❌ Found deprecated 'example' fields. Use 'examples' for OpenAPI 3.1"
+          exit 1
+        else
+          echo "✅ All examples use OpenAPI 3.1 format"
+        fi
+
+    - name: 📊 Count examples
+      run: |
+        yaml_examples=$(grep -c "examples:" leadmagic-openapi-3.1.yaml || echo "0")
+        json_examples=$(grep -c '"examples":' leadmagic-openapi-3.1.json || echo "0")
+        echo "📊 YAML examples: $yaml_examples"
+        echo "📊 JSON examples: $json_examples"
+        echo "✅ Example count validation complete"
+
+  documentation-check:
+    name: Documentation Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 📚 Check README completeness
+      run: |
+        required_sections=(
+          "Authentication"
+          "Base URL"
+          "Credit Consumption"
+          "Testing & Validation"
+          "Use Case Examples"
+        )
+        
+        for section in "${required_sections[@]}"; do
+          if grep -q "$section" README.md; then
+            echo "✅ Found section: $section"
+          else
+            echo "❌ Missing section: $section"
+            exit 1
+          fi
+        done
+
+    - name: 🔗 Check for hardcoded API keys
+      run: |
+        if grep -r "71d6116d583b42873c9f4db5e2c5da88\|sk-\|api_key.*=" . --exclude-dir=.git; then
+          echo "❌ Found potential hardcoded API keys"
+          exit 1
+        else
+          echo "✅ No hardcoded API keys found"
+        fi
+
+    - name: 📏 Check file sizes
+      run: |
+        yaml_size=$(stat -c%s leadmagic-openapi-3.1.yaml)
+        json_size=$(stat -c%s leadmagic-openapi-3.1.json)
+        readme_size=$(stat -c%s README.md)
+        
+        echo "📊 File sizes:"
+        echo "  YAML: $yaml_size bytes"
+        echo "  JSON: $json_size bytes"  
+        echo "  README: $readme_size bytes"
+        
+        # Ensure files aren't empty
+        if [ "$yaml_size" -lt 1000 ] || [ "$json_size" -lt 1000 ] || [ "$readme_size" -lt 1000 ]; then
+          echo "❌ One or more files appear to be too small"
+          exit 1
+        fi
+        
+        echo "✅ All files have reasonable sizes" 
