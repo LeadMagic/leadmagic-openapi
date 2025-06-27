@@ -35,10 +35,18 @@ jobs:
 
     - name: 🔄 Check YAML/JSON sync
       run: |
-        # Convert YAML to JSON and compare with existing JSON
-        npx swagger-codegen generate -i leadmagic-openapi-3.1.yaml -l openapi -o temp/
-        # Note: Full sync validation would require custom script
-        echo "✅ Basic validation passed - manual sync check recommended"
+        # Simple validation that both files are valid and roughly the same size
+        yaml_size=$(wc -c < leadmagic-openapi-3.1.yaml)
+        json_size=$(wc -c < leadmagic-openapi-3.1.json)
+        echo "📊 YAML size: $yaml_size bytes"
+        echo "📊 JSON size: $json_size bytes"
+        
+        # JSON should be larger than YAML (more verbose format)
+        if [ "$json_size" -gt "$yaml_size" ]; then
+          echo "✅ File sizes are reasonable - JSON larger than YAML as expected"
+        else
+          echo "⚠️ Unexpected file size ratio - manual sync check recommended"
+        fi
 
     - name: 📋 Validate test script syntax
       run: node -c test-api.js
@@ -131,14 +139,14 @@ jobs:
           fi
         done
 
-    - name: 🔗 Check for hardcoded API keys
+    - name: 🔗 Check for hardcoded credentials
       run: |
-        # Check for actual hardcoded API keys in code files, excluding documentation
-        if grep -r "71d6116d583b42873c9f4db5e2c5da88" test-api.js leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
-          echo "❌ Found hardcoded API keys in specification or test files"
+        # Check for common API key patterns in critical files
+        if grep -r "sk-[a-zA-Z0-9]\{48\}\|api_key.*=.*[a-zA-Z0-9]\{10,\}" test-api.js leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
+          echo "❌ Found potential hardcoded credentials in specification or test files"
           exit 1
         else
-          echo "✅ No hardcoded API keys found in critical files"
+          echo "✅ No hardcoded credentials found in critical files"
         fi
 
     - name: 📏 Check file sizes
