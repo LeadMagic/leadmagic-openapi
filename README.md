@@ -1256,7 +1256,7 @@ node test-api.js
 
 ## 🤝 Support & Resources
 
-- **API Documentation:** [https://leadmagic.mintlify.app](https://leadmagic.mintlify.app)
+- **API Documentation:** [https://docs.leadmagic.io](https://docs.leadmagic.io)
 - **Official Website:** [https://leadmagic.io](https://leadmagic.io)
 - **Dashboard:** [https://app.leadmagic.io](https://app.leadmagic.io)
 - **Support:** [support@leadmagic.io](mailto:support@leadmagic.io)

@@ -159,7 +159,7 @@ node test-api.js
 ## 📞 Getting Help
 
 - **Documentation Issues**: Create an issue with the "documentation" label
-- **API Questions**: Check [LeadMagic's official documentation](https://leadmagic.mintlify.app)
+- **API Questions**: Check [LeadMagic's official documentation](https://docs.leadmagic.io)
 - **Specification Questions**: Create an issue with the "question" label
 - **Technical Support**: Contact [support@leadmagic.io](mailto:support@leadmagic.io)
 
