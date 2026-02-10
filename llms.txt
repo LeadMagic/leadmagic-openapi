@@ -1,0 +1,49 @@
+# LeadMagic API
+
+> LeadMagic is a B2B data enrichment API with 22 endpoints for email finding/validation, profile enrichment, company intelligence, job data, mobile number lookup, technographics, competitor analysis, and advertisement tracking.
+
+Base URL: https://api.leadmagic.io
+Authentication: X-API-Key header on every request
+All fields use snake_case. Almost all endpoints use POST (exceptions: GET /job-country, GET /job-types).
+
+## Credits & Authentication
+- [Check Credits](https://docs.leadmagic.io/api-reference/check-credits): POST /credits - Returns available credit balance (free, no credits consumed)
+
+## Email Services
+- [Email Validation](https://docs.leadmagic.io/api-reference/email-validation): POST /email-validate - Verify email deliverability, MX records, and company data (0.05 credits)
+- [Email Finder](https://docs.leadmagic.io/api-reference/email-finder): POST /email-finder - Find verified work email from name + company domain (1 credit)
+- [Personal Email Finder](https://docs.leadmagic.io/api-reference/personal-email-finder): POST /personal-email-finder - Find personal emails from LinkedIn profile URL (2 credits)
+- [B2B Social to Email](https://docs.leadmagic.io/api-reference/b2b-social-email): POST /b2b-social-email - Find work email from LinkedIn profile URL (5 credits)
+- [Email to B2B Profile](https://docs.leadmagic.io/api-reference/email-to-profile): POST /b2b-profile - Find LinkedIn profile from work email (10 credits)
+
+## Mobile & Contact
+- [Mobile Finder](https://docs.leadmagic.io/api-reference/mobile-finder): POST /mobile-finder - Find mobile numbers via profile URL, work email, or personal email (5 credits, only if found)
+
+## Profile & People
+- [Profile Search](https://docs.leadmagic.io/api-reference/profile-search): POST /profile-search - Get full B2B profile data from LinkedIn URL (1 credit, 300 req/min)
+- [Role Finder](https://docs.leadmagic.io/api-reference/role-finder): POST /role-finder - Find people in specific roles at a company (2 credits)
+- [Employee Finder](https://docs.leadmagic.io/api-reference/employee-finder): POST /employee-finder - List employees at a company with pagination (0.5 credits)
+- [Job Change Detector](https://docs.leadmagic.io/api-reference/job-change-detector): POST /job-change-detector - Detect if a contact changed jobs (3 credits)
+
+## Company Intelligence
+- [Company Search](https://docs.leadmagic.io/api-reference/company-search): POST /company-search - Get detailed company info by domain, name, or LinkedIn URL (1 credit)
+- [Company Funding](https://docs.leadmagic.io/api-reference/company-funding): POST /company-funding - Get funding rounds, financials, competitors, leadership (4 credits)
+- [Technographics](https://docs.leadmagic.io/api-reference/technographics): POST /technographics - Identify technology stack a company uses (1 credit)
+- [Competitors Search](https://docs.leadmagic.io/api-reference/competitors-search): POST /competitors-search - Discover competitor companies with financial data (5 credits)
+
+## Jobs
+- [Jobs Finder](https://docs.leadmagic.io/api-reference/jobs-finder): POST /jobs-finder - Search job postings with filters for title, location, experience level (1 credit per job)
+- [Job Countries](https://docs.leadmagic.io/api-reference/job-countries): GET /job-country - List available countries for job filtering (free)
+- [Job Types](https://docs.leadmagic.io/api-reference/job-types): GET /job-types - List available job types (free)
+
+## Advertisement Intelligence
+- [Google Ads Search](https://docs.leadmagic.io/api-reference/google-ads-search): POST /google/searchads - Find Google Ads campaigns by company (1 credit per ad)
+- [Meta Ads Search](https://docs.leadmagic.io/api-reference/meta-ads-search): POST /meta/searchads - Find Facebook/Instagram ads by company (1 credit per ad)
+- [B2B Ads Search](https://docs.leadmagic.io/api-reference/b2b-ads-search): POST /b2b/searchads - Search B2B LinkedIn ad campaigns (1 credit per ad)
+- [B2B Ad Details](https://docs.leadmagic.io/api-reference/b2b-ad-details): POST /b2b/ad-details - Get detailed info about a specific B2B ad (2 credits)
+
+## Optional
+- [OpenAPI Spec (YAML)](https://github.com/LeadMagic/leadmagic-openapi/blob/main/leadmagic-openapi-3.1.yaml): Full OpenAPI 3.1 specification
+- [OpenAPI Spec (JSON)](https://github.com/LeadMagic/leadmagic-openapi/blob/main/leadmagic-openapi-3.1.json): JSON format specification
+- [Contributing Guide](https://github.com/LeadMagic/leadmagic-openapi/blob/main/CONTRIBUTING.md): How to contribute
+- [Changelog](https://github.com/LeadMagic/leadmagic-openapi/blob/main/CHANGELOG.md): Version history
