@@ -4,12 +4,14 @@ A comprehensive, production-ready OpenAPI 3.1 specification for LeadMagic's comp
 
 ## 🎯 Overview
 
-LeadMagic provides the most comprehensive B2B data enrichment API, featuring 19 endpoints across email finding, profile enrichment, company intelligence, job data, and advertisement tracking. This specification is **100% tested** against the live API and fully OpenAPI 3.1 compliant.
+LeadMagic provides the most comprehensive B2B data enrichment API, featuring 22 endpoints across email finding, profile enrichment, company intelligence, job data, technographics, competitor analysis, and advertisement tracking. This specification is **100% tested** against the live API and fully OpenAPI 3.1 compliant.
 
 ## 📁 Files
 
-- `leadmagic-openapi-3.1.yaml` - Complete OpenAPI 3.1 specification (60,883 bytes)
-- `leadmagic-openapi-3.1.json` - JSON format specification (91,190 bytes)
+- `leadmagic-openapi-3.1.yaml` - Complete OpenAPI 3.1 specification
+- `leadmagic-openapi-3.1.json` - JSON format specification
+- `llms.txt` - LLM-friendly overview ([llms.txt standard](https://llmstxt.org/))
+- `llms-full.txt` - Complete API docs in a single LLM-optimized file
 - `test-api.js` - Comprehensive API validation suite
 - `README.md` - This complete documentation
 
@@ -1097,11 +1099,24 @@ curl --header 'X-API-Key: your-leadmagic-api-key'
 - **Other endpoints**: Standard rate limits apply
 
 ### Error Handling
-All endpoints return consistent error format:
+All errors use a structured format:
 ```json
 {
-  "error": "Bad Request",
-  "message": "API key is missing or invalid."
+  "success": false,
+  "errors": [
+    {
+      "type": "https://api.leadmagic.io/errors/error_code",
+      "title": "Human-readable error description",
+      "status": 400,
+      "code": "error_code",
+      "docs": "https://docs.leadmagic.io/api-reference/errors",
+      "instance": "/endpoint#request-id"
+    }
+  ],
+  "meta": {
+    "request_id": "uuid",
+    "timestamp": "2026-02-10T20:37:04.253Z"
+  }
 }
 ```
 
@@ -1109,6 +1124,7 @@ All endpoints return consistent error format:
 - `200` - Success
 - `400` - Bad Request (invalid parameters)
 - `401` - Unauthorized (invalid API key)
+- `404` - Not Found (endpoint does not exist)
 - `429` - Rate limit exceeded
 - `500` - Internal server error
 
@@ -1118,25 +1134,30 @@ All endpoints return consistent error format:
 
 | Endpoint | Credits | Notes |
 |----------|---------|--------|
-| `/credits` | 0 | Free to check |
-| `/email-validate` | 0.05 | Very cost-effective |
-| `/email-finder` | 1 | Standard rate |
-| `/mobile-finder` | 5 | Only if found |
-| `/profile-search` | 1 | Rate limited |
-| `/b2b-profile` | 10 | Higher cost for reverse lookup |
-| `/personal-email-finder` | 1 | Standard rate |
-| `/b2b-social-email` | 1 | Standard rate |
-| `/role-finder` | 0-1 | Only if found |
-| `/employee-finder` | 1 | Per request (multiple results) |
-| `/company-search` | 1 | Comprehensive data |
-| `/company-funding` | 4 | Premium intelligence |
-| `/jobs-finder` | 1 per job | Based on results returned |
-| `/google/searchads` | 1 per ad | Based on ads found |
-| `/meta/searchads` | 1 per ad | Based on ads found |
-| `/b2b/searchads` | 1 per ad | Based on ads found |
-| `/b2b/ad-details` | 2 | Per ad detail request |
-| `/job-country` | 0 | Metadata endpoint |
-| `/job-types` | 0 | Metadata endpoint |
+| `POST /credits` | 0 | Free to check |
+| `POST /email-validate` | 0.05 | 20 validations per credit |
+| `POST /email-finder` | 1 | Per email found |
+| `POST /personal-email-finder` | 2 | Per personal email |
+| `POST /b2b-social-email` | 5 | Per social-to-email lookup |
+| `POST /b2b-profile` | 10 | Reverse email-to-profile |
+| `POST /mobile-finder` | 5 | Only if found |
+| `POST /profile-search` | 1 | Rate limited 300/min |
+| `POST /role-finder` | 2 | Per role found |
+| `POST /employee-finder` | 0.5 | Per page of results |
+| `POST /job-change-detector` | 3 | Per job change check |
+| `POST /company-search` | 1 | Per company |
+| `POST /company-funding` | 4 | Premium intelligence |
+| `POST /technographics` | 1 | Per tech stack |
+| `POST /competitors-search` | 5 | Per competitor list |
+| `POST /jobs-finder` | 1 per job | Based on results returned |
+| `POST /google/searchads` | 1 per ad | Based on ads found |
+| `POST /meta/searchads` | 1 per ad | Based on ads found |
+| `POST /b2b/searchads` | 1 per ad | Based on ads found |
+| `POST /b2b/ad-details` | 2 | Per ad detail request |
+| `GET /job-country` | 0 | Metadata endpoint |
+| `GET /job-types` | 0 | Metadata endpoint |
+
+**Free results**: `catch_all`, `unknown`, and `not_found` results never consume credits.
 
 ---
 
@@ -1244,13 +1265,32 @@ node test-api.js
 ## 📈 Specification Stats
 
 - **OpenAPI Version:** 3.1.0 ✅
-- **Total Endpoints:** 19 ✅
+- **Total Endpoints:** 22 ✅
 - **Component Schemas:** 7 ✅
-- **Defined Tags:** 8 ✅
+- **Defined Tags:** 9 ✅
 - **Security Schemes:** 1 ✅
-- **Examples:** 249 (all OpenAPI 3.1 format) ✅
+- **Examples:** 249+ (all OpenAPI 3.1 format) ✅
 - **Legacy Examples:** 0 ✅
-- **File Sizes:** YAML (60,883 bytes), JSON (91,190 bytes) ✅
+
+---
+
+## 🤖 LLM-Friendly Documentation
+
+This repository is optimized for consumption by AI coding assistants and LLMs:
+
+- **[llms.txt](llms.txt)** - Lightweight overview following the [llms.txt standard](https://llmstxt.org/) with structured links to all endpoints
+- **[llms-full.txt](llms-full.txt)** - Complete API documentation in a single file, optimized for LLM context windows
+- **[Context7](https://context7.com/leadmagic/leadmagic-openapi)** - Indexed and searchable via Context7 MCP server
+
+### Using with AI Tools
+
+```bash
+# Context7 MCP - query from any AI coding assistant
+# Library ID: /leadmagic/leadmagic-openapi
+
+# Or feed llms-full.txt directly into an LLM
+cat llms-full.txt | pbcopy  # Copy to clipboard for pasting into AI
+```
 
 ---
 

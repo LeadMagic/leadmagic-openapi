@@ -1,0 +1,1120 @@
+# LeadMagic API - Complete Documentation
+
+> LeadMagic is a B2B data enrichment API with 22 endpoints for email finding/validation, profile enrichment, company intelligence, job data, mobile number lookup, technographics, competitor analysis, and advertisement tracking.
+
+## Authentication
+
+All endpoints require the `X-API-Key` header:
+
+```
+curl -H "X-API-Key: YOUR_API_KEY" -H "Content-Type: application/json" https://api.leadmagic.io/credits
+```
+
+Base URL: `https://api.leadmagic.io`
+
+## Error Handling
+
+All errors use a structured format:
+
+```json
+{
+  "success": false,
+  "errors": [
+    {
+      "type": "https://api.leadmagic.io/errors/error_code",
+      "title": "Human-readable error description",
+      "status": 400,
+      "code": "error_code",
+      "docs": "https://docs.leadmagic.io/api-reference/errors",
+      "instance": "/endpoint#request-id"
+    }
+  ],
+  "meta": {
+    "request_id": "uuid",
+    "timestamp": "2026-02-10T20:37:04.253Z"
+  }
+}
+```
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request (invalid parameters)
+- 401: Unauthorized (invalid API key)
+- 404: Not Found (endpoint does not exist)
+- 429: Rate limit exceeded
+- 500: Internal server error
+
+## Credit System
+
+Credits are consumed per request. Free results: catch_all, unknown, and not_found never consume credits.
+
+| Endpoint | Credits | Notes |
+|---|---|---|
+| POST /credits | 0 | Free |
+| POST /email-validate | 0.05 | 20 validations per credit |
+| POST /email-finder | 1 | Per email found |
+| POST /personal-email-finder | 2 | Per personal email |
+| POST /b2b-social-email | 5 | Per social-to-email lookup |
+| POST /b2b-profile | 10 | Reverse email-to-profile |
+| POST /mobile-finder | 5 | Only if found |
+| POST /profile-search | 1 | Rate limited 300/min |
+| POST /role-finder | 2 | Per role found |
+| POST /employee-finder | 0.5 | Per page of results |
+| POST /job-change-detector | 3 | Per job change check |
+| POST /company-search | 1 | Per company |
+| POST /company-funding | 4 | Premium intelligence |
+| POST /technographics | 1 | Per tech stack |
+| POST /competitors-search | 5 | Per competitor list |
+| POST /jobs-finder | 1 per job | Based on results |
+| GET /job-country | 0 | Metadata |
+| GET /job-types | 0 | Metadata |
+| POST /google/searchads | 1 per ad | Based on ads found |
+| POST /meta/searchads | 1 per ad | Based on ads found |
+| POST /b2b/searchads | 1 per ad | Based on ads found |
+| POST /b2b/ad-details | 2 | Per ad detail |
+
+---
+
+## POST /credits
+
+Check your available API credits.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/credits \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+Response:
+```json
+{
+  "credits": 12500
+}
+```
+
+---
+
+## POST /email-validate
+
+Validate email deliverability and get company information.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/email-validate \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "jesse@leadmagic.io"}'
+```
+
+Parameters:
+- `email` (required): Email address to validate
+- `first_name` (optional): First name for enrichment
+- `last_name` (optional): Last name for enrichment
+
+Response:
+```json
+{
+  "email": "jesse@leadmagic.io",
+  "email_status": "valid",
+  "credits_consumed": 0.05,
+  "message": "Email is valid.",
+  "is_domain_catch_all": false,
+  "mx_record": "leadmagic.io",
+  "mx_provider": "Google Workspace",
+  "mx_security_gateway": false,
+  "company_name": "leadmagic",
+  "company_industry": "internet",
+  "company_size": "11-50",
+  "company_founded": 2022,
+  "company_location": {
+    "name": "boston, massachusetts, united states",
+    "locality": "boston",
+    "region": "massachusetts",
+    "metro": "boston",
+    "country": "united states",
+    "continent": "north america",
+    "street_address": "1 seaport lane",
+    "address_line_2": null,
+    "postal_code": "02210",
+    "geo": null
+  },
+  "company_linkedin_url": "linkedin.com/company/leadmagichq",
+  "company_linkedin_id": "75153174",
+  "company_facebook_url": null,
+  "company_twitter_url": null,
+  "company_type": "private"
+}
+```
+
+Status values: `valid`, `valid_catch_all`, `invalid`, `unknown`, `catch_all`
+
+---
+
+## POST /email-finder
+
+Find verified work email addresses using name and company.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/email-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Satya",
+    "last_name": "Nadella",
+    "domain": "microsoft.com",
+    "company_name": "Microsoft"
+  }'
+```
+
+Parameters:
+- `first_name` (required): First name
+- `last_name` (required): Last name
+- `domain` (required): Company domain
+- `company_name` (optional): Company name
+
+Response:
+```json
+{
+  "email": "snadella@microsoft.com",
+  "status": "valid",
+  "credits_consumed": 1,
+  "message": "Email was confidently found and verified.",
+  "first_name": "Satya",
+  "last_name": "Nadella",
+  "domain": "microsoft.com",
+  "mx_record": "microsoft-com.mail.protection.outlook.com",
+  "mx_provider": "microsoft",
+  "mx_security_gateway": false,
+  "has_mx": true,
+  "mx_records_full": [],
+  "company_name": "",
+  "company_industry": null,
+  "company_size": null,
+  "company_founded": null,
+  "company_type": null,
+  "company_location": {
+    "name": null,
+    "locality": null,
+    "region": null,
+    "metro": null,
+    "country": null,
+    "continent": null,
+    "street_address": null,
+    "address_line_2": null,
+    "postal_code": null,
+    "geo": null
+  },
+  "company_linkedin_url": null,
+  "company_linkedin_id": null,
+  "company_facebook_url": null,
+  "company_twitter_url": null
+}
+```
+
+Status values: `valid`, `valid_catch_all`, `not_found`
+
+---
+
+## POST /personal-email-finder
+
+Find personal email addresses from LinkedIn profile URLs.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/personal-email-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"profile_url": "https://www.linkedin.com/in/example/"}'
+```
+
+Parameters:
+- `profile_url` (required): LinkedIn profile URL
+
+Response (found):
+```json
+{
+  "personal_email": "user@gmail.com",
+  "status": "found",
+  "credits_consumed": 2,
+  "message": "Personal email found"
+}
+```
+
+Response (not found):
+```json
+{
+  "message": "No personal email found for the provided criteria",
+  "credits_consumed": 0
+}
+```
+
+---
+
+## POST /b2b-social-email
+
+Find work emails from LinkedIn profile URLs.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/b2b-social-email \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"profile_url": "https://www.linkedin.com/in/example/"}'
+```
+
+Parameters:
+- `profile_url` (required): LinkedIn profile URL
+
+Response (found):
+```json
+{
+  "profile_url": "https://www.linkedin.com/in/example/",
+  "work_email": "user@company.com",
+  "credits_consumed": 5,
+  "message": "Email found."
+}
+```
+
+Response (not found):
+```json
+{
+  "profile_url": "https://www.linkedin.com/in/example/",
+  "credits_consumed": 0,
+  "message": "Email not found."
+}
+```
+
+---
+
+## POST /b2b-profile
+
+Find LinkedIn profiles from work email addresses.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/b2b-profile \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"work_email": "jesse@leadmagic.io"}'
+```
+
+Parameters:
+- `work_email` (required): Work email address
+
+Response:
+```json
+{
+  "profile_url": "http://www.linkedin.com/in/jesseoue",
+  "message": "Profile URL found",
+  "credits_consumed": 10
+}
+```
+
+---
+
+## POST /mobile-finder
+
+Find mobile phone numbers using various identifiers. Provide at least one parameter.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/mobile-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"profile_url": "https://www.linkedin.com/in/example/"}'
+```
+
+Parameters (at least one required):
+- `profile_url`: LinkedIn profile URL
+- `work_email`: Work email address
+- `personal_email`: Personal email address
+
+Response (found):
+```json
+{
+  "profile_url": "linkedin.com/in/example",
+  "mobile_number": "+15551234567",
+  "credits_consumed": 5,
+  "message": "Mobile number found"
+}
+```
+
+Response (not found):
+```json
+{
+  "profile_url": "linkedin.com/in/example",
+  "mobile_number": null,
+  "credits_consumed": 0,
+  "message": "No mobile number found"
+}
+```
+
+---
+
+## POST /profile-search
+
+Get comprehensive B2B profile information from LinkedIn URL.
+Rate limit: 300 requests/minute. Public profiles only.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/profile-search \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"profile_url": "https://www.linkedin.com/in/example/"}'
+```
+
+Parameters:
+- `profile_url` (required): LinkedIn profile URL
+
+Response:
+```json
+{
+  "profile_url": "https://www.linkedin.com/in/example/",
+  "first_name": "John",
+  "last_name": "Doe",
+  "full_name": "John Doe",
+  "public_identifier": "johndoe",
+  "headline": "CEO at Company",
+  "company_name": "Company",
+  "company_size": "51-200",
+  "company_industry": "Technology",
+  "company_linkedin_url": "linkedin.com/company/company",
+  "company_website": "company.com",
+  "total_tenure_months": "48",
+  "total_tenure_days": "1440",
+  "total_tenure_years": "4.0",
+  "connections": 500,
+  "followers": 1200,
+  "country": "United States",
+  "location": "San Francisco, California, United States",
+  "about": "Bio description here.",
+  "experiences": [
+    {
+      "company_id": "12345",
+      "title": "CEO",
+      "subtitle": "Company",
+      "caption": "2020 - Present"
+    }
+  ],
+  "educations": [
+    {
+      "title": "University Name",
+      "caption": "2010 - 2014"
+    }
+  ],
+  "credits_consumed": 1
+}
+```
+
+---
+
+## POST /role-finder
+
+Find specific roles within companies.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/role-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "job_title": "CEO",
+    "company_name": "LeadMagic",
+    "company_domain": "leadmagic.io"
+  }'
+```
+
+Parameters:
+- `job_title` (required): Job title to search for
+- `company_name` (required, or company_domain): Company name
+- `company_domain` (required, or company_name): Company domain
+- `company_profile_url` (optional): Company LinkedIn URL
+
+Response:
+```json
+{
+  "name": "Jesse Ouellette",
+  "profile_url": "https://www.linkedin.com/in/jesseoue",
+  "first_name": "Jesse",
+  "last_name": "Ouellette",
+  "message": "Role Found",
+  "credits_consumed": 2,
+  "company_name": "Leadmagic",
+  "company_website": "leadmagic.io"
+}
+```
+
+---
+
+## POST /employee-finder
+
+Find employees of specific companies with pagination.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/employee-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_name": "Microsoft", "page": 1, "per_page": 5}'
+```
+
+Parameters:
+- `company_name` (required): Company name
+- `page` (optional, default 1): Page number
+- `per_page` (optional, default 10): Results per page
+
+Response:
+```json
+{
+  "message": "Data found for the given company.",
+  "total_count": 10,
+  "returned_count": 10,
+  "credits_consumed": 0.5,
+  "data": [
+    {
+      "first_name": "john",
+      "last_name": "doe",
+      "title": "Software Engineer",
+      "website": "microsoft.com",
+      "company_name": "Microsoft"
+    }
+  ]
+}
+```
+
+---
+
+## POST /job-change-detector
+
+Detect when contacts change jobs.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/job-change-detector \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "profile_url": "https://www.linkedin.com/in/example/",
+    "company_name": "OldCompany"
+  }'
+```
+
+Parameters:
+- `profile_url` (required): LinkedIn profile URL
+- `company_name` (required, or company_domain): Previous company name
+- `company_domain` (required, or company_name): Previous company domain
+
+Response:
+```json
+{
+  "changed": true,
+  "previous_company": "OldCompany",
+  "current_company": "NewCompany",
+  "credits_consumed": 3,
+  "message": "Job change detected"
+}
+```
+
+---
+
+## POST /company-search
+
+Get detailed company information and insights.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/company-search \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "microsoft.com"}'
+```
+
+Parameters (at least one required):
+- `company_domain`: Company website domain
+- `company_name`: Company name
+- `profile_url`: Company LinkedIn URL
+
+Response:
+```json
+{
+  "credits_consumed": 1,
+  "message": "Company found",
+  "companyName": "Microsoft",
+  "companyId": 1035,
+  "locations": [
+    {
+      "country": "US",
+      "city": "Redmond",
+      "geographicArea": "Washington",
+      "postalCode": "98052",
+      "line1": "1 Microsoft Way",
+      "line2": null,
+      "description": null,
+      "headquarter": true,
+      "localizedName": "Redmond",
+      "latitude": 47.6398,
+      "longitude": -122.1286
+    }
+  ],
+  "employeeCount": 174769,
+  "specialities": ["Business Software", "Developer Tools", "Cloud Computing", "AI"],
+  "employeeCountRange": {"start": 100001, "end": 200000},
+  "tagline": null,
+  "followerCount": 27540712,
+  "industry": "Computer Software",
+  "description": "Company description...",
+  "websiteUrl": "https://news.microsoft.com/",
+  "headquarter": {
+    "country": "US",
+    "city": "Redmond",
+    "geographicArea": "Washington",
+    "postalCode": "98052",
+    "line1": "1 Microsoft Way"
+  },
+  "foundedOn": null,
+  "universalName": "microsoft",
+  "hashtag": "#microsoftlife",
+  "url": "https://www.linkedin.com/company/microsoft/",
+  "logo_url": "https://logo.leadmagic.io/news.microsoft.com",
+  "founded_year": "1975",
+  "ownership_status": "public",
+  "revenue": 293812000000,
+  "revenue_formatted": "293.8B",
+  "employee_range": "100,000 - 9,999,999",
+  "total_funding": "61M",
+  "funding_rounds": 1,
+  "last_funding_round": "IPO",
+  "last_funding_amount": 61000000,
+  "last_funding_date": "Mar 1986",
+  "competitors": ["IBM", "Google", "Oracle", "SAP", "Apple", "Salesforce"],
+  "acquisitions_count": 5,
+  "twitter_url": "twitter.com/microsoft",
+  "linkedin_url": "linkedin.com/company/microsoft",
+  "facebook_url": "facebook.com/microsoft",
+  "stock_ticker": "msft"
+}
+```
+
+---
+
+## POST /company-funding
+
+Get comprehensive funding, financial, and competitive intelligence.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/company-funding \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "leadmagic.io"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+
+Response:
+```json
+{
+  "basicInfo": {
+    "companyName": "LeadMagic",
+    "description": "",
+    "shortName": "LeadMagic",
+    "founded": "2021",
+    "headquarters": {
+      "city": "Boston",
+      "state": "Massachusetts",
+      "country": "USA",
+      "fullAddress": "Boston, Massachusetts, USA"
+    },
+    "primaryDomain": "leadmagic.io",
+    "phone": "N/A",
+    "status": "NEW",
+    "followers": 7,
+    "ownership": "Private"
+  },
+  "financialInfo": {
+    "revenue": 1260000,
+    "formattedRevenue": "1.3M",
+    "totalFunding": "N/A",
+    "formattedFunding": "0",
+    "lastFundingRound": "N/A",
+    "fundingHistory": []
+  },
+  "companySize": {
+    "employees": 4,
+    "employeeRange": "1 - 25",
+    "employeeGrowth": "N/A"
+  },
+  "leadership": {
+    "ceo": {
+      "firstName": "Jesse",
+      "lastName": "Ouellette",
+      "designation": "Founder",
+      "linkedIn": "https://www.linkedin.com/in/jesseoue",
+      "twitter": "https://twitter.com/jesseogtm"
+    }
+  },
+  "industryAndSectors": {
+    "industrySectors": ["SaaS"],
+    "industries": ["Software, Internet & Computer Services"],
+    "technologyStack": "N/A"
+  },
+  "topCompetitors": [],
+  "acquisitions": [],
+  "socialMedia": [
+    {"platform": "linkedIn", "url": "https://www.linkedin.com/company/leadmagichq"}
+  ],
+  "news": [],
+  "pressReleases": [],
+  "keyHighlights": [],
+  "summarySection": "LeadMagic was founded in 2021...",
+  "credits_consumed": 4
+}
+```
+
+---
+
+## POST /technographics
+
+Identify the technology stack a company uses.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/technographics \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "example.com"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+
+Response (found):
+```json
+{
+  "credits_consumed": 1,
+  "technologies": ["React", "Node.js", "AWS", "PostgreSQL"],
+  "message": "Technology stack found"
+}
+```
+
+Response (not found):
+```json
+{
+  "credits_consumed": 0,
+  "message": "No technology stack information available for this company"
+}
+```
+
+---
+
+## POST /competitors-search
+
+Discover competitor companies with financial and operational data.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/competitors-search \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "microsoft.com"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+
+Response:
+```json
+{
+  "credits_consumed": 5,
+  "competitors": [
+    {
+      "name": "Microsoft",
+      "shortDescription": "Microsoft is a company that develops software, hardware, and cloud computing products.",
+      "founded_year": "1975",
+      "companyType": "public",
+      "hq": "Redmond, US",
+      "employeesCount": 177751,
+      "valuation": 3073487709600,
+      "tags": [
+        {"name": "Technology", "slug": "technology", "primary": true}
+      ],
+      "growth": 0,
+      "non_hq_locations": ["Tirana, AL", "Algiers, DZ"],
+      "more_locations": true,
+      "financial_metrics": {
+        "currency_code": "USD",
+        "period": "FY, 2025",
+        "revenue": 281724000000,
+        "cost_of_goods_sold": 87831000000,
+        "gross_profit": 193893000000,
+        "net_income": 101832000000
+      }
+    }
+  ]
+}
+```
+
+---
+
+## POST /jobs-finder
+
+Search job postings with advanced filtering.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/jobs-finder \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "company_name": "Microsoft",
+    "job_title": "Software Engineer",
+    "page": 1,
+    "per_page": 5
+  }'
+```
+
+Parameters:
+- `company_name` (optional): Filter by company
+- `company_website` (optional): Filter by company domain
+- `job_title` (optional): Filter by job title
+- `location` (optional): Filter by location
+- `experience_level` (optional): entry, mid, senior, executive
+- `job_description` (optional): Keywords in description
+- `country_id` (optional): Country code
+- `page` (optional, default 1): Page number
+- `per_page` (optional, max 50): Results per page
+
+Response:
+```json
+{
+  "total_count": 13464,
+  "page": 1,
+  "per_page": 2,
+  "total_pages": 6732,
+  "credits_consumed": 2,
+  "results": [
+    {
+      "company": {
+        "name": "Microsoft",
+        "website_url": "https://www.microsoft.com/",
+        "linkedin_url": "https://www.linkedin.com/company/microsoft/",
+        "twitter_handle": "Microsoft",
+        "github_url": "https://github.com/microsoft"
+      },
+      "title": "Senior Software Engineer",
+      "location": "Athens, Attica, Greece",
+      "types": [{"id": 1, "name": "Full Time"}],
+      "cities": [
+        {
+          "geonameid": 264371,
+          "asciiname": "Athens",
+          "name": "Athens",
+          "country": {"id": 88, "code": "GR", "name": "Greece"},
+          "timezone": "Europe/Athens",
+          "latitude": "37.98376",
+          "longitude": "23.72784"
+        }
+      ],
+      "states": [],
+      "countries": [{"id": 88, "code": "GR", "name": "Greece"}],
+      "regions": [{"id": 3, "name": "Europe"}],
+      "expired": null,
+      "description": "Full job description text...",
+      "experience_level": "Senior Level",
+      "language": "en",
+      "salary_min": null,
+      "salary_max": null,
+      "salary_currency": "EUR",
+      "published_at": "2025-12-04T04:26:00Z",
+      "remote": false,
+      "application_url": "https://jobs.careers.microsoft.com/global/en/job/1879677/"
+    }
+  ]
+}
+```
+
+---
+
+## GET /job-country
+
+Get list of available countries for job filtering.
+
+Request:
+```bash
+curl -X GET https://api.leadmagic.io/job-country \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+Response:
+```json
+[
+  {"id": "AF", "name": "Afghanistan"},
+  {"id": "US", "name": "United States"},
+  {"id": "GB", "name": "United Kingdom"}
+]
+```
+
+---
+
+## GET /job-types
+
+Get list of available job types.
+
+Request:
+```bash
+curl -X GET https://api.leadmagic.io/job-types \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+Response:
+```json
+[
+  {"id": 1, "name": "Full Time"},
+  {"id": 2, "name": "Part Time"},
+  {"id": 3, "name": "Temporary"},
+  {"id": 4, "name": "Internship"},
+  {"id": 5, "name": "Freelance"},
+  {"id": 6, "name": "Contract"},
+  {"id": 7, "name": "Apprenticeship"}
+]
+```
+
+---
+
+## POST /google/searchads
+
+Find Google Ads campaigns by company.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/google/searchads \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "example.com", "company_name": "Example"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+- `company_name` (optional): Company name
+
+Response:
+```json
+{
+  "credits_consumed": 8,
+  "ads": [
+    {
+      "advertiser_id": "AR15234567890123456789",
+      "creative_id": "CR98765432109876543210",
+      "advertiser_name": "Example Inc",
+      "format": "Text",
+      "start": "2024-01-15",
+      "last_seen": "2024-06-27",
+      "original_url": "https://adstransparency.google.com/...",
+      "variants": [
+        {
+          "content": "Ad copy text here.",
+          "height": null,
+          "width": null
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## POST /meta/searchads
+
+Find Facebook/Instagram ads by company.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/meta/searchads \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "example.com", "company_name": "Example"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+- `company_name` (optional): Company name
+
+Response:
+```json
+{
+  "credits_consumed": 2.6,
+  "ads": [
+    {
+      "ad_archive_id": "987654321098765432",
+      "page_id": "123456789012345678",
+      "page_name": "Example",
+      "is_active": true,
+      "publisher_platform": ["facebook", "instagram"],
+      "snapshot": {
+        "body": {"markup": "Ad body text."},
+        "title": "Ad Title",
+        "cta_text": "Learn More",
+        "images": [{"original_image_url": "https://..."}],
+        "videos": []
+      }
+    }
+  ]
+}
+```
+
+---
+
+## POST /b2b/searchads
+
+Search B2B LinkedIn advertisement campaigns.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/b2b/searchads \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"company_domain": "example.com", "company_name": "Example"}'
+```
+
+Parameters:
+- `company_domain` (required): Company domain
+- `company_name` (optional): Company name
+
+Response:
+```json
+{
+  "credits_consumed": 5,
+  "ads": [
+    {
+      "ad_id": "b2b_12345",
+      "company_name": "Example",
+      "ad_title": "Ad Title",
+      "ad_description": "Ad description text.",
+      "ad_url": "https://example.com/landing"
+    }
+  ]
+}
+```
+
+---
+
+## POST /b2b/ad-details
+
+Get detailed information about a specific B2B ad.
+
+Request:
+```bash
+curl -X POST https://api.leadmagic.io/b2b/ad-details \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ad_url": "https://www.linkedin.com/ad-library/detail/12345"}'
+```
+
+Parameters:
+- `ad_url` (required): URL of the B2B ad from LinkedIn ad library
+
+Response:
+```json
+{
+  "message": "Ad details retrieved successfully.",
+  "credits_consumed": 2,
+  "ad_details": {
+    "success": true,
+    "description": "Ad description",
+    "headline": "Ad headline",
+    "poster": "Company Name",
+    "posterTitle": "Poster title",
+    "promotedBy": "Company",
+    "targeting": {},
+    "image": "https://...",
+    "video": null,
+    "carouselImages": [],
+    "url": "https://www.linkedin.com/ad-library/detail/12345",
+    "adType": "SPONSORED_CONTENT",
+    "advertiser": "Company Name",
+    "cta": "Learn More",
+    "destinationUrl": "https://example.com",
+    "adDuration": "30 days",
+    "startDate": "2024-01-01",
+    "endDate": "2024-01-31",
+    "totalImpressions": 50000,
+    "impressionsByCountry": []
+  }
+}
+```
+
+---
+
+## Integration Examples
+
+### Python - Email Finder
+```python
+import requests
+
+API_KEY = "your-api-key"
+BASE_URL = "https://api.leadmagic.io"
+
+response = requests.post(
+    f"{BASE_URL}/email-finder",
+    headers={"X-API-Key": API_KEY, "Content-Type": "application/json"},
+    json={
+        "first_name": "Satya",
+        "last_name": "Nadella",
+        "domain": "microsoft.com"
+    }
+)
+data = response.json()
+print(f"Email: {data['email']}, Status: {data['status']}")
+```
+
+### JavaScript - Company Search
+```javascript
+const response = await fetch("https://api.leadmagic.io/company-search", {
+  method: "POST",
+  headers: {
+    "X-API-Key": "your-api-key",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ company_domain: "microsoft.com" })
+});
+const data = await response.json();
+console.log(`Company: ${data.companyName}, Employees: ${data.employeeCount}`);
+```
+
+### Python - Full Lead Enrichment Workflow
+```python
+import requests
+
+API_KEY = "your-api-key"
+BASE = "https://api.leadmagic.io"
+headers = {"X-API-Key": API_KEY, "Content-Type": "application/json"}
+
+# Step 1: Find email
+email_resp = requests.post(f"{BASE}/email-finder", headers=headers, json={
+    "first_name": "Satya", "last_name": "Nadella", "domain": "microsoft.com"
+}).json()
+
+# Step 2: Validate email
+valid_resp = requests.post(f"{BASE}/email-validate", headers=headers, json={
+    "email": email_resp["email"]
+}).json()
+
+# Step 3: Get company data
+company_resp = requests.post(f"{BASE}/company-search", headers=headers, json={
+    "company_domain": "microsoft.com"
+}).json()
+
+# Step 4: Find mobile
+mobile_resp = requests.post(f"{BASE}/mobile-finder", headers=headers, json={
+    "work_email": email_resp["email"]
+}).json()
+
+print(f"Email: {email_resp['email']} ({valid_resp['email_status']})")
+print(f"Company: {company_resp['companyName']} ({company_resp['employeeCount']} employees)")
+print(f"Mobile: {mobile_resp.get('mobile_number', 'Not found')}")
+```
