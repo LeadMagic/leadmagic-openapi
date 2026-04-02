@@ -28,7 +28,8 @@ cd leadmagic-openapi
 export LEADMAGIC_API_KEY=your-api-key-here
 
 # Test the current specification
-node test-api.js
+npm install
+npm run test:api
 ```
 
 ### 2. Making Changes
@@ -37,20 +38,23 @@ node test-api.js
 1. Edit `README.md` for documentation changes
 2. Ensure examples are accurate and helpful
 3. Test any code examples you add
+4. If the change affects MCP-facing naming, setup, auth, or pricing language, keep the wording aligned with the hosted MCP docs and the public Cursor plugin package
 
 #### For OpenAPI Specification Updates
 1. Edit both `leadmagic-openapi-3.1.yaml` AND `leadmagic-openapi-3.1.json`
 2. Ensure both files remain synchronized
 3. Validate the specification:
    ```bash
-   # Use Swagger CLI or similar tools
-   swagger-codegen validate -i leadmagic-openapi-3.1.yaml
+   npm install
+   npm run lint:openapi
    ```
 
 #### For Test Script Updates
-1. Edit `test-api.js` to add new test cases
+1. Edit `test-api.ts` to add new test cases
 2. Ensure all tests pass with a valid API key
-3. Test edge cases and error conditions
+3. Run `npm run typecheck`
+4. Test edge cases and error conditions
+5. If you add reporting, never write the API key or request headers to the report output
 
 ### 3. Testing Your Changes
 
@@ -60,7 +64,7 @@ node test-api.js
 export LEADMAGIC_API_KEY=your-actual-api-key
 
 # Run the comprehensive test suite
-node test-api.js
+npm run test:api
 
 # Test specific endpoints if you made targeted changes
 ```
@@ -85,7 +89,7 @@ node test-api.js
 5. **Commit with clear messages**:
    ```bash
    git commit -m "docs: improve email validation response examples
-   
+
    - Added more realistic company data examples
    - Clarified mx_provider field values
    - Updated use cases section"
@@ -95,16 +99,18 @@ node test-api.js
 ## 📝 Style Guidelines
 
 ### OpenAPI Specification
-- **Consistent naming**: Use `snake_case` for all field names (matches API)
+- **Current-doc accuracy**: Match the current public docs and verified responses for each endpoint instead of assuming one global field naming style
 - **Comprehensive examples**: Include realistic, working examples
 - **Clear descriptions**: Write helpful descriptions for all fields and endpoints
 - **Proper validation**: Include appropriate validation rules and constraints
+- **OpenAPI 3.1 schema style**: Use JSON Schema 2020-12 patterns such as `jsonSchemaDialect`, `examples`, and union types like `["string", "null"]` instead of `nullable`
 
 ### Documentation
 - **Clear headings**: Use descriptive section headers
 - **Code examples**: Provide copy-paste ready examples
 - **Use cases**: Include practical, real-world use cases
 - **Consistent formatting**: Follow the existing markdown style
+- **Cross-surface consistency**: Keep API snapshot language aligned with the current MCP docs and public Cursor plugin positioning
 
 ### Testing
 - **Environment variables**: Never hardcode API keys
@@ -159,7 +165,7 @@ node test-api.js
 ## 📞 Getting Help
 
 - **Documentation Issues**: Create an issue with the "documentation" label
-- **API Questions**: Check [LeadMagic's official documentation](https://docs.leadmagic.io)
+- **API Questions**: Check [LeadMagic's official documentation](https://leadmagic.io/docs)
 - **Specification Questions**: Create an issue with the "question" label
 - **Technical Support**: Contact [support@leadmagic.io](mailto:support@leadmagic.io)
 
@@ -170,4 +176,4 @@ Contributors will be recognized in:
 - README acknowledgments
 - GitHub contributor graphs
 
-Thank you for helping make the LeadMagic OpenAPI specification better for all developers! 🎉 
+Thank you for helping make the LeadMagic OpenAPI specification better for all developers! 🎉

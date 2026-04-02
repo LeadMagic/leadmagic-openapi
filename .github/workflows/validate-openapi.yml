@@ -8,13 +8,16 @@ on:
     paths:
       - 'leadmagic-openapi-3.1.yaml'
       - 'leadmagic-openapi-3.1.json'
-      - 'test-api.js'
+      - 'test-api.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
 
 jobs:
   validate-spec:
     name: Validate OpenAPI Specification
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
@@ -23,6 +26,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
+
+    - name: 📦 Install repo dependencies
+      run: npm install
 
     - name: 📦 Install Swagger CLI
       run: npm install -g @apidevtools/swagger-cli
@@ -40,7 +46,7 @@ jobs:
         json_size=$(wc -c < leadmagic-openapi-3.1.json)
         echo "📊 YAML size: $yaml_size bytes"
         echo "📊 JSON size: $json_size bytes"
-        
+
         # JSON should be larger than YAML (more verbose format)
         if [ "$json_size" -gt "$yaml_size" ]; then
           echo "✅ File sizes are reasonable - JSON larger than YAML as expected"
@@ -48,24 +54,24 @@ jobs:
           echo "⚠️ Unexpected file size ratio - manual sync check recommended"
         fi
 
-    - name: 📋 Validate test script syntax
-      run: node -c test-api.js
+    - name: 🧠 Typecheck smoke test script
+      run: npm run typecheck
 
     - name: 🧪 Run dry test (without API key)
       run: |
-        # Test that the script properly handles missing API key
-        output=$(node test-api.js 2>&1 || true)
-        if echo "$output" | grep -q "LEADMAGIC_API_KEY environment variable is required"; then
-          echo "✅ Test script properly requires API key"
+        # Test that the script safely fails in CI when no key or interactive prompt is available
+        output=$(npm run test:api 2>&1 || true)
+        if echo "$output" | grep -q "Set LEADMAGIC_API_KEY or run this script in an interactive terminal"; then
+          echo "✅ Test script safely requires a key in CI"
         else
-          echo "❌ Test script should require API key"
+          echo "❌ Test script should fail safely without exposing key input"
           exit 1
         fi
 
   lint-spec:
     name: Lint OpenAPI with Spectral
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
@@ -76,15 +82,15 @@ jobs:
         node-version: '18'
 
     - name: 📦 Install Spectral
-      run: npm install -g @stoplight/spectral-cli
+      run: npm install
 
     - name: 🔍 Lint OpenAPI specification
-      run: spectral lint leadmagic-openapi-3.1.yaml
+      run: npm run lint:openapi
 
   check-examples:
     name: Validate Examples Format
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
@@ -115,7 +121,7 @@ jobs:
   documentation-check:
     name: Documentation Quality Check
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
@@ -129,7 +135,7 @@ jobs:
           "Testing & Validation"
           "Use Case Examples"
         )
-        
+
         for section in "${required_sections[@]}"; do
           if grep -q "$section" README.md; then
             echo "✅ Found section: $section"
@@ -142,7 +148,7 @@ jobs:
     - name: 🔗 Check for hardcoded credentials
       run: |
         # Check for common API key patterns in critical files
-        if grep -r "sk-[a-zA-Z0-9]\{48\}\|api_key.*=.*[a-zA-Z0-9]\{10,\}" test-api.js leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
+        if grep -r "sk-[a-zA-Z0-9]\{48\}\|api_key.*=.*[a-zA-Z0-9]\{10,\}" test-api.ts leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
           echo "❌ Found potential hardcoded credentials in specification or test files"
           exit 1
         else
@@ -154,16 +160,16 @@ jobs:
         yaml_size=$(stat -c%s leadmagic-openapi-3.1.yaml)
         json_size=$(stat -c%s leadmagic-openapi-3.1.json)
         readme_size=$(stat -c%s README.md)
-        
+
         echo "📊 File sizes:"
         echo "  YAML: $yaml_size bytes"
-        echo "  JSON: $json_size bytes"  
+        echo "  JSON: $json_size bytes"
         echo "  README: $readme_size bytes"
-        
+
         # Ensure files aren't empty
         if [ "$yaml_size" -lt 1000 ] || [ "$json_size" -lt 1000 ] || [ "$readme_size" -lt 1000 ]; then
           echo "❌ One or more files appear to be too small"
           exit 1
         fi
-        
-        echo "✅ All files have reasonable sizes" 
+
+        echo "✅ All files have reasonable sizes"
