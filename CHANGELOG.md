@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Synced top-level repository docs to the current `leadmagic.io/docs` route layout under `/v1/...`
+- Reworked the smoke-test utility as `test-api.ts` with typed test cases, secure interactive API-key entry, compact output previews, and pass/fail reporting against current documented endpoints
+- Updated LLM-oriented docs to stop claiming full parity with the public docs when docs-only endpoints now exist outside this local snapshot
+- Clarified how this OpenAPI snapshot aligns with the hosted MCP setup and the public Cursor plugin package
+- Clarified that the current MCP surface includes competitors, technographics, and job-change tooling, while ad-search endpoints remain part of the broader API snapshot rather than the current MCP tool set
+- Removed stale blanket claims that all current responses use uniform snake_case naming
+
+### Clarified
+- This repository still models the 19 core endpoints already present locally, while the live docs currently expose additional APIs such as analytics, technographics, competitors search, and extra jobs metadata endpoints
+
 ## [1.0.0] - 2025-01-26
 
 ### Added
@@ -90,4 +101,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Notes
 - All costs verified against official LeadMagic documentation
 - Specification tested against live API with provided API key
-- Platform-agnostic documentation maintains functionality while removing vendor lock-in 
+- Platform-agnostic documentation maintains functionality while removing vendor lock-in

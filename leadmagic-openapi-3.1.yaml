@@ -1,4 +1,5 @@
 openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 info:
   title: LeadMagic API
   version: 1.5.0
@@ -7,8 +8,8 @@ info:
     enrichment, and advertisement searching.
 
 
-    **Important**: All API endpoints use snake_case for field names in both requests
-    and responses.
+    **Important**: Current public docs are not fully uniform on field naming. Some
+    endpoints use snake_case while others show mixed or camelCase response fields.
 
     '
   contact:
@@ -64,8 +65,9 @@ components:
           examples:
           - 1 Seaport Lane
         address_line_2:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         postal_code:
           type: string
           examples:
@@ -74,46 +76,6 @@ components:
           type: string
           examples:
           - 42.35,-71.06
-    Company:
-      type: object
-      description: Company information
-      properties:
-        company_name:
-          type: string
-          examples:
-          - Leadmagic
-        company_industry:
-          type: string
-          examples:
-          - Internet
-        company_size:
-          type: string
-          examples:
-          - 11-50
-        company_founded:
-          type: integer
-          examples:
-          - 2022
-        company_type:
-          type: string
-          examples:
-          - private
-        company_linkedin_url:
-          type: string
-          examples:
-          - linkedin.com/company/leadmagichq
-        company_linkedin_id:
-          type: string
-          examples:
-          - '75153174'
-        company_facebook_url:
-          type: string
-          nullable: true
-        company_twitter_url:
-          type: string
-          nullable: true
-        company_location:
-          $ref: '#/components/schemas/Location'
     DetailedCompany:
       type: object
       description: Detailed company information from company search
@@ -152,8 +114,9 @@ components:
                 examples:
                 - 1 Seaport Ln
               line2:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
               description:
                 type: string
                 examples:
@@ -222,15 +185,17 @@ components:
           type: object
           properties:
             month:
-              type: integer
-              nullable: true
+              type:
+              - integer
+              - 'null'
             year:
               type: integer
               examples:
               - 2022
             day:
-              type: integer
-              nullable: true
+              type:
+              - integer
+              - 'null'
         universal_name:
           type: string
           examples:
@@ -246,7 +211,7 @@ components:
         url:
           type: string
           examples:
-          - https://www.linkedin.com/company/leadmagichq/
+          - https://profiles.example.com/company/leadmagichq/
         credits_consumed:
           type: integer
           examples:
@@ -258,7 +223,7 @@ components:
         profile_url:
           type: string
           examples:
-          - https://www.linkedin.com/in/williamhgates/
+          - https://profiles.example.com/williamhgates/
         first_name:
           type: string
           examples:
@@ -294,7 +259,7 @@ components:
         company_linkedin_url:
           type: string
           examples:
-          - linkedin.com/company/bill-&-melinda-gates-foundation
+          - profiles.example.com/company/bill-and-melinda-gates-foundation
         company_website:
           type: string
           examples:
@@ -409,11 +374,13 @@ components:
                 type: string
                 description: HTML content or JavaScript URL for the ad
               height:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
               width:
-                type: integer
-                nullable: true
+                type:
+                - integer
+                - 'null'
     JobResult:
       type: object
       description: Job search result
@@ -432,7 +399,7 @@ components:
             linkedin_url:
               type: string
               examples:
-              - https://www.linkedin.com/company/microsoft/
+              - https://profiles.example.com/company/microsoft/
             twitter_handle:
               type: string
               examples:
@@ -508,9 +475,10 @@ components:
           examples:
           - '2025-06-25T20:36:00Z'
         expired:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          nullable: true
         application_url:
           type: string
           examples:
@@ -579,6 +547,35 @@ paths:
                     description: Available credits balance
                     examples:
                     - 7333.8
+                  is_frozen:
+                    type: boolean
+                    description: Whether the account's credits are currently frozen.
+                    examples:
+                    - false
+                  credits_frozen:
+                    type: number
+                    description: Portion of credits currently frozen.
+                    examples:
+                    - 0
+                  credits_liquid:
+                    type: number
+                    description: Portion of credits currently available for use.
+                    examples:
+                    - 7333.8
+                  credit_freeze_message:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional message describing the freeze state.
+                    examples:
+                    - null
+                  credit_freeze_plan_hint:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional plan or upgrade hint related to a credit freeze.
+                    examples:
+                    - null
                 required:
                 - credits
         '400':
@@ -694,17 +691,19 @@ paths:
                   company_linkedin_url:
                     type: string
                     examples:
-                    - linkedin.com/company/leadmagichq
+                    - profiles.example.com/company/leadmagichq
                   company_linkedin_id:
                     type: string
                     examples:
                     - '75153174'
                   company_facebook_url:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                   company_twitter_url:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                   company_location:
                     $ref: '#/components/schemas/Location'
                 required:
@@ -839,7 +838,7 @@ paths:
                   company_linkedin_url:
                     type: string
                     examples:
-                    - linkedin.com/company/microsoft
+                    - profiles.example.com/company/microsoft
                   company_linkedin_id:
                     type: string
                     examples:
@@ -873,7 +872,7 @@ paths:
   /profile-search:
     post:
       summary: Profile Search
-      description: "Provide a B2B profile URL (e.g., LinkedIn) to get full profile\
+      description: "Provide a B2B profile URL (for example, a professional social profile) to get full profile\
         \ details. \nRate limit: 300 requests/minute.\n"
       operationId: searchProfile
       tags:
@@ -891,7 +890,7 @@ paths:
                   type: string
                   description: Full URL of the B2B profile.
                   examples:
-                  - https://www.linkedin.com/in/williamhgates/
+                  - https://profiles.example.com/williamhgates/
       responses:
         '200':
           description: Successful retrieval of profile information.
@@ -952,7 +951,7 @@ paths:
                 profile_url:
                   type: string
                   examples:
-                  - https://www.linkedin.com/company/leadmagichq
+                  - https://profiles.example.com/company/leadmagichq
       responses:
         '200':
           description: Successful retrieval of company details.
@@ -1277,7 +1276,7 @@ paths:
                 profile_url:
                   type: string
                   examples:
-                  - https://www.linkedin.com/in/williamhgates/
+                  - https://profiles.example.com/williamhgates/
                 work_email:
                   type: string
                   examples:
@@ -1305,10 +1304,11 @@ paths:
                     - 0
                     - 1
                   mobile_number:
-                    type: string
+                    type:
+                    - string
+                    - 'null'
                     examples:
                     - '+1234567890'
-                    nullable: true
                 required:
                 - message
                 - credits_consumed
@@ -1317,15 +1317,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /b2b-profile:
     post:
       summary: Email Address to B2B Profile
@@ -1357,7 +1355,7 @@ paths:
                   profile_url:
                     type: string
                     examples:
-                    - http://www.linkedin.com/in/jesseouehwx
+                    - https://profiles.example.com/jesseouehwx
                   message:
                     type: string
                     examples:
@@ -1374,15 +1372,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /role-finder:
     post:
       summary: Role Finder
@@ -1414,7 +1410,7 @@ paths:
                 company_profile_url:
                   type: string
                   examples:
-                  - https://www.linkedin.com/company/microsoft
+                  - https://profiles.example.com/company/microsoft
       responses:
         '200':
           description: Role search response.
@@ -1449,15 +1445,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /employee-finder:
     post:
       summary: Employee Finder
@@ -1548,15 +1542,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /company-funding:
     post:
       summary: Company Funding
@@ -1687,15 +1679,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /job-country:
     get:
       summary: Get Job Countries
@@ -1730,8 +1720,7 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /job-types:
     get:
       summary: Get Job Types
@@ -1766,8 +1755,7 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /personal-email-finder:
     post:
       summary: Personal Email Finder
@@ -1786,9 +1774,9 @@ paths:
               properties:
                 profile_url:
                   type: string
-                  description: B2B profile URL (e.g., LinkedIn profile)
+                  description: B2B profile URL (for example, a professional social profile)
                   examples:
-                  - https://www.linkedin.com/in/williamhgates/
+                  - https://profiles.example.com/williamhgates/
       responses:
         '200':
           description: Personal email search response.
@@ -1798,10 +1786,11 @@ paths:
                 type: object
                 properties:
                   personal_email:
-                    type: string
+                    type:
+                    - string
+                    - 'null'
                     examples:
                     - bill.gates@gmail.com
-                    nullable: true
                   status:
                     type: string
                     enum:
@@ -1826,15 +1815,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /b2b-social-email:
     post:
       summary: B2B Social to Email
@@ -1853,9 +1840,9 @@ paths:
               properties:
                 profile_url:
                   type: string
-                  description: B2B profile URL (e.g., LinkedIn profile)
+                  description: B2B profile URL (for example, a professional social profile)
                   examples:
-                  - https://www.linkedin.com/in/williamhgates/
+                  - https://profiles.example.com/williamhgates/
       responses:
         '200':
           description: Work email search response.
@@ -1865,10 +1852,11 @@ paths:
                 type: object
                 properties:
                   work_email:
-                    type: string
+                    type:
+                    - string
+                    - 'null'
                     examples:
                     - bill.gates@microsoft.com
-                    nullable: true
                   status:
                     type: string
                     enum:
@@ -1893,15 +1881,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /b2b/searchads:
     post:
       summary: B2B Ads Search
@@ -1967,15 +1953,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
   /b2b/ad-details:
     post:
       summary: B2B Ad Details
@@ -1994,7 +1978,7 @@ paths:
               properties:
                 ad_id:
                   type: string
-                  description: LinkedIn ad ID
+                  description: B2B ad ID
                   examples:
                   - '12345'
       responses:
@@ -2031,9 +2015,10 @@ paths:
                         type: string
                         format: date
                       end_date:
-                        type: string
+                        type:
+                        - string
+                        - 'null'
                         format: date
-                        nullable: true
                   credits_consumed:
                     type: integer
                     examples:
@@ -2046,15 +2031,13 @@ paths:
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized - Invalid API key.
           content:
             application/json:
               schema:
-                ? ''
-                : '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'
 tags:
 - name: Advertisements
   description: Advertisement intelligence

@@ -1,0 +1,19 @@
+{
+	"name": "leadmagic-openapi",
+	"private": true,
+	"version": "0.1.0",
+	"description": "Validation and smoke-test tooling for the LeadMagic OpenAPI snapshot",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"lint:openapi": "spectral lint leadmagic-openapi-3.1.yaml",
+		"test:api": "tsx test-api.ts",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@stoplight/spectral-cli": "6.15.0",
+		"@types/node": "25.3.3",
+		"tsx": "4.21.0",
+		"typescript": "5.9.3"
+	}
+}

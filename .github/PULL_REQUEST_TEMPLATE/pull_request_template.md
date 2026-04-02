@@ -40,7 +40,7 @@
 - [ ] Updated both YAML and JSON files (if applicable)
 - [ ] Validated specification with Swagger CLI/Editor
 - [ ] All examples use OpenAPI 3.1 format (`examples` not `example`)
-- [ ] Field names use snake_case (matches API)
+- [ ] Field names and response examples match the current public docs for the affected endpoint(s)
 - [ ] Credit costs are accurate
 - [ ] HTTP methods are correct (POST for data endpoints)
 

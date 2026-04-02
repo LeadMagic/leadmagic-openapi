@@ -133,6 +133,7 @@ generated/
 # Test results
 test-results/
 results/
+reports/
 
 # Documentation build output
 docs/build/
@@ -155,4 +156,4 @@ openapi-generator/
 
 # Temporary API test files
 test-output.json
-api-responses.json 
+api-responses.json

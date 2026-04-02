@@ -1,1312 +1,213 @@
-# LeadMagic API - Complete Documentation
+# LeadMagic OpenAPI Snapshot
 
-A comprehensive, production-ready OpenAPI 3.1 specification for LeadMagic's complete data enrichment API suite.
+This repository contains a maintained OpenAPI snapshot, LLM-friendly docs, and a live API smoke-test script for LeadMagic. It should stay aligned with the current LeadMagic MCP positioning, but it is an API snapshot repo rather than a full mirror of the MCP surface.
 
-## 🎯 Overview
+The authoritative product documentation is the public docs site:
 
-LeadMagic provides the most comprehensive B2B data enrichment API, featuring 22 endpoints across email finding, profile enrichment, company intelligence, job data, technographics, competitor analysis, and advertisement tracking. This specification is **100% tested** against the live API and fully OpenAPI 3.1 compliant.
+- Docs: [https://leadmagic.io/docs](https://leadmagic.io/docs)
+- Docs index: [https://leadmagic.io/docs/llms.txt](https://leadmagic.io/docs/llms.txt)
+- Dashboard: [https://app.leadmagic.io](https://app.leadmagic.io)
 
-## 📁 Files
+## Status
+The public API docs now use versioned routes under `/v1/...` and expose more endpoints than this repo currently models. This repo currently focuses on the 19 core endpoints already represented in the local OpenAPI files, plus current route mappings and a cleaner validation script.
 
-- `leadmagic-openapi-3.1.yaml` - Complete OpenAPI 3.1 specification
-- `leadmagic-openapi-3.1.json` - JSON format specification
-- `llms.txt` - LLM-friendly overview ([llms.txt standard](https://llmstxt.org/))
-- `llms-full.txt` - Complete API docs in a single LLM-optimized file
-- `test-api.js` - Comprehensive API validation suite
-- `README.md` - This complete documentation
+If you need the full current product surface, treat `https://leadmagic.io/docs` as the source of truth.
 
-## 🚀 Quick Start
+## Companion Surfaces
 
-### Authentication
-All endpoints require authentication via the `X-API-Key` header:
+LeadMagic's developer surface now spans a few aligned entry points:
+
+- `leadmagic-openapi`: this repository, for schema snapshots and API-oriented docs
+- LeadMagic MCP docs: https://leadmagic.io/docs/mcp/setup
+- Hosted MCP endpoint: `https://mcp.leadmagic.io/mcp`
+- Cursor plugin repo: `leadmagic-cursor-plugin`, which packages the hosted MCP flow for Cursor
+
+This repo should stay aligned with the live MCP/API behavior, but it should not claim to be the only or most current product surface when the docs site has moved ahead.
+
+## Current MCP Surface
+
+The current LeadMagic MCP docs describe:
+
+- 16 tools
+- 1 shared docs resource: `leadmagic://docs`
+- 2 built-in prompts
+
+The MCP surface currently covers credits, people enrichment, company research, technographics, competitors, job-change detection, and jobs search.
+
+Important distinction: the broader REST API and this OpenAPI snapshot include ad-search endpoints, but the current MCP tool surface does not expose those ad tools. Keep repo copy explicit about that difference.
+
+## Files
+- `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot
+- `leadmagic-openapi-3.1.json`: JSON form of the local snapshot
+- `.spectral.yml`: OpenAPI lint configuration
+- `llms.txt`: Short, current LLM-oriented overview
+- `llms-full.txt`: Longer current LLM-oriented reference
+- `test-api.ts`: Live smoke-test script against current documented `/v1/...` routes
+
+## Authentication
+All endpoints require an `X-API-Key` header.
+
 ```bash
-curl -H "X-API-Key: your-api-key-here" \
-     -H "Content-Type: application/json" \
-     https://api.leadmagic.io/credits
+curl 'https://api.leadmagic.io/v1/credits' \
+  -H 'X-API-Key: YOUR_API_KEY'
 ```
 
-> **Security Note:** Never commit API keys to version control. Use environment variables or secure configuration management.
+Never commit API keys. Use `LEADMAGIC_API_KEY` or your own secrets manager.
+
+## Base URL
+`https://api.leadmagic.io`
+
+Current docs group routes under:
+
+- `/v1/credits`
+- `/v1/people/*`
+- `/v1/companies/*`
+- `/v1/jobs/*`
+- `/v1/ads/*`
+
+## Current Route Map
+
+| Legacy repo route | Current documented route |
+| --- | --- |
+| `POST /credits` | `GET /v1/credits` |
+| `POST /email-validate` | `POST /v1/people/email-validation` |
+| `POST /email-finder` | `POST /v1/people/email-finder` |
+| `POST /personal-email-finder` | `POST /v1/people/personal-email-finder` |
+| `POST /b2b-social-email` | `POST /v1/people/b2b-profile-email` |
+| `POST /b2b-profile` | `POST /v1/people/b2b-profile` |
+| `POST /mobile-finder` | `POST /v1/people/mobile-finder` |
+| `POST /profile-search` | `POST /v1/people/profile-search` |
+| `POST /role-finder` | `POST /v1/people/role-finder` |
+| `POST /employee-finder` | `POST /v1/people/employee-finder` |
+| `POST /company-search` | `POST /v1/companies/company-search` |
+| `POST /company-funding` | `POST /v1/companies/company-funding` |
+| `POST /jobs-finder` | `POST /v1/jobs/jobs-finder` |
+| `GET /job-country` | `GET /v1/jobs/countries` |
+| `GET /job-types` | `GET /v1/jobs/job-types` |
+| `POST /google/searchads` | `POST /v1/ads/google-ads-search` |
+| `POST /meta/searchads` | `POST /v1/ads/meta-ads-search` |
+| `POST /b2b/searchads` | `POST /v1/ads/b2b-ads-search` |
+| `POST /b2b/ad-details` | `POST /v1/ads/b2b-ads-details` |
+
+## Credit Consumption
+
+These values are aligned to the public docs as of this cleanup pass.
+
+| Endpoint | Cost | Notes |
+| --- | --- | --- |
+| `GET /v1/credits` | 0 | Free, no rate limit called out |
+| `POST /v1/people/email-validation` | 0.25 | 4 validations per credit |
+| `POST /v1/people/email-finder` | 1 | Free on null result |
+| `POST /v1/people/personal-email-finder` | 2 | Free if not found |
+| `POST /v1/people/b2b-profile-email` | 5 | Free if not found |
+| `POST /v1/people/b2b-profile` | 10 | Free if not found |
+| `POST /v1/people/mobile-finder` | 5 | Free if not found |
+| `POST /v1/people/profile-search` | 1 | Docs currently show 100 req/min |
+| `POST /v1/people/role-finder` | 2 | Free if no match |
+| `POST /v1/people/employee-finder` | 0.05 per employee | 20 employees per credit |
+| `POST /v1/companies/company-search` | 1 | Free if not found |
+| `POST /v1/companies/company-funding` | 4 | Free if not found |
+| `POST /v1/jobs/jobs-finder` | 1 per job | Free if no jobs found |
+| `GET /v1/jobs/countries` | 0 | Metadata |
+| `GET /v1/jobs/job-types` | 0 | Metadata |
+| `POST /v1/ads/google-ads-search` | 0.2 | 5 searches per credit |
+| `POST /v1/ads/meta-ads-search` | 0.2 | 5 searches per credit |
+| `POST /v1/ads/b2b-ads-search` | 0.2 | 5 searches per credit |
+| `POST /v1/ads/b2b-ads-details` | 2 | Free if not found |
+
+Docs-only endpoints not yet represented in the local snapshot include analytics, job change detection, technographics, competitors search, job company types, job industries, job regions, and credits helper endpoints.
+
+## Use Case Examples
 
-### Base URL
-```
-https://api.leadmagic.io
-```
-
----
-
-## 📋 Complete API Reference
-
-### 🔄 Credits Management
-
-#### Check Credits
-Get your available API credits.
-
-**Endpoint:** `POST /credits`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/credits \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json'
-```
-
-**Response:**
-```json
-{
-  "credits": 7333.8
-}
-```
-
-**Use Cases:**
-- Monitor credit usage in applications
-- Implement billing alerts
-- Display remaining credits to users
-
----
-
-### 📧 Email Services
-
-#### 1. Email Validation
-Validate email deliverability and get company information.
-
-**Endpoint:** `POST /email-validate`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/email-validate \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "email": "elon@tesla.com",
-       "first_name": "Elon",
-       "last_name": "Musk"
-     }'
-```
-
-**Response:**
-```json
-{
-  "email": "elon@tesla.com",
-  "email_status": "valid",
-  "credits_consumed": 0.05,
-  "message": "Email is valid.",
-  "is_domain_catch_all": false,
-  "mx_record": "mx1.tesla.com",
-  "mx_provider": "Google Workspace",
-  "mx_security_gateway": false,
-  "company_name": "Tesla",
-  "company_industry": "Automotive",
-  "company_size": "10001+",
-  "company_founded": 2003,
-  "company_type": "public",
-  "company_linkedin_url": "linkedin.com/company/tesla-motors",
-  "company_linkedin_id": "15564",
-  "company_location": {
-    "name": "austin, texas, united states",
-    "locality": "austin",
-    "region": "texas",
-    "country": "united states"
-  }
-}
-```
-
-**Status Values:**
-- `valid` - Email is deliverable
-- `valid_catch_all` - Valid but domain accepts all emails
-- `invalid` - Email does not exist
-- `unknown` - Cannot determine status
-- `catch_all` - Domain is catch-all configured
-
-**Use Cases:**
-- Clean email lists before campaigns
-- Real-time form validation
-- Lead qualification scoring
-- CRM data hygiene
-
-#### 2. Email Finder
-Find verified email addresses using name and company.
-
-**Endpoint:** `POST /email-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/email-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "first_name": "Elon",
-       "last_name": "Musk",
-       "domain": "tesla.com",
-       "company_name": "Tesla"
-     }'
-```
-
-**Response:**
-```json
-{
-  "email": "elon@tesla.com",
-  "status": "valid",
-  "credits_consumed": 1,
-  "message": "Valid email found.",
-  "first_name": "Elon",
-  "last_name": "Musk",
-  "domain": "tesla.com",
-  "is_domain_catch_all": false,
-  "mx_record": "mx1.tesla.com",
-  "mx_provider": "Google Workspace",
-  "mx_security_gateway": false,
-  "company_name": "Tesla",
-  "company_industry": "Automotive",
-  "company_size": "10001+",
-  "company_founded": 2003,
-  "company_type": "public",
-  "company_linkedin_url": "linkedin.com/company/tesla-motors",
-  "company_linkedin_id": "15564",
-  "company_location": {
-    "name": "austin, texas, united states"
-  }
-}
-```
-
-**Status Values:**
-- `valid` - Email found and verified
-- `valid_catch_all` - Found but domain is catch-all
-- `not_found` - No email found
-
-**Use Cases:**
-- Sales prospecting and outreach
-- Lead generation campaigns
-- Contact database building
-- Recruitment and talent acquisition
-
-#### 3. Personal Email Finder
-Find personal email addresses from B2B profiles.
-
-**Endpoint:** `POST /personal-email-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/personal-email-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "profile_url": "https://www.linkedin.com/in/elonmusk/"
-     }'
-```
-
-**Response:**
-```json
-{
-  "personal_email": "elon@spacex.com",
-  "status": "found",
-  "credits_consumed": 1,
-  "message": "Personal email found"
-}
-```
-
-**Use Cases:**
-- Personal outreach campaigns
-- Executive communication
-- Direct marketing initiatives
-- Influencer partnerships
-
-#### 4. B2B Social to Email
-Find work emails from B2B profile URLs.
-
-**Endpoint:** `POST /b2b-social-email`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/b2b-social-email \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "profile_url": "https://www.linkedin.com/in/elonmusk/"
-     }'
-```
-
-**Response:**
-```json
-{
-  "work_email": "elon@tesla.com",
-  "status": "found",
-  "credits_consumed": 1,
-  "message": "Work email found"
-}
-```
-
-**Use Cases:**
-- B2B prospecting workflows
-- Social selling strategies
-- B2B lead generation
-- Account-based marketing
-
-#### 5. Work Email to B2B Profile
-Find B2B profiles from work email addresses.
-
-**Endpoint:** `POST /b2b-profile`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/b2b-profile \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "work_email": "elon@tesla.com"
-     }'
-```
-
-**Response:**
-```json
-{
-  "profile_url": "https://www.linkedin.com/in/elonmusk/",
-  "message": "Profile URL found",
-  "credits_consumed": 10
-}
-```
-
-**Use Cases:**
-- Enrich existing email databases
-- Social media prospecting
-- Contact intelligence gathering
-- Lead scoring enhancement
-
----
-
-### 📱 Mobile & Contact Services
-
-#### 6. Mobile Finder
-Find mobile phone numbers using various identifiers.
-
-**Endpoint:** `POST /mobile-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/mobile-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "work_email": "elon@tesla.com"
-     }'
-```
-
-**Response:**
-```json
-{
-  "message": "mobile not found",
-  "credits_consumed": 0,
-  "mobile_number": null
-}
-```
-
-**Parameters (provide at least one):**
-- `profile_url` - B2B profile URL
-- `work_email` - Work email address
-- `personal_email` - Personal email address
-
-**Use Cases:**
-- SMS marketing campaigns
-- Direct outreach via phone/WhatsApp
-- Multi-channel communication
-- Emergency contact information
-
----
-
-### 👤 Profile & People Services
-
-#### 7. Profile Search
-Get comprehensive B2B profile information.
-
-**Endpoint:** `POST /profile-search`  
-**Rate Limit:** 300 requests/minute  
-**Note:** Public profiles only
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/profile-search \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "profile_url": "https://www.linkedin.com/in/elonmusk/"
-     }'
-```
-
-**Response:**
-```json
-{
-  "profile_url": "https://www.linkedin.com/in/elonmusk/",
-  "first_name": "Elon",
-  "last_name": "Musk",
-  "full_name": "Elon Musk",
-  "public_identifier": "elonmusk",
-  "headline": "CEO at Tesla, SpaceX",
-  "company_name": "Tesla",
-  "company_size": "10001+",
-  "company_industry": "Automotive",
-  "company_linkedin_url": "linkedin.com/company/tesla-motors",
-  "company_website": "tesla.com",
-  "total_tenure_months": "180",
-  "total_tenure_days": "5400",
-  "total_tenure_years": "15.0",
-  "connections": 500,
-  "followers": 25000000,
-  "country": "United States",
-  "location": "Austin, Texas, United States",
-  "about": "CEO of Tesla and SpaceX. Working to accelerate sustainable transport and space exploration.",
-  "experiences": [
-    {
-      "company_id": "15564",
-      "title": "CEO",
-      "subtitle": "Tesla",
-      "caption": "2008 - Present · 16 yrs"
-    }
-  ],
-  "educations": [
-    {
-      "title": "University of Pennsylvania",
-      "caption": "1992 - 1997"
-    }
-  ],
-  "credits_consumed": 1
-}
-```
-
-**Use Cases:**
-- Sales prospect research
-- Recruitment and talent sourcing
-- Business development research
-- Market intelligence gathering
-- Partnership opportunity assessment
-
-#### 8. Role Finder
-Find specific roles within companies.
-
-**Endpoint:** `POST /role-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/role-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "job_title": "Software Engineer",
-       "company_name": "Tesla",
-       "company_domain": "tesla.com"
-     }'
-```
-
-**Response:**
-```json
-{
-  "message": "Role found.",
-  "credits_consumed": 1,
-  "company_name": "Tesla",
-  "company_website": "tesla.com",
-  "contacts": [
-    {
-      "name": "John Doe",
-      "title": "Senior Software Engineer",
-      "profile_url": "https://linkedin.com/in/johndoe"
-    }
-  ]
-}
-```
-
-**Parameters (job_title required + one of):**
-- `company_name` - Company name
-- `company_domain` - Company domain
-- `company_profile_url` - Company profile URL
-
-**Use Cases:**
-- Targeted recruitment campaigns
-- Sales team building for specific companies
-- Competitive intelligence
-- Partnership development
-
-#### 9. Employee Finder
-Find employees of specific companies.
-
-**Endpoint:** `POST /employee-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/employee-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_name": "Tesla",
-       "page": 1,
-       "per_page": 5
-     }'
-```
-
-**Response:**
-```json
-{
-  "message": "Data found for the given company.",
-  "total_count": 50000,
-  "returned_count": 5,
-  "credits_consumed": 1,
-  "data": [
-    {
-      "first_name": "Elon",
-      "last_name": "Musk",
-      "title": "CEO",
-      "website": "https://www.tesla.com",
-      "company_name": "Tesla"
-    },
-    {
-      "first_name": "Drew",
-      "last_name": "Baglino",
-      "title": "SVP, Powertrain and Energy Engineering",
-      "website": "https://www.tesla.com",
-      "company_name": "Tesla"
-    }
-  ]
-}
-```
-
-**Use Cases:**
-- Bulk recruitment campaigns
-- Company analysis and research
-- Sales territory mapping
-- Competitive intelligence
-- Organization chart building
-
----
-
-### 🏢 Company Services
-
-#### 10. Company Search
-Get detailed company information and insights.
-
-**Endpoint:** `POST /company-search`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/company-search \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_domain": "tesla.com",
-       "company_name": "Tesla"
-     }'
-```
-
-**Response:**
-```json
-{
-  "company_name": "Tesla",
-  "company_id": 15564,
-  "locations": [
-    {
-      "country": "US",
-      "city": "Austin",
-      "geographic_area": "Texas",
-      "postal_code": "78725",
-      "line1": "1 Tesla Rd",
-      "description": "Headquarters",
-      "headquarter": true,
-      "localized_name": "Austin",
-      "latitude": 30.2672,
-      "longitude": -97.7431
-    }
-  ],
-  "employee_count": 99290,
-  "specialities": ["Electric Vehicles", "Energy Storage", "Solar"],
-  "employee_count_range": {
-    "start": 10001,
-    "end": 999999
-  },
-  "tagline": "Accelerating the world's transition to sustainable energy",
-  "follower_count": 5200000,
-  "industry": "Automotive",
-  "description": "Tesla designs and manufactures electric vehicles, energy storage systems, and solar panels.",
-  "website_url": "https://tesla.com",
-  "founded_on": {
-    "year": 2003,
-    "month": 7,
-    "day": 1
-  },
-  "universal_name": "tesla-motors",
-  "hashtag": "#tesla",
-  "industry_v2_taxonomy": "Motor Vehicle Manufacturing",
-  "url": "https://www.linkedin.com/company/tesla-motors/",
-  "credits_consumed": 1
-}
-```
-
-**Parameters (provide at least one):**
-- `company_domain` - Company website domain
-- `company_name` - Company name
-- `profile_url` - Company profile URL
-
-**Use Cases:**
-- Lead qualification and scoring
-- Market research and analysis
-- Competitive intelligence
-- Investment research
-- Partnership evaluation
-
-#### 11. Company Funding
-Get comprehensive funding, financial, and competitive intelligence.
-
-**Endpoint:** `POST /company-funding`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/company-funding \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_domain": "tesla.com"
-     }'
-```
-
-**Response:**
-```json
-{
-  "basicInfo": {
-    "companyName": "Tesla Inc.",
-    "description": "Tesla designs and manufactures electric vehicles and energy solutions.",
-    "shortName": "Tesla",
-    "founded": "2003",
-    "headquarters": {
-      "city": "Austin",
-      "state": "Texas",
-      "country": "USA",
-      "fullAddress": "Austin, Texas, USA"
-    },
-    "primaryDomain": "tesla.com",
-    "phone": "1-512-516-8177",
-    "status": "PUBLIC",
-    "followers": 5200000,
-    "ownership": "Public"
-  },
-  "financialInfo": {
-    "revenue": 96773000000,
-    "formattedRevenue": "96.8B",
-    "totalFunding": 7538000000,
-    "formattedFunding": "7.5B",
-    "lastFundingRound": {
-      "round": "IPO",
-      "date": "2010-06-29T00:00:00.000Z",
-      "amount": 226100000
-    }
-  },
-  "companySize": {
-    "employees": 99290,
-    "employeeRange": "10,000 - 99,999",
-    "employeeGrowth": "15.2%"
-  },
-  "leadership": {
-    "ceo": {
-      "firstName": "Elon",
-      "lastName": "Musk",
-      "designation": "CEO & Product Architect",
-      "linkedIn": "https://www.linkedin.com/in/elonmusk/",
-      "twitter": "https://twitter.com/elonmusk"
-    }
-  },
-  "topCompetitors": [
-    {
-      "name": "Ford Motor Company",
-      "revenue": "$158B",
-      "employees": "190,000",
-      "headquarters": {
-        "city": "Dearborn",
-        "state": "Michigan",
-        "country": "USA"
-      },
-      "website": "https://www.ford.com"
-    }
-  ],
-  "acquisitions": [
-    {
-      "companyName": "SolarCity",
-      "acquisitionDate": "2016-11-01T00:00:00.000Z",
-      "description": "Solar energy services company",
-      "source": "https://tesla.com/solarcity"
-    }
-  ],
-  "socialMedia": [
-    {
-      "platform": "twitter",
-      "url": "https://twitter.com/tesla"
-    },
-    {
-      "platform": "facebook",
-      "url": "https://www.facebook.com/tesla"
-    }
-  ],
-  "credits_consumed": 4
-}
-```
-
-**Use Cases:**
-- Investment due diligence
-- Competitive landscape analysis
-- Market opportunity assessment
-- Sales strategy development
-- Partnership evaluation
-
----
-
-### 💼 Jobs Services
-
-#### 12. Jobs Finder
-Search job postings with advanced filtering.
-
-**Endpoint:** `POST /jobs-finder`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/jobs-finder \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_name": "Tesla",
-       "job_title": "Software Engineer",
-       "location": "Austin",
-       "experience_level": "senior",
-       "page": 1,
-       "per_page": 5
-     }'
-```
-
-**Response:**
-```json
-{
-  "total_count": 157,
-  "page": 1,
-  "per_page": 5,
-  "total_pages": 32,
-  "credits_consumed": 5,
-  "results": [
-    {
-      "company": {
-        "name": "Tesla",
-        "website_url": "https://www.tesla.com/",
-        "linkedin_url": "https://www.linkedin.com/company/tesla-motors/",
-        "twitter_handle": "Tesla",
-        "github_url": "https://github.com/tesla",
-        "is_agency": false
-      },
-      "title": "Senior Software Engineer - Autopilot",
-      "location": "Austin, Texas, United States",
-      "types": [
-        {
-          "id": 1,
-          "name": "Full Time"
-        }
-      ],
-      "cities": [
-        {
-          "geonameid": 4671654,
-          "asciiname": "Austin",
-          "name": "Austin",
-          "country": {
-            "id": 238,
-            "code": "US",
-            "name": "United States"
-          }
-        }
-      ],
-      "has_remote": false,
-      "published": "2024-06-25T20:36:00Z",
-      "expired": null,
-      "application_url": "https://jobs.lever.co/tesla/senior-software-engineer",
-      "language": "en",
-      "salary_min": "150000",
-      "salary_max": "250000",
-      "salary_currency": "USD",
-      "experience_level": "Senior Level",
-      "description": "Join Tesla's Autopilot team to develop cutting-edge autonomous driving technology..."
-    }
-  ]
-}
-```
-
-**Filter Options:**
-- `company_name` - Filter by company
-- `company_website` - Filter by company domain
-- `job_title` - Filter by job title
-- `location` - Filter by location
-- `experience_level` - `entry`, `mid`, `senior`, `executive`
-- `job_description` - Keywords in description
-- `country_id` - Country code (US, CA, etc.)
-- `page` - Page number (default: 1)
-- `per_page` - Results per page (max: 50)
-
-**Use Cases:**
-- Recruitment and talent acquisition
-- Competitive salary analysis
-- Market opportunity assessment
-- Industry trend analysis
-- Career opportunity tracking
-
-#### 13. Get Job Countries
-Get list of available countries for job filtering.
-
-**Endpoint:** `GET /job-country`
-
-**Request:**
-```bash
-curl --request GET \
-     --url https://api.leadmagic.io/job-country \
-     --header 'X-API-Key: your-api-key'
-```
-
-**Response:**
-```json
-[
-  {"id": "US", "name": "United States"},
-  {"id": "CA", "name": "Canada"},
-  {"id": "GB", "name": "United Kingdom"},
-  {"id": "DE", "name": "Germany"},
-  {"id": "FR", "name": "France"}
-]
-```
-
-#### 14. Get Job Types
-Get list of available job types.
-
-**Endpoint:** `GET /job-types`
-
-**Request:**
-```bash
-curl --request GET \
-     --url https://api.leadmagic.io/job-types \
-     --header 'X-API-Key: your-api-key'
-```
-
-**Response:**
-```json
-[
-  {"id": 1, "name": "Full Time"},
-  {"id": 2, "name": "Part Time"},
-  {"id": 3, "name": "Temporary"},
-  {"id": 4, "name": "Internship"},
-  {"id": 5, "name": "Freelance"},
-  {"id": 6, "name": "Contract"}
-]
-```
-
----
-
-### 📺 Advertisement Intelligence
-
-#### 15. Google Ads Search
-Find Google Ads campaigns by company.
-
-**Endpoint:** `POST /google/searchads`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/google/searchads \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_domain": "tesla.com",
-       "company_name": "Tesla"
-     }'
-```
-
-**Response:**
-```json
-{
-  "credits_consumed": 8,
-  "ads": [
-    {
-      "advertiser_id": "AR15234567890123456789",
-      "creative_id": "CR98765432109876543210",
-      "advertiser_name": "Tesla Inc",
-      "format": "Text",
-      "start": "2024-01-15",
-      "last_seen": "2024-06-27",
-      "original_url": "https://adstransparency.google.com/advertiser/AR15234567890123456789/creative/CR98765432109876543210",
-      "variants": [
-        {
-          "content": "Experience the future of driving with Tesla Model 3. Zero emissions, maximum performance.",
-          "height": null,
-          "width": null
-        }
-      ]
-    }
-  ]
-}
-```
-
-**Use Cases:**
-- Competitive ad intelligence
-- Marketing strategy research
-- Ad copy inspiration
-- Campaign performance tracking
-- Industry trend analysis
-
-#### 16. Meta Ads Search
-Find Facebook/Instagram ads by company.
-
-**Endpoint:** `POST /meta/searchads`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/meta/searchads \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_domain": "tesla.com",
-       "company_name": "Tesla"
-     }'
-```
-
-**Response:**
-```json
-{
-  "credits_consumed": 2.6,
-  "ads": [
-    {
-      "ad_archive_id": "987654321098765432",
-      "page_id": "123456789012345678",
-      "page_name": "Tesla",
-      "is_active": true,
-      "publisher_platform": ["facebook", "instagram"],
-      "snapshot": {
-        "body": {
-          "markup": "Drive the future with Tesla. Zero emissions, infinite possibilities."
-        },
-        "title": "Tesla Model Y",
-        "cta_text": "Learn More",
-        "images": [
-          {
-            "original_image_url": "https://scontent.xx.fbcdn.net/tesla-model-y.jpg"
-          }
-        ],
-        "videos": []
-      }
-    }
-  ]
-}
-```
-
-**Use Cases:**
-- Social media ad tracking
-- Creative strategy analysis
-- Brand monitoring
-- Competitive intelligence
-- Campaign inspiration
-
-#### 17. B2B Ads Search
-Search for B2B advertisement campaigns.
-
-**Endpoint:** `POST /b2b/searchads`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/b2b/searchads \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "company_domain": "tesla.com",
-       "company_name": "Tesla"
-     }'
-```
-
-**Response:**
-```json
-{
-  "credits_consumed": 5,
-  "ads": [
-    {
-      "ad_id": "b2b_12345",
-      "company_name": "Tesla",
-      "ad_title": "Tesla for Business - Fleet Solutions",
-      "ad_description": "Transform your business fleet with Tesla's commercial vehicle solutions.",
-      "ad_url": "https://tesla.com/fleet"
-    }
-  ]
-}
-```
-
-#### 18. B2B Ad Details
-Get detailed information about specific B2B ads.
-
-**Endpoint:** `POST /b2b/ad-details`
-
-**Request:**
-```bash
-curl --request POST \
-     --url https://api.leadmagic.io/b2b/ad-details \
-     --header 'X-API-Key: your-api-key' \
-     --header 'Content-Type: application/json' \
-     --data '{
-       "ad_id": "b2b_12345"
-     }'
-```
-
-**Response:**
-```json
-{
-  "ad_id": "b2b_12345",
-  "company_name": "Tesla",
-  "ad_title": "Tesla for Business - Fleet Solutions",
-  "ad_description": "Complete fleet electrification solutions for businesses of all sizes.",
-  "ad_url": "https://tesla.com/fleet",
-  "campaign_info": {
-    "campaign_name": "Tesla Business Q2 2024",
-    "start_date": "2024-04-01",
-    "end_date": "2024-06-30"
-  },
-  "credits_consumed": 2
-}
-```
-
-**Use Cases:**
-- B2B marketing intelligence
-- Enterprise solution tracking
-- Competitive analysis
-- Campaign research
-- Business development insights
-
----
-
-## 🎯 Use Case Examples
-
-### Sales & Marketing Teams
 ```javascript
-// Complete lead enrichment workflow
-const lead = {
-  firstName: "Elon",
-  lastName: "Musk",
-  company: "Tesla"
-};
-
-// 1. Find email
-const emailResult = await findEmail(lead);
-
-// 2. Validate email
-const validation = await validateEmail(emailResult.email);
-
-// 3. Get profile details
-const profile = await searchProfile(emailResult.profile_url);
-
-// 4. Get company intelligence
-const company = await searchCompany("tesla.com");
-
-// 5. Find mobile for multi-channel outreach
-const mobile = await findMobile(emailResult.email);
+// Sales prospecting workflow
+await fetch("https://api.leadmagic.io/v1/people/email-finder", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/people/email-validation", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/companies/company-search", { /* ... */ });
 ```
 
-### Recruitment Teams
 ```javascript
-// Targeted recruitment pipeline
-const company = "Tesla";
-const role = "Software Engineer";
-
-// 1. Find employees in role
-const employees = await findEmployees(company);
-
-// 2. Get specific role holders
-const roleHolders = await findRole(role, company);
-
-// 3. Get their profiles
-const profiles = await Promise.all(
-  roleHolders.map(person => searchProfile(person.profile_url))
-);
-
-// 4. Find contact information
-const contacts = await Promise.all(
-  profiles.map(profile => findEmail(profile))
-);
+// Recruiting workflow
+await fetch("https://api.leadmagic.io/v1/people/role-finder", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/people/employee-finder", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/people/profile-search", { /* ... */ });
 ```
 
-### Business Intelligence
 ```javascript
-// Competitive analysis workflow
-const competitor = "tesla.com";
-
-// 1. Get company overview
-const company = await searchCompany(competitor);
-
-// 2. Get funding and financial data
-const funding = await getCompanyFunding(competitor);
-
-// 3. Analyze job market activity
-const jobs = await findJobs({ company_name: "Tesla" });
-
-// 4. Track advertising strategy
-const googleAds = await searchGoogleAds(competitor);
-const metaAds = await searchMetaAds(competitor);
-const b2bAds = await searchB2BAds(competitor);
+// Competitive intelligence workflow
+await fetch("https://api.leadmagic.io/v1/companies/company-funding", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/jobs/jobs-finder", { /* ... */ });
+await fetch("https://api.leadmagic.io/v1/ads/google-ads-search", { /* ... */ });
 ```
 
----
+## Testing & Validation
 
-## 🔧 Important Technical Details
-
-### Field Naming Convention
-**All fields use snake_case:**
-```json
-{
-  "first_name": "Elon",          // ✅ Correct
-  "company_name": "Tesla",       // ✅ Correct
-  "email_status": "valid"        // ✅ Correct
-}
-```
-
-**NOT camelCase:**
-```json
-{
-  "firstName": "Elon",           // ❌ Wrong
-  "companyName": "Tesla",        // ❌ Wrong
-  "emailStatus": "valid"         // ❌ Wrong
-}
-```
-
-### HTTP Methods
-**All endpoints use POST method** (even for data retrieval):
-```bash
-POST /credits              # ✅ Correct
-POST /email-validate       # ✅ Correct
-GET /job-country          # ✅ Exception (metadata only)
-GET /job-types            # ✅ Exception (metadata only)
-```
-
-### Authentication
-Include API key in every request:
-```bash
-curl --header 'X-API-Key: your-leadmagic-api-key'
-```
-
-### Rate Limits
-- **Profile Search**: 300 requests/minute
-- **Other endpoints**: Standard rate limits apply
-
-### Error Handling
-All errors use a structured format:
-```json
-{
-  "success": false,
-  "errors": [
-    {
-      "type": "https://api.leadmagic.io/errors/error_code",
-      "title": "Human-readable error description",
-      "status": 400,
-      "code": "error_code",
-      "docs": "https://docs.leadmagic.io/api-reference/errors",
-      "instance": "/endpoint#request-id"
-    }
-  ],
-  "meta": {
-    "request_id": "uuid",
-    "timestamp": "2026-02-10T20:37:04.253Z"
-  }
-}
-```
-
-**Common HTTP Status Codes:**
-- `200` - Success
-- `400` - Bad Request (invalid parameters)
-- `401` - Unauthorized (invalid API key)
-- `404` - Not Found (endpoint does not exist)
-- `429` - Rate limit exceeded
-- `500` - Internal server error
-
----
-
-## 📊 Credit Consumption
-
-| Endpoint | Credits | Notes |
-|----------|---------|--------|
-| `POST /credits` | 0 | Free to check |
-| `POST /email-validate` | 0.05 | 20 validations per credit |
-| `POST /email-finder` | 1 | Per email found |
-| `POST /personal-email-finder` | 2 | Per personal email |
-| `POST /b2b-social-email` | 5 | Per social-to-email lookup |
-| `POST /b2b-profile` | 10 | Reverse email-to-profile |
-| `POST /mobile-finder` | 5 | Only if found |
-| `POST /profile-search` | 1 | Rate limited 300/min |
-| `POST /role-finder` | 2 | Per role found |
-| `POST /employee-finder` | 0.5 | Per page of results |
-| `POST /job-change-detector` | 3 | Per job change check |
-| `POST /company-search` | 1 | Per company |
-| `POST /company-funding` | 4 | Premium intelligence |
-| `POST /technographics` | 1 | Per tech stack |
-| `POST /competitors-search` | 5 | Per competitor list |
-| `POST /jobs-finder` | 1 per job | Based on results returned |
-| `POST /google/searchads` | 1 per ad | Based on ads found |
-| `POST /meta/searchads` | 1 per ad | Based on ads found |
-| `POST /b2b/searchads` | 1 per ad | Based on ads found |
-| `POST /b2b/ad-details` | 2 | Per ad detail request |
-| `GET /job-country` | 0 | Metadata endpoint |
-| `GET /job-types` | 0 | Metadata endpoint |
-
-**Free results**: `catch_all`, `unknown`, and `not_found` results never consume credits.
-
----
-
-## 🛠️ OpenAPI 3.1 Features
-
-This specification is **100% OpenAPI 3.1 compliant** and includes:
-
-✅ **Modern JSON Schema 2020-12 support**  
-✅ **249 comprehensive examples** (all using OpenAPI 3.1 `examples` format)  
-✅ **0 legacy examples** (no deprecated `example` fields)  
-✅ **Proper webhook support** (if needed)  
-✅ **Advanced validation** with pattern matching  
-✅ **Complete security scheme** definitions  
-✅ **Comprehensive error handling** specifications  
-
-### Using with Tools
-
-**Swagger UI:**
-```bash
-npx swagger-ui-serve leadmagic-openapi-3.1.yaml
-```
-
-**Code Generation:**
-```bash
-# JavaScript/TypeScript
-npx @openapitools/openapi-generator-cli generate \
-  -i leadmagic-openapi-3.1.yaml \
-  -g typescript-fetch \
-  -o ./leadmagic-client
-
-# Python
-openapi-generator-cli generate \
-  -i leadmagic-openapi-3.1.yaml \
-  -g python \
-  -o ./leadmagic-python-client
-
-# Go
-openapi-generator-cli generate \
-  -i leadmagic-openapi-3.1.yaml \
-  -g go \
-  -o ./leadmagic-go-client
-```
-
-**Postman Import:**
-```bash
-# Convert to Postman collection
-openapi2postmanv2 -s leadmagic-openapi-3.1.yaml -o leadmagic.postman_collection.json
-```
-
----
-
-## 🧪 Testing & Validation
-
-### Setup Environment
-Before running tests, set your API key as an environment variable:
+Set your API key or let the script prompt you securely at runtime:
 
 ```bash
-# Option 1: Set for single test run
-LEADMAGIC_API_KEY=your-api-key-here node test-api.js
-
-# Option 2: Export for session
 export LEADMAGIC_API_KEY=your-api-key-here
-node test-api.js
-
-# Option 3: Create .env file (recommended)
-echo "LEADMAGIC_API_KEY=your-api-key-here" > .env
-# Then modify test-api.js to use dotenv if needed
+npm install
+npm run test:api
 ```
 
-### Run Comprehensive Tests
-```bash
-# After setting up your API key:
-node test-api.js
-```
-
-### Expected Output
-```
-🧪 Testing LeadMagic API Endpoints
-
-1. ✅ /credits - 7333.8 credits available
-2. ✅ /email-validate - Email validation working
-3. ✅ /email-finder - Email finding operational  
-4. ✅ /mobile-finder - Mobile search functional
-5. ✅ /b2b-profile - Profile lookup working
-6. ✅ /personal-email-finder - Personal email search ready
-7. ✅ /b2b-social-email - Social to email working
-8. ✅ /profile-search - Profile enrichment functional
-9. ✅ /role-finder - Role search operational
-10. ✅ /employee-finder - Employee search working
-11. ✅ /company-search - Company lookup functional
-12. ✅ /company-funding - Funding data available
-13. ✅ /jobs-finder - Job search operational
-14. ✅ /job-country - Country metadata available
-15. ✅ /job-types - Job type metadata ready
-16. ✅ /google/searchads - Google ads search working
-17. ✅ /meta/searchads - Meta ads search functional
-18. ✅ /b2b/searchads - B2B ads search operational
-19. ✅ /b2b/ad-details - Ad details lookup working
-
-🎉 All 19 endpoints validated successfully!
-```
-
----
-
-## 📈 Specification Stats
-
-- **OpenAPI Version:** 3.1.0 ✅
-- **Total Endpoints:** 22 ✅
-- **Component Schemas:** 7 ✅
-- **Defined Tags:** 9 ✅
-- **Security Schemes:** 1 ✅
-- **Examples:** 249+ (all OpenAPI 3.1 format) ✅
-- **Legacy Examples:** 0 ✅
-
----
-
-## 🤖 LLM-Friendly Documentation
-
-This repository is optimized for consumption by AI coding assistants and LLMs:
-
-- **[llms.txt](llms.txt)** - Lightweight overview following the [llms.txt standard](https://llmstxt.org/) with structured links to all endpoints
-- **[llms-full.txt](llms-full.txt)** - Complete API documentation in a single file, optimized for LLM context windows
-- **[Context7](https://context7.com/leadmagic/leadmagic-openapi)** - Indexed and searchable via Context7 MCP server
-
-### Using with AI Tools
+Or run the script without exporting the key first:
 
 ```bash
-# Context7 MCP - query from any AI coding assistant
-# Library ID: /leadmagic/leadmagic-openapi
-
-# Or feed llms-full.txt directly into an LLM
-cat llms-full.txt | pbcopy  # Copy to clipboard for pasting into AI
+npm install
+npm run test:api
 ```
 
----
+The script will prompt for the key in an interactive terminal with hidden input, will not print the key back to the console, and uses the current documented `/v1/...` endpoints to print per-endpoint status, key fields, compact response previews, and a final pass/fail summary.
 
-## 🤝 Support & Resources
+The default smoke-test fixtures now use live, overridable values instead of placeholder domains, because some endpoints reject placeholders such as `example.com` with validation errors. You can override them with `LEADMAGIC_TEST_COMPANY_NAME`, `LEADMAGIC_TEST_COMPANY_DOMAIN`, `LEADMAGIC_TEST_WORK_EMAIL`, `LEADMAGIC_TEST_PROFILE_URL`, and `LEADMAGIC_TEST_AD_URL`.
 
-- **API Documentation:** [https://docs.leadmagic.io](https://docs.leadmagic.io)
-- **Official Website:** [https://leadmagic.io](https://leadmagic.io)
-- **Dashboard:** [https://app.leadmagic.io](https://app.leadmagic.io)
-- **Support:** [support@leadmagic.io](mailto:support@leadmagic.io)
+Useful flags:
 
----
+```bash
+# Only run one endpoint group
+npm run test:api -- --group people
 
-## 📄 License
+# Write a JSON report without storing the API key
+npm run test:api -- --report reports/smoke-test.json
 
-This OpenAPI specification is provided under the MIT License.
+# Combine both
+npm run test:api -- --group companies --report reports/companies.json
+```
 
----
+The report file includes status, summary fields, credits consumed, preview data, and pass/fail results. It does not include the API key or request headers.
 
-**🎉 Built with comprehensive testing and rigorous validation to ensure 100% API accuracy** 
+## Notes On Field Shapes
+
+The current docs are no longer uniformly snake_case across every endpoint. Some responses remain snake_case while others use mixed or camelCase field names in examples. Do not assume a single naming convention across the entire API surface without checking the endpoint-specific docs.
+
+## OpenAPI 3.1 Notes
+
+This snapshot now follows the key OpenAPI 3.1 and JSON Schema 2020-12 patterns recommended by Zuplo/OpenAPI migration guidance:
+
+- declares `jsonSchemaDialect`
+- uses JSON Schema union types like `["string", "null"]` instead of `nullable: true`
+- uses `examples` arrays instead of legacy `example`
+- keeps YAML and JSON snapshots synchronized
+
+Lint the spec with:
+
+```bash
+npm install
+npm run lint:openapi
+```
+
+## Cursor And MCP Alignment
+
+If you update route names, auth expectations, pricing notes, or endpoint coverage here, keep those changes consistent with:
+
+- the hosted MCP setup docs
+- the MCP tool reference
+- and the public Cursor plugin package
+
+## Support
+- API docs: [https://leadmagic.io/docs](https://leadmagic.io/docs)
+- Official site: [https://leadmagic.io](https://leadmagic.io)
+- Support: [support@leadmagic.io](mailto:support@leadmagic.io)
+
+## License
+MIT

@@ -16,7 +16,7 @@
 
 ## ✅ Checklist
 - [ ] No hardcoded API keys
-- [ ] Used snake_case for field names
+- [ ] Field names and response examples match the current public docs for the affected endpoint(s)
 - [ ] Updated both YAML and JSON files (if needed)
 - [ ] Followed [Contributing Guidelines](CONTRIBUTING.md)
 
