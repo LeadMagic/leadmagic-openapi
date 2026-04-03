@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- README: companion-surfaces table linking [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin), hosted MCP URL, and docs; hosted MCP section now lists **10 tools** with REST hints and explicit note that jobs/ads remain API-only
 - Synced top-level repository docs to the current `leadmagic.io/docs` route layout under `/v1/...`
 - Reworked the smoke-test utility as `test-api.ts` with typed test cases, secure interactive API-key entry, compact output previews, and pass/fail reporting against current documented endpoints
 - Updated LLM-oriented docs to stop claiming full parity with the public docs when docs-only endpoints now exist outside this local snapshot
