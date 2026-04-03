@@ -1,6 +1,8 @@
 # LeadMagic OpenAPI Snapshot
 
-This repository contains a maintained OpenAPI snapshot, LLM-friendly docs, and a live API smoke-test script for LeadMagic. It should stay aligned with the current LeadMagic MCP positioning, but it is an API snapshot repo rather than a full mirror of the MCP surface.
+This repository contains a maintained OpenAPI snapshot, LLM-friendly docs, and a live API smoke-test script for LeadMagic. It should stay aligned with the current LeadMagic MCP positioning, but it is an **API / REST** snapshot repo—not a mirror of the full Cursor plugin bundle.
+
+**Pairing:** For **Cursor** and hosted **MCP** (OAuth by default, agent tools), use the official plugin repo: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin).
 
 The authoritative product documentation is the public docs site:
 
@@ -13,28 +15,40 @@ The public API docs now use versioned routes under `/v1/...` and expose more end
 
 If you need the full current product surface, treat `https://leadmagic.io/docs` as the source of truth.
 
-## Companion Surfaces
+## Companion surfaces
 
-LeadMagic's developer surface now spans a few aligned entry points:
+LeadMagic's developer surface spans a few aligned entry points:
 
-- `leadmagic-openapi`: this repository, for schema snapshots and API-oriented docs
-- LeadMagic MCP docs: https://leadmagic.io/docs/mcp/setup
-- Hosted MCP endpoint: `https://mcp.leadmagic.io/mcp`
-- Cursor plugin repo: `leadmagic-cursor-plugin`, which packages the hosted MCP flow for Cursor
+| Surface | Repository / URL | Use when |
+| --- | --- | --- |
+| **REST OpenAPI snapshot** | **This repo** — [github.com/LeadMagic/leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Integrating `https://api.leadmagic.io`, codegen, LLM context from `llms.txt`, or running `test-api` smoke tests |
+| **Cursor plugin + MCP config** | [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Installing LeadMagic in Cursor (marketplace or team marketplace), OAuth-default `mcp.json`, skills, and rules |
+| **MCP endpoint** | `https://mcp.leadmagic.io/mcp` | Any MCP client (Cursor, AI SDK, etc.) after auth |
+| **Product docs** | [leadmagic.io/docs](https://leadmagic.io/docs), [MCP setup](https://leadmagic.io/docs/mcp/setup) | Authoritative behavior, pricing, and tool reference |
 
-This repo should stay aligned with the live MCP/API behavior, but it should not claim to be the only or most current product surface when the docs site has moved ahead.
+This repo should stay aligned with live API behavior, but [leadmagic.io/docs](https://leadmagic.io/docs) remains the source of truth when the product moves ahead of the snapshot.
 
-## Current MCP Surface
+## Hosted MCP tool surface (Cursor)
 
-The current LeadMagic MCP docs describe:
+The public **hosted MCP** exposes **10 tools** (a subset of the REST API), plus:
 
-- 16 tools
 - 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts
+- 2 built-in prompts (for example `account_research`, `contact_lookup`)
 
-The MCP surface currently covers credits, people enrichment, company research, technographics, competitors, job-change detection, and jobs search.
+| MCP tool | Typical REST backing (see docs / OpenAPI) |
+| --- | --- |
+| `check_credit_balance` | `GET /v1/credits` |
+| `validate_work_email` | `POST /v1/people/email-validation` |
+| `find_work_email` | `POST /v1/people/email-finder` |
+| `find_mobile_number` | `POST /v1/people/mobile-finder` |
+| `linkedin_profile_to_work_email` | `POST /v1/people/b2b-profile-email` |
+| `detect_job_change` | Job-change detector endpoint (see product docs) |
+| `research_account` | Company search + funding (e.g. `/v1/companies/...`) |
+| `list_company_competitors` | Competitors endpoint |
+| `get_company_technographics` | Technographics endpoint |
+| `find_people_by_role` | `POST /v1/people/role-finder` |
 
-Important distinction: the broader REST API and this OpenAPI snapshot include ad-search endpoints, but the current MCP tool surface does not expose those ad tools. Keep repo copy explicit about that difference.
+**Important:** This OpenAPI snapshot includes **jobs** and **ads** routes and other endpoints that are **not** exposed as MCP tools today. When updating copy here, keep that gap explicit and cross-check [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) and [MCP tools docs](https://leadmagic.io/docs/mcp/tools).
 
 ## Files
 - `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot
@@ -196,13 +210,13 @@ npm install
 npm run lint:openapi
 ```
 
-## Cursor And MCP Alignment
+## Cursor and MCP alignment
 
 If you update route names, auth expectations, pricing notes, or endpoint coverage here, keep those changes consistent with:
 
-- the hosted MCP setup docs
-- the MCP tool reference
-- and the public Cursor plugin package
+- [LeadMagic MCP setup](https://leadmagic.io/docs/mcp/setup) and [MCP tools](https://leadmagic.io/docs/mcp/tools) on the docs site
+- [LeadMagic Cursor plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) (`mcp.json`, OAuth-default auth, README, and changelog)
+- Hosted MCP: `https://mcp.leadmagic.io/mcp` and discovery at `https://mcp.leadmagic.io/clients`
 
 ## Support
 - API docs: [https://leadmagic.io/docs](https://leadmagic.io/docs)
