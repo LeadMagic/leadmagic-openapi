@@ -2,7 +2,7 @@
 
 This repository contains a maintained OpenAPI snapshot, LLM-friendly docs, and a live API smoke-test script for LeadMagic. It should stay aligned with the current LeadMagic MCP positioning, but it is an **API / REST** snapshot repo—not a mirror of the full Cursor plugin bundle.
 
-**Pairing:** For **Cursor** and hosted **MCP** (OAuth by default, agent tools), use the official plugin repo: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin).
+**Pairing:** For **Cursor** and hosted **MCP** (OAuth by default), use the official plugin repo: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin). That package follows the usual Cursor plugin layout (rules, skills, **agent**, **commands**, and MCP)—similar in shape to community examples such as [encoredev/cursor-plugin](https://github.com/encoredev/cursor-plugin), but with **remote HTTP MCP** to LeadMagic’s cloud instead of a local stdio server.
 
 The authoritative product documentation is the public docs site:
 
@@ -22,7 +22,7 @@ LeadMagic's developer surface spans a few aligned entry points:
 | Surface | Repository / URL | Use when |
 | --- | --- | --- |
 | **REST OpenAPI snapshot** | **This repo** — [github.com/LeadMagic/leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Integrating `https://api.leadmagic.io`, codegen, LLM context from `llms.txt`, or running `test-api` smoke tests |
-| **Cursor plugin + MCP config** | [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Installing LeadMagic in Cursor (marketplace or team marketplace), OAuth-default `mcp.json`, skills, and rules |
+| **Cursor plugin + MCP config** | [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Installing LeadMagic in Cursor (marketplace or team marketplace), OAuth-default `mcp.json`, skills, rules, enrichment **agent**, and **commands** |
 | **MCP endpoint** | `https://mcp.leadmagic.io/mcp` | Any MCP client (Cursor, AI SDK, etc.) after auth |
 | **Product docs** | [leadmagic.io/docs](https://leadmagic.io/docs), [MCP setup](https://leadmagic.io/docs/mcp/setup) | Authoritative behavior, pricing, and tool reference |
 
