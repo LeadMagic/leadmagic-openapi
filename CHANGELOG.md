@@ -45,9 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 - **Authentication**: API key-based authentication via `X-API-Key` header
-- **Rate Limiting**: 300 requests/minute for profile search
-- **Field Naming**: Consistent snake_case throughout
-- **HTTP Methods**: POST for all data endpoints, GET for metadata
+- **HTTP Methods**: POST for data endpoints, GET for metadata
 - **Error Handling**: Standardized error response format
 - **Security**: Environment variable configuration, no hardcoded credentials
 
@@ -73,33 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions for automated validation
 - Professional repository metadata with topics and description
 
-## Credit Costs
-
-| Endpoint | Credits | Notes |
-|----------|---------|--------|
-| `/credits` | 0 | Free to check |
-| `/email-validate` | 0.05 | 20 validations per credit |
-| `/email-finder` | 1 | Per email found |
-| `/mobile-finder` | 5 | Per mobile found |
-| `/profile-search` | 1 | Public profiles only |
-| `/b2b-profile` | 10 | Reverse lookup premium |
-| `/personal-email-finder` | 1 | Per email found |
-| `/b2b-social-email` | 1 | Per email found |
-| `/role-finder` | 0-1 | Only if found |
-| `/employee-finder` | 1 | Per request |
-| `/company-search` | 1 | Per search |
-| `/company-funding` | 4 | Premium intelligence |
-| `/jobs-finder` | 1 per job | Per job returned |
-| `/google/searchads` | 1 per ad | Per ad found |
-| `/meta/searchads` | 1 per ad | Per ad found |
-| `/b2b/searchads` | 1 per ad | Per ad found |
-| `/b2b/ad-details` | 2 | Per ad detail |
-| `/job-country` | 0 | Metadata endpoint |
-| `/job-types` | 0 | Metadata endpoint |
-
 ---
 
-### Notes
-- All costs verified against official LeadMagic documentation
-- Specification tested against live API with provided API key
-- Platform-agnostic documentation maintains functionality while removing vendor lock-in
+For the current credit cost table and route mapping, see the [README](README.md).
+The `1.0.0` snapshot above documented the legacy unversioned routes; see the
+`[Unreleased]` section for the current `/v1/...` layout.
