@@ -25,7 +25,7 @@ jobs:
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '22'
 
     - name: 📦 Install repo dependencies
       run: npm install
@@ -79,7 +79,7 @@ jobs:
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '22'
 
     - name: 📦 Install Spectral
       run: npm install
@@ -98,16 +98,18 @@ jobs:
     - name: 🔧 Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '22'
 
     - name: ✅ Check for OpenAPI 3.1 examples format
       run: |
-        # Check that we're using 'examples' (OpenAPI 3.1) not 'example' (OpenAPI 3.0)
-        if grep -r '"example":\|example:' leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
+        # Detect the deprecated singular 'example:' / '"example":' fields from OpenAPI 3.0
+        # without matching the valid 3.1 'examples:' / '"examples":' form.
+        if grep -nE '(^|[^s])"example"[[:space:]]*:|(^|[^s])example[[:space:]]*:' \
+            leadmagic-openapi-3.1.yaml leadmagic-openapi-3.1.json; then
           echo "❌ Found deprecated 'example' fields. Use 'examples' for OpenAPI 3.1"
           exit 1
         else
-          echo "✅ All examples use OpenAPI 3.1 format"
+          echo "✅ All examples use OpenAPI 3.1 'examples' format"
         fi
 
     - name: 📊 Count examples

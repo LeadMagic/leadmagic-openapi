@@ -24,4 +24,4 @@
 <!-- For API changes, paste actual response examples -->
 
 ---
-**Fixes #** <!-- Link to issue if applicable --> 
+**Fixes #** <!-- Link to issue if applicable -->
