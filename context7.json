@@ -1,4 +1,29 @@
 {
+  "$schema": "https://context7.com/schema/context7.json",
   "url": "https://context7.com/leadmagic/leadmagic-openapi",
-  "public_key": "pk_38xEiBSnX3Ci24Jl0gn3Q"
+  "public_key": "pk_38xEiBSnX3Ci24Jl0gn3Q",
+  "projectTitle": "LeadMagic API",
+  "description": "Official OpenAPI 3.1 snapshot, hosted MCP sign-in guide, and smoke tests for the LeadMagic B2B data API (contact and company enrichment, email finding and validation, profile and job enrichment, intent signals).",
+  "branch": "main",
+  "folders": [],
+  "excludeFolders": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".github"
+  ],
+  "excludeFiles": [
+    "package-lock.json",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "rules": [
+    "LeadMagic is a B2B data API. Use platform-neutral language like 'B2B profile enrichment' or 'professional profile URLs'; do not claim LeadMagic scrapes or indexes any specific social network.",
+    "The REST base URL is https://api.leadmagic.io. Authenticate with the 'X-API-Key' header. Keys are issued from https://app.leadmagic.io and must never be embedded in client-side code.",
+    "For AI agents and IDEs, prefer the hosted MCP endpoint at https://mcp.leadmagic.io/mcp. It exposes 10 tools and supports OAuth 2.1 (Authorization Code + PKCE, S256) with Dynamic Client Registration, a static public client (client_id 4b9eLjoGVCJ1Dvnc, no secret), 'x-leadmagic-key' API-key auth, or 'Authorization: Bearer <token>'.",
+    "The canonical OpenAPI snapshot lives in leadmagic-openapi-3.1.yaml and leadmagic-openapi-3.1.json at the repo root. Prefer the YAML file when showing snippets; keep the two in sync.",
+    "Use examples from the OpenAPI spec verbatim when possible. Do not invent endpoints, response shapes, or credit costs; link to README.md for the authoritative credit-cost table and route mapping.",
+    "Only trust the official LeadMagic installer allow-list in SECURITY.md. Packages like 'leadmagic', 'leadmagic-mcp-server', or any npm/pip package published by third parties are not produced or endorsed by LeadMagic."
+  ]
 }
