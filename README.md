@@ -50,6 +50,119 @@ The public **hosted MCP** exposes **10 tools** (a subset of the REST API), plus:
 
 **Important:** This OpenAPI snapshot includes **jobs** and **ads** routes and other endpoints that are **not** exposed as MCP tools today. When updating copy here, keep that gap explicit and cross-check [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) and [MCP tools docs](https://leadmagic.io/docs/mcp/tools).
 
+## Hosted MCP sign-in
+
+Connect any MCP-compatible client to LeadMagic at:
+
+```
+https://mcp.leadmagic.io/mcp
+```
+
+The public client discovery manifest (canonical source for per-client install snippets) lives at [`https://mcp.leadmagic.io/clients`](https://mcp.leadmagic.io/clients).
+
+### Authentication modes
+
+OAuth (Authorization Code + PKCE, S256) is the recommended path — your MCP client opens a browser, you sign in through Clerk, and a short-lived bearer token is returned. Static API-key headers are supported as a fallback for environments where OAuth is blocked.
+
+| Mode | How it works | When to use |
+| --- | --- | --- |
+| **OAuth via Dynamic Client Registration (DCR)** | Client auto-registers at `https://mcp.leadmagic.io/oauth/register`, then runs the standard OAuth 2.1 flow. | Default path for Cursor, Claude, VS Code/Copilot, Amazon Q, Gemini CLI, and any client that implements MCP OAuth + DCR. |
+| **OAuth with the static public client** | Skip DCR and reuse the published public client. Client ID: `4b9eLjoGVCJ1Dvnc`, secret: _(blank — PKCE)_. Consent screen shows **LeadMagic MCP & CLI (static)**. | Workspaces that block DCR but still want browser OAuth (e.g. legacy Claude.ai connectors). |
+| **API key header** | Send `x-leadmagic-key: <YOUR_API_KEY>` on every MCP request. | CI, server-to-server agents, AI SDK tools, and clients that don't support OAuth yet. |
+| **Bearer token** | Send `Authorization: Bearer <YOUR_LEADMAGIC_TOKEN>`. | When you've already minted a `lm-ui` token (e.g. from Claude Code's `/mcp` sign-in) and want to pass it to another runtime. |
+
+OAuth metadata (for clients that need it explicitly):
+
+- Authorization server: `https://mcp.leadmagic.io/.well-known/oauth-authorization-server`
+- Protected resource: `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp`
+- Registration endpoint: `https://mcp.leadmagic.io/oauth/register`
+- Scopes: `openid profile email offline_access`
+- Issuer: `https://clerk.leadmagic.io` (Clerk-hosted OAuth 2.1 + OIDC)
+
+### Cursor
+
+Use the official plugin whenever possible — it ships `mcp.json`, rules, skills, an enrichment agent, and commands together:
+
+- Marketplace / local install: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin)
+
+If you'd rather wire it up by hand, Cursor v0.48+ accepts a URL-only remote MCP entry (Cursor handles OAuth + DCR internally — fully quit and reopen Cursor after saving):
+
+```json
+{
+  "mcpServers": {
+    "leadmagic": {
+      "url": "https://mcp.leadmagic.io/mcp"
+    }
+  }
+}
+```
+
+- Project scope: `.cursor/mcp.json` at the project root
+- User scope: `~/.cursor/mcp.json`
+
+When OAuth is blocked, use the API-key variant and read the key from the environment (never commit the literal key):
+
+```json
+{
+  "mcpServers": {
+    "leadmagic": {
+      "type": "http",
+      "url": "https://mcp.leadmagic.io/mcp",
+      "headers": {
+        "x-leadmagic-key": "${LEADMAGIC_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### Other MCP clients
+
+All of these speak the same streamable-HTTP transport against `https://mcp.leadmagic.io/mcp`. The discovery endpoint at [`/clients`](https://mcp.leadmagic.io/clients) returns the exact, per-client JSON/CLI snippet (with the right config file name and location) and is the source of truth if a client's CLI changes shape.
+
+| Client | Recommended auth | Notes |
+| --- | --- | --- |
+| Claude Desktop / Claude.ai | OAuth | Remote MCP must be added via **Customize → Connectors** on claude.ai — not via `claude_desktop_config.json`. |
+| Claude Code CLI | OAuth | `claude mcp add --transport http leadmagic https://mcp.leadmagic.io/mcp`, then `/mcp` to sign in. |
+| ChatGPT (Developer Mode) / Responses API | OAuth (DCR, PKCE) for ChatGPT; API key for Responses API server SDK | ChatGPT registers callbacks like `https://chatgpt.com/connector/oauth/{callback_id}`. |
+| VS Code / GitHub Copilot | OAuth | Uses the `servers` key (VS Code convention) — not `mcpServers` (Cursor-only). |
+| Windsurf, Zed, Cline, Roo Code, Continue, Amp, Augment, JetBrains | API key header | All accept `x-leadmagic-key`; most also support OAuth DCR. |
+| OpenCode | Bearer token | Uses `Authorization: Bearer` and `"oauth": false` in `opencode.json`. |
+| Gemini CLI | API key header | `gemini mcp add --transport http leadmagic https://mcp.leadmagic.io/mcp -H "x-leadmagic-key: YOUR_API_KEY"`. |
+| Amazon Q Developer, GitHub Copilot Coding Agent | API key header | Copilot Coding Agent snippet goes into the repo's **Settings → Copilot → Coding agent** MCP config. |
+
+### Vercel AI SDK
+
+For programmatic access from AI SDK agents and apps (server-side), use a per-request API key header:
+
+```ts
+import { createMCPClient } from "@ai-sdk/mcp";
+
+const leadmagicMcp = await createMCPClient({
+  transport: {
+    type: "http",
+    url: "https://mcp.leadmagic.io/mcp",
+    headers: {
+      "x-leadmagic-key": process.env.LEADMAGIC_API_KEY!,
+    },
+    redirect: "error",
+  },
+});
+
+try {
+  const tools = await leadmagicMcp.tools();
+  // Pass `tools` into generateText, streamText, or your agent runtime.
+} finally {
+  await leadmagicMcp.close();
+}
+```
+
+### Security reminders
+
+- Never commit real API keys or bearer tokens. Use `LEADMAGIC_API_KEY` (or another secret store) and reference it with `${LEADMAGIC_API_KEY}` in committed config.
+- The static OAuth client ID (`4b9eLjoGVCJ1Dvnc`) is **public by design** (PKCE, no secret). Do not treat it as a credential.
+- Only install LeadMagic-branded MCP servers, skills, or plugins from the official locations listed in [`SECURITY.md`](SECURITY.md). The authoritative install paths are `github.com/LeadMagic/*` and `mcp.leadmagic.io`.
+
 ## Files
 - `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot
 - `leadmagic-openapi-3.1.json`: JSON form of the local snapshot
