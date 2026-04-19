@@ -16,15 +16,68 @@ Important: current public docs are not uniform about field naming. Some endpoint
 
 ## Current MCP Surface
 
-The current LeadMagic MCP docs describe:
+The hosted LeadMagic MCP exposes:
 
-- 16 tools
+- 10 tools (see README for the full mapping to REST endpoints)
 - 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts
+- 2 built-in prompts (for example `account_research`, `contact_lookup`)
 
-That MCP surface currently covers credits, people enrichment, company research, technographics, competitors, job-change detection, and jobs search.
+The MCP surface currently covers credits, people enrichment, company research, technographics, competitors, job-change detection, and role lookup.
 
-Important distinction: ad-search endpoints exist in the broader REST API and this OpenAPI snapshot, but they are not part of the current MCP tool surface.
+Important distinction: ads endpoints and some jobs endpoints exist in the broader REST API and this OpenAPI snapshot, but they are not part of the current MCP tool surface.
+
+## Hosted MCP Sign-In
+
+The hosted MCP is the canonical way for AI clients (Cursor, Claude, ChatGPT, VS Code/Copilot, Windsurf, Zed, and many others) to call LeadMagic tools without per-developer REST wiring.
+
+### Entrypoint
+
+- MCP URL: `https://mcp.leadmagic.io/mcp` (streamable HTTP)
+- Per-client install snippets (canonical source): `https://mcp.leadmagic.io/clients`
+
+### Authentication
+
+| Mode | Detail |
+| --- | --- |
+| OAuth 2.1 + Dynamic Client Registration (recommended) | Client auto-registers at `https://mcp.leadmagic.io/oauth/register` and runs Authorization Code + PKCE. |
+| OAuth with the static public client | `client_id=4b9eLjoGVCJ1Dvnc`, secret blank (PKCE S256). Clerk consent screen reads "LeadMagic MCP & CLI (static)". The client ID is public by design. |
+| API-key header | `x-leadmagic-key: <YOUR_API_KEY>` on every MCP request. |
+| Bearer token | `Authorization: Bearer <YOUR_LEADMAGIC_TOKEN>`. |
+
+### OAuth metadata
+
+- Authorization server: `https://mcp.leadmagic.io/.well-known/oauth-authorization-server`
+- Protected resource: `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp`
+- Registration endpoint: `https://mcp.leadmagic.io/oauth/register`
+- Issuer: `https://clerk.leadmagic.io`
+- JWKS: `https://clerk.leadmagic.io/.well-known/jwks.json`
+- Scopes: `openid profile email offline_access`
+- Grant types: `authorization_code`, `refresh_token`
+- Code challenge methods: `S256`
+- Response types: `code`
+- ID token signing: `RS256`
+
+### Client coverage
+
+All clients below speak the same streamable-HTTP transport. The discovery document at `https://mcp.leadmagic.io/clients` returns up-to-date install snippets per client and is the source of truth if any CLI or config shape changes.
+
+- Cursor (prefer the official plugin: `https://github.com/LeadMagic/leadmagic-cursor-plugin`; manual URL-only `.cursor/mcp.json` also supported on v0.48+)
+- Claude Desktop, Claude Code CLI, claude.ai, Cowork (Anthropic)
+- ChatGPT Developer Mode, OpenAI Responses API
+- VS Code / GitHub Copilot in VS Code
+- Windsurf (Codeium)
+- Zed, Cline, Roo Code, OpenCode, Continue, Amp (Sourcegraph), Augment Code
+- Gemini CLI (Google)
+- JetBrains IDEs (2025.1+)
+- Amazon Q Developer (AWS)
+- GitHub Copilot Coding Agent
+- Vercel AI SDK via `@ai-sdk/mcp` `createMCPClient` or `openai.tools.mcp`
+
+### Security reminders
+
+- Never commit real API keys or bearer tokens. Reference them via `${LEADMAGIC_API_KEY}` or a secret manager.
+- The static OAuth client ID (`4b9eLjoGVCJ1Dvnc`) is intentionally public (PKCE, no secret). It is not a credential.
+- Only install LeadMagic-branded MCP servers, skills, or plugins from the official locations listed in `SECURITY.md`. See the impersonation guidance there before running any "LeadMagic" install snippet you find elsewhere.
 
 ## Error Shape
 

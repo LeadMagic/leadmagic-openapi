@@ -9,6 +9,65 @@ We actively maintain and provide security updates for the following versions:
 | 1.0.x   | :white_check_mark: |
 | < 1.0   | :x:                |
 
+## 🧩 Third-party skills, plugins, agents, and MCP servers
+
+LeadMagic is commonly targeted by **impersonation / brand-squatting** attempts that try to get users to install unofficial "LeadMagic" skills, Claude Code / Cursor plugins, agent bundles, MCP servers, or CLIs. These often look like helpful contributions ("here's an `npx` command to add a LeadMagic skill") and arrive via GitHub issues, social media, blog posts, or AI-chat suggestions.
+
+**Treat every third-party install command as full arbitrary code execution on your machine.** Skills / plugins / agents typically run inside your editor's trust boundary and can read `.env` files, exfiltrate credentials, run shell commands, and modify code.
+
+### Official LeadMagic installer allow-list
+
+These are the **only** GitHub owners, domains, and install paths we publish. Anything else claiming to be LeadMagic is unofficial.
+
+| Kind | Official location | Notes |
+| --- | --- | --- |
+| GitHub org | `https://github.com/LeadMagic` | Exact capitalization. **Not** `lead-magic`, `leadmagic-io`, `leadmagic-team`, `leadmagic-labs`, `sales-skills`, or any other variant. |
+| REST / OpenAPI repo | `https://github.com/LeadMagic/leadmagic-openapi` | This repo. |
+| Cursor plugin + MCP config | `https://github.com/LeadMagic/leadmagic-cursor-plugin` | |
+| Official skills repo | `https://github.com/LeadMagic/leadmagic-skills` | Only LeadMagic-branded skill is `skills/leadmagic-api/`. |
+| Hosted MCP endpoint | `https://mcp.leadmagic.io/mcp` | OAuth-default. |
+| MCP client discovery | `https://mcp.leadmagic.io/clients` | Canonical per-client install snippets. |
+| OAuth authorization server metadata | `https://mcp.leadmagic.io/.well-known/oauth-authorization-server` | Issuer is `https://clerk.leadmagic.io`. |
+| OAuth protected resource metadata | `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp` | |
+| OAuth DCR endpoint | `https://mcp.leadmagic.io/oauth/register` | |
+| Static public OAuth client ID | `4b9eLjoGVCJ1Dvnc` | Public by design (PKCE, no secret). Consent screen shows **LeadMagic MCP & CLI (static)**. Not a credential. |
+| REST API base URL | `https://api.leadmagic.io` | No other production base URL. |
+| Product docs | `https://leadmagic.io/docs` | Source of truth. |
+| Dashboard | `https://app.leadmagic.io` | |
+| Support email | `support@leadmagic.io` | |
+| Security email | `security@leadmagic.io` | |
+
+If an install snippet references **any** other owner, npm scope, domain, or MCP host and claims to be a LeadMagic integration, it is not from us.
+
+### Known impersonation attempts
+
+- `sales-skills/sales` / `sales-leadmagic` (GitHub org `sales-skills`, user `@ggarcia196x`) — see [issue #5](https://github.com/LeadMagic/leadmagic-openapi/issues/5). Reported to GitHub Trust & Safety.
+
+### How to verify before installing anything "LeadMagic"
+
+1. Confirm the GitHub owner is literally `LeadMagic`.
+2. Confirm the repo is linked from `https://leadmagic.io/docs` **or** from this repo's README / the `leadmagic-cursor-plugin` README.
+3. When in doubt, email `security@leadmagic.io`.
+
+### Report a suspected impersonation
+
+Please email `security@leadmagic.io` with:
+
+- Link(s) to the impersonating repo / package / site.
+- The install command or distribution path.
+- Where you encountered it (issue, tweet, blog, AI chat suggestion, etc.).
+- Any evidence of intent to deceive (use of our brand, logos, product language).
+
+You can also open a **Third-party plugin / skill impersonation report** issue from the issue templates in this repo.
+
+### If you already installed something unofficial
+
+1. Stop the editor / agent session that loaded it.
+2. Remove the bundle (`~/.agents/skills/`, `~/.cursor/`, project-local `.cursor/`, `.claude/`, etc.).
+3. Rotate credentials: `LEADMAGIC_API_KEY`, cloud provider keys, GitHub tokens, npm tokens, SSH keys without passphrases.
+4. Inspect shell rc files, `~/.npmrc`, cron/launchd, and any open repos for unexpected diffs.
+5. Email `security@leadmagic.io` with what ran and when.
+
 ## 🛡️ Reporting a Vulnerability
 
 ### API Security Issues
@@ -139,4 +198,4 @@ For security-related questions or concerns:
 
 ---
 
-**Remember**: When in doubt, err on the side of caution and report potential security issues privately rather than publicly. 
+**Remember**: When in doubt, err on the side of caution and report potential security issues privately rather than publicly.
