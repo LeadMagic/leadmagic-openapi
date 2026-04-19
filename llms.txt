@@ -41,15 +41,31 @@ Important: do not assume all responses use the same field naming style. Current 
 
 ## Current MCP Surface
 
-The current LeadMagic MCP docs describe:
+The hosted LeadMagic MCP exposes:
 
-- 16 tools
+- 10 tools (see README for the full mapping to REST endpoints)
 - 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts
+- 2 built-in prompts (for example `account_research`, `contact_lookup`)
 
-That MCP surface includes credits, people enrichment, company research, technographics, competitors, job-change detection, and jobs search.
+The MCP surface covers credits, people enrichment, company research, technographics, competitors, job-change detection, and role lookup.
 
-Important distinction: ad-search endpoints exist in the broader REST API and this snapshot, but they are not part of the current MCP tool surface.
+Important distinction: ads endpoints and some jobs endpoints exist in the broader REST API and this snapshot, but they are not part of the current MCP tool surface.
+
+## Hosted MCP Sign-In
+
+- Entrypoint: `https://mcp.leadmagic.io/mcp` (streamable HTTP)
+- Per-client install snippets (canonical): `https://mcp.leadmagic.io/clients`
+- OAuth authorization server metadata: `https://mcp.leadmagic.io/.well-known/oauth-authorization-server`
+- OAuth protected resource metadata: `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp`
+- Registration endpoint (DCR): `https://mcp.leadmagic.io/oauth/register`
+- OAuth scopes: `openid profile email offline_access`
+- Static public OAuth client (no DCR): client ID `4b9eLjoGVCJ1Dvnc`, secret blank (PKCE, S256). This ID is public by design.
+- API-key fallback header: `x-leadmagic-key: <YOUR_API_KEY>`
+- Bearer fallback header: `Authorization: Bearer <YOUR_LEADMAGIC_TOKEN>`
+
+Supported clients (all streamable-HTTP against the same URL): Cursor, Claude Desktop / Code / claude.ai, ChatGPT Developer Mode + Responses API, VS Code / GitHub Copilot, Windsurf, Zed, Cline, Roo Code, OpenCode, Gemini CLI, JetBrains IDEs, Amazon Q Developer, GitHub Copilot Coding Agent, Continue, Amp, Augment Code, Vercel AI SDK.
+
+For Cursor specifically, prefer the official plugin at `https://github.com/LeadMagic/leadmagic-cursor-plugin` (ships `mcp.json`, rules, skills, agent, and commands). Manual alternative is a URL-only `.cursor/mcp.json` entry — Cursor v0.48+ handles OAuth + DCR internally.
 
 ## Docs-Only Endpoints Not Yet Modeled Here
 
