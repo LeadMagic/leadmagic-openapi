@@ -14,6 +14,6 @@
 		"@stoplight/spectral-cli": "6.15.0",
 		"@types/node": "25.3.3",
 		"tsx": "4.21.0",
-		"typescript": "5.9.3"
+		"typescript": "6.0.3"
 	}
 }
