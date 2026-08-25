@@ -151,7 +151,7 @@ try {
 - Only install LeadMagic-branded MCP servers, skills, or plugins from the official locations listed in [`SECURITY.md`](SECURITY.md). The authoritative install paths are `github.com/LeadMagic/*` and `mcp.leadmagic.io`.
 
 ## Files
-- `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot
+- `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot (normalized to strict 3.1 `examples` style via `scripts/normalize-31-examples.mjs`)
 - `leadmagic-openapi-3.1.json`: JSON form of the local snapshot
 - `.spectral.yml`: OpenAPI lint configuration
 - `llms.txt`: Short, current LLM-oriented overview
