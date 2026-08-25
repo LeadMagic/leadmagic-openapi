@@ -165,7 +165,7 @@ npm run test:api
 ## 📞 Getting Help
 
 - **Documentation Issues**: Create an issue with the "documentation" label
-- **API Questions**: Check [LeadMagic's official documentation](https://leadmagic.io/docs)
+- **API Questions**: Check [LeadMagic's official documentation](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
 - **Specification Questions**: Create an issue with the "question" label
 - **Technical Support**: Contact [support@leadmagic.io](mailto:support@leadmagic.io)
 

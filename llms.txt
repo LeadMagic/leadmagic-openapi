@@ -20,60 +20,60 @@ First page: filters + `limit` (≤50). Response returns `next_cursor` + `has_mor
 ## Search (V3)
 
 ### People — 400M+ profiles
-- [People Search](https://leadmagic.io/docs/api-reference/people-search): `POST /v3/people/search` — canonical; aliases `/v3/person/search`, `/v3/people/{company-search,full-search,mixed-search,icp-search,employees,by-title,contacts-by-title,lookalike}`
+- [People Search](https://leadmagic.io/docs/api-reference/people-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/people/search` — canonical; aliases `/v3/person/search`, `/v3/people/{company-search,full-search,mixed-search,icp-search,employees,by-title,contacts-by-title,lookalike}`
 
 ### Companies — 25M+
-- [Company Search](https://leadmagic.io/docs/api-reference/company-search-v3): `POST /v3/companies/search` — aliases `/company-search`, `/lookup`, `/enrich`, `/domain-lookup`, `/funding`
-- [Company Lookalike](https://leadmagic.io/docs/api-reference/company-lookalike): `POST /v3/companies/lookalike` — aliases `/competitors`, `/competitors-search` (metered, 5 credits)
+- [Company Search](https://leadmagic.io/docs/api-reference/company-search-v3?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/companies/search` — aliases `/company-search`, `/lookup`, `/enrich`, `/domain-lookup`, `/funding`
+- [Company Lookalike](https://leadmagic.io/docs/api-reference/company-lookalike?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/companies/lookalike` — aliases `/competitors`, `/competitors-search` (metered, 5 credits)
 
 ### Jobs — 46M+ postings
-- [Job Search](https://leadmagic.io/docs/api-reference/job-search): `POST /v3/jobs/search` — modes: vector (default, `titles.vector`), facets (`includeFacets`), deep (`mode: "deep"`)
-- [Job Search Export](https://leadmagic.io/docs/api-reference/job-search-export): `POST /v3/jobs/search/export` — ≤5,000 rows, metered on all plans
-- [Resolve Filters](https://leadmagic.io/docs/api-reference/job-search-helpers): `POST /v3/jobs/search/resolve` — free
+- [Job Search](https://leadmagic.io/docs/api-reference/job-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/jobs/search` — modes: vector (default, `titles.vector`), facets (`includeFacets`), deep (`mode: "deep"`)
+- [Job Search Export](https://leadmagic.io/docs/api-reference/job-search-export?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/jobs/search/export` — ≤5,000 rows, metered on all plans
+- [Resolve Filters](https://leadmagic.io/docs/api-reference/job-search-helpers?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/jobs/search/resolve` — free
 - Free GET helpers: `/v3/jobs/search/{companies,titles,roles,tags,locations,occupation-taxonomy,catalogs,stats}`
-- [Search Stats](https://leadmagic.io/docs/api-reference/search-stats): `POST /v3/search/stats`
+- [Search Stats](https://leadmagic.io/docs/api-reference/search-stats?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v3/search/stats`
 
 ## Enrichment (V1)
 
 ### Credits
-- [Check Credits](https://leadmagic.io/docs/api-reference/check-credits): `GET /v1/credits` — free
+- [Check Credits](https://leadmagic.io/docs/api-reference/check-credits?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `GET /v1/credits` — free
 
 ### People
-- [Email Validation](https://leadmagic.io/docs/api-reference/email-validation): `POST /v1/people/email-validation` (0.25 credits)
-- [Email Finder](https://leadmagic.io/docs/api-reference/email-finder): `POST /v1/people/email-finder` (1)
-- [Personal Email Finder](https://leadmagic.io/docs/api-reference/personal-email-finder): `POST /v1/people/personal-email-finder` (2)
-- [B2B Profile to Email](https://leadmagic.io/docs/api-reference/profile-to-email): `POST /v1/people/b2b-profile-email` (5)
-- [Email to B2B Profile](https://leadmagic.io/docs/api-reference/email-to-profile): `POST /v1/people/b2b-profile` (10)
-- [Mobile Finder](https://leadmagic.io/docs/api-reference/mobile-finder): `POST /v1/people/mobile-finder` (5)
-- [Profile Search](https://leadmagic.io/docs/api-reference/profile-search): `POST /v1/people/profile-search` (1)
-- [Role Finder](https://leadmagic.io/docs/api-reference/role-finder): `POST /v1/people/role-finder` (2)
-- [Employee Finder](https://leadmagic.io/docs/api-reference/employee-finder): `POST /v1/people/employee-finder`
-- [Job Change Detector](https://leadmagic.io/docs/api-reference/job-change-detector): `POST /v1/people/job-change-detector`
+- [Email Validation](https://leadmagic.io/docs/api-reference/email-validation?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/email-validation` (0.25 credits)
+- [Email Finder](https://leadmagic.io/docs/api-reference/email-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/email-finder` (1)
+- [Personal Email Finder](https://leadmagic.io/docs/api-reference/personal-email-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/personal-email-finder` (2)
+- [B2B Profile to Email](https://leadmagic.io/docs/api-reference/profile-to-email?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/b2b-profile-email` (5)
+- [Email to B2B Profile](https://leadmagic.io/docs/api-reference/email-to-profile?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/b2b-profile` (10)
+- [Mobile Finder](https://leadmagic.io/docs/api-reference/mobile-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/mobile-finder` (5)
+- [Profile Search](https://leadmagic.io/docs/api-reference/profile-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/profile-search` (1)
+- [Role Finder](https://leadmagic.io/docs/api-reference/role-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/role-finder` (2)
+- [Employee Finder](https://leadmagic.io/docs/api-reference/employee-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/employee-finder`
+- [Job Change Detector](https://leadmagic.io/docs/api-reference/job-change-detector?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/people/job-change-detector`
 
 ### Companies
-- [Company Search](https://leadmagic.io/docs/api-reference/company-search): `POST /v1/companies/company-search` (1)
-- [Company Funding](https://leadmagic.io/docs/api-reference/company-funding): `POST /v1/companies/company-funding` (4)
-- [Technographics](https://leadmagic.io/docs/api-reference/technographics): `POST /v1/companies/technographics`
-- [Competitors Search](https://leadmagic.io/docs/api-reference/competitors-search): `POST /v1/companies/competitors-search`
+- [Company Search](https://leadmagic.io/docs/api-reference/company-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/companies/company-search` (1)
+- [Company Funding](https://leadmagic.io/docs/api-reference/company-funding?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/companies/company-funding` (4)
+- [Technographics](https://leadmagic.io/docs/api-reference/technographics?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/companies/technographics`
+- [Competitors Search](https://leadmagic.io/docs/api-reference/competitors-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/companies/competitors-search`
 
 ### Jobs (V1)
-- [Jobs Finder](https://leadmagic.io/docs/api-reference/jobs-finder): `POST /v1/jobs/jobs-finder`
+- [Jobs Finder](https://leadmagic.io/docs/api-reference/jobs-finder?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/jobs/jobs-finder`
 - Catalogs: `GET /v1/jobs/{countries,regions,industries,job-types,company-types}`
 
 ### Ads
-- [Google Ads Search](https://leadmagic.io/docs/api-reference/google-ads-search): `POST /v1/ads/google-ads-search`
-- [Meta Ads Search](https://leadmagic.io/docs/api-reference/meta-ads-search): `POST /v1/ads/meta-ads-search`
-- [B2B Ads Search](https://leadmagic.io/docs/api-reference/b2b-ads-search): `POST /v1/ads/b2b-ads-search`
-- [B2B Ad Details](https://leadmagic.io/docs/api-reference/b2b-ad-details): `POST /v1/ads/b2b-ads-details`
+- [Google Ads Search](https://leadmagic.io/docs/api-reference/google-ads-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/ads/google-ads-search`
+- [Meta Ads Search](https://leadmagic.io/docs/api-reference/meta-ads-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/ads/meta-ads-search`
+- [B2B Ads Search](https://leadmagic.io/docs/api-reference/b2b-ads-search?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/ads/b2b-ads-search`
+- [B2B Ad Details](https://leadmagic.io/docs/api-reference/b2b-ad-details?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /v1/ads/b2b-ads-details`
 
 ## Bulk & Batch
 
-- [Bulk Submit](https://leadmagic.io/docs/api-reference/bulk-jobs-submit): `POST /bulk/submit` — plus job lifecycle under `GET /bulk/jobs/*` (status, results, errors, events, stream, progress) and `POST /bulk/validate`
+- [Bulk Submit](https://leadmagic.io/docs/api-reference/bulk-jobs-submit?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `POST /bulk/submit` — plus job lifecycle under `GET /bulk/jobs/*` (status, results, errors, events, stream, progress) and `POST /bulk/validate`
 - Batch campaigns: `POST /v1/batch` — budgets, clients, suppression lists, webhooks, metrics under `/v1/batch/*`
 
 ## Analytics
 
-- [Dashboard](https://leadmagic.io/docs/api-reference/analytics): `GET /v1/analytics/dashboard` — free usage/spend reporting
+- [Dashboard](https://leadmagic.io/docs/api-reference/analytics?utm_source=github&utm_medium=llms&utm_campaign=leadmagic-openapi): `GET /v1/analytics/dashboard` — free usage/spend reporting
 
 ## Hosted MCP
 
