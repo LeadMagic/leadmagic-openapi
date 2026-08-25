@@ -16,15 +16,9 @@ Important: current public docs are not uniform about field naming. Some endpoint
 
 ## Current MCP Surface
 
-The hosted LeadMagic MCP exposes:
+The hosted LeadMagic MCP exposes 35+ tools covering the whole product: people/company/jobs search, decision-makers, email find/validate, mobile, account intelligence, technographics, competitors, job-change detection, ads research, bulk jobs, and credits — plus the `leadmagic://docs` resource and built-in prompts (`account_research`, `contact_lookup`). Tool reference: https://leadmagic.io/docs/mcp/tools
 
-- 10 tools (see README for the full mapping to REST endpoints)
-- 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts (for example `account_research`, `contact_lookup`)
-
-The MCP surface currently covers credits, people enrichment, company research, technographics, competitors, job-change detection, and role lookup.
-
-Important distinction: ads endpoints and some jobs endpoints exist in the broader REST API and this OpenAPI snapshot, but they are not part of the current MCP tool surface.
+Unlimited search on Professional & Ultimate plans: POST /v3/people/search, /v3/companies/search, and /v3/jobs/search are credit-free with no volume cap (5 req/s Professional, 10 req/s Ultimate). Agent guide: https://leadmagic.io/docs/mcp/agent-guide
 
 ## Hosted MCP Sign-In
 

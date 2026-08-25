@@ -1,6 +1,6 @@
 # LeadMagic OpenAPI Snapshot
 
-This repository contains a maintained OpenAPI snapshot, LLM-friendly docs, and a live API smoke-test script for LeadMagic. It should stay aligned with the current LeadMagic MCP positioning, but it is an **API / REST** snapshot repo—not a mirror of the full Cursor plugin bundle.
+OpenAPI 3.1 specification, LLM-friendly reference (`llms.txt`), and live smoke tests for the **LeadMagic B2B data enrichment API** — people search (400M+ profiles), company search (25M+), job-postings search (46M+), email finding & validation, mobile numbers, ads intelligence, and bulk CSV enrichment. Use it for codegen, Postman/Insomnia imports, agent/LLM context, and API integration testing.
 
 **Pairing:** For **Cursor** and hosted **MCP** (OAuth by default), use the official plugin repo: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin). That package follows the usual Cursor plugin layout (rules, skills, **agent**, **commands**, and MCP)—similar in shape to community examples such as [encoredev/cursor-plugin](https://github.com/encoredev/cursor-plugin), but with **remote HTTP MCP** to LeadMagic’s cloud instead of a local stdio server.
 
@@ -11,9 +11,12 @@ The authoritative product documentation is the public docs site:
 - Dashboard: [https://app.leadmagic.io](https://app.leadmagic.io)
 
 ## Status
-The public API docs now use versioned routes under `/v1/...` and expose more endpoints than this repo currently models. This repo currently focuses on the 19 core endpoints already represented in the local OpenAPI files, plus current route mappings and a cleaner validation script.
 
-If you need the full current product surface, treat `https://leadmagic.io/docs` as the source of truth.
+The snapshot models the **full current public surface — 81 paths** — synced from the live docs contract at [leadmagic.io/docs](https://leadmagic.io/docs): versioned `/v1/*` enrichment routes, the `/v3/*` search family (people, companies, jobs — with route aliases), `/bulk/*` and `/v1/batch/*` job pipelines, analytics, and ads.
+
+**Unlimited search on Professional & Ultimate plans:** `POST /v3/people/search`, `POST /v3/companies/search`, and `POST /v3/jobs/search` are credit-free with no volume cap — rate-limited only (5 req/s Professional, 10 req/s Ultimate). See the [agent guide](https://leadmagic.io/docs/mcp/agent-guide) for pagination and best practices.
+
+When the product moves ahead of this snapshot, [leadmagic.io/docs](https://leadmagic.io/docs) is the source of truth.
 
 ## Companion surfaces
 
@@ -28,27 +31,11 @@ LeadMagic's developer surface spans a few aligned entry points:
 
 This repo should stay aligned with live API behavior, but [leadmagic.io/docs](https://leadmagic.io/docs) remains the source of truth when the product moves ahead of the snapshot.
 
-## Hosted MCP tool surface (Cursor)
+## Hosted MCP tool surface
 
-The public **hosted MCP** exposes **10 tools** (a subset of the REST API), plus:
+The hosted MCP exposes **35+ tools** covering the whole product: people/company/jobs search, decision-makers, email find/validate, mobile, account intelligence, technographics, competitors, job-change detection, ads research, bulk jobs, and credits — plus the `leadmagic://docs` resource and built-in prompts (`account_research`, `contact_lookup`). Full tool reference: [leadmagic.io/docs/mcp/tools](https://leadmagic.io/docs/mcp/tools).
 
-- 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts (for example `account_research`, `contact_lookup`)
-
-| MCP tool | Typical REST backing (see docs / OpenAPI) |
-| --- | --- |
-| `check_credit_balance` | `GET /v1/credits` |
-| `validate_work_email` | `POST /v1/people/email-validation` |
-| `find_work_email` | `POST /v1/people/email-finder` |
-| `find_mobile_number` | `POST /v1/people/mobile-finder` |
-| `linkedin_profile_to_work_email` | `POST /v1/people/b2b-profile-email` |
-| `detect_job_change` | Job-change detector endpoint (see product docs) |
-| `research_account` | Company search + funding (e.g. `/v1/companies/...`) |
-| `list_company_competitors` | Competitors endpoint |
-| `get_company_technographics` | Technographics endpoint |
-| `find_people_by_role` | `POST /v1/people/role-finder` |
-
-**Important:** This OpenAPI snapshot includes **jobs** and **ads** routes and other endpoints that are **not** exposed as MCP tools today. When updating copy here, keep that gap explicit and cross-check [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) and [MCP tools docs](https://leadmagic.io/docs/mcp/tools).
+Agent skills that teach correct usage (plans, cursors, credit safety): [LeadMagic/leadmagic-skills](https://github.com/LeadMagic/leadmagic-skills) — `npx skills add LeadMagic/leadmagic-skills`.
 
 ## Hosted MCP sign-in
 
@@ -192,7 +179,9 @@ Current docs group routes under:
 - `/v1/jobs/*`
 - `/v1/ads/*`
 
-## Current Route Map
+## Legacy → current route map
+
+The snapshot no longer carries the old unversioned routes; this map is for migrating pre-`/v1` integrations.
 
 | Legacy repo route | Current documented route |
 | --- | --- |
@@ -242,7 +231,7 @@ These values are aligned to the public docs as of this cleanup pass.
 | `POST /v1/ads/b2b-ads-search` | 0.2 | 5 searches per credit |
 | `POST /v1/ads/b2b-ads-details` | 2 | Free if not found |
 
-Docs-only endpoints not yet represented in the local snapshot include analytics, job change detection, technographics, competitors search, job company types, job industries, job regions, and credits helper endpoints.
+V3 search pricing: 1 credit per returned row on metered plans; **credit-free and volume-unlimited on Professional (5 req/s) and Ultimate (10 req/s)**. Contact-detail unlocks, lookalikes (5), and jobs export stay metered on every plan.
 
 ## Use Case Examples
 
