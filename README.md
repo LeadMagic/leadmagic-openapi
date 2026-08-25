@@ -6,17 +6,17 @@ OpenAPI 3.1 specification, LLM-friendly reference (`llms.txt`), and live smoke t
 
 The authoritative product documentation is the public docs site:
 
-- Docs: [https://leadmagic.io/docs](https://leadmagic.io/docs)
+- Docs: [https://leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
 - Docs index: [https://leadmagic.io/docs/llms.txt](https://leadmagic.io/docs/llms.txt)
-- Dashboard: [https://app.leadmagic.io](https://app.leadmagic.io)
+- Dashboard: [https://app.leadmagic.io](https://app.leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
 
 ## Status
 
-The snapshot models the **full current public surface — 81 paths** — synced from the live docs contract at [leadmagic.io/docs](https://leadmagic.io/docs): versioned `/v1/*` enrichment routes, the `/v3/*` search family (people, companies, jobs — with route aliases), `/bulk/*` and `/v1/batch/*` job pipelines, analytics, and ads.
+The snapshot models the **full current public surface — 81 paths** — synced from the live docs contract at [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi): versioned `/v1/*` enrichment routes, the `/v3/*` search family (people, companies, jobs — with route aliases), `/bulk/*` and `/v1/batch/*` job pipelines, analytics, and ads.
 
-**Unlimited search on Professional & Ultimate plans:** `POST /v3/people/search`, `POST /v3/companies/search`, and `POST /v3/jobs/search` are credit-free with no volume cap — rate-limited only (5 req/s Professional, 10 req/s Ultimate). See the [agent guide](https://leadmagic.io/docs/mcp/agent-guide) for pagination and best practices.
+**Unlimited search on Professional & Ultimate plans:** `POST /v3/people/search`, `POST /v3/companies/search`, and `POST /v3/jobs/search` are credit-free with no volume cap — rate-limited only (5 req/s Professional, 10 req/s Ultimate). See the [agent guide](https://leadmagic.io/docs/mcp/agent-guide?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) for pagination and best practices.
 
-When the product moves ahead of this snapshot, [leadmagic.io/docs](https://leadmagic.io/docs) is the source of truth.
+When the product moves ahead of this snapshot, [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) is the source of truth.
 
 ## Companion surfaces
 
@@ -27,13 +27,13 @@ LeadMagic's developer surface spans a few aligned entry points:
 | **REST OpenAPI snapshot** | **This repo** — [github.com/LeadMagic/leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Integrating `https://api.leadmagic.io`, codegen, LLM context from `llms.txt`, or running `test-api` smoke tests |
 | **Cursor plugin + MCP config** | [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Installing LeadMagic in Cursor (marketplace or team marketplace), OAuth-default `mcp.json`, skills, rules, enrichment **agent**, and **commands** |
 | **MCP endpoint** | `https://mcp.leadmagic.io/mcp` | Any MCP client (Cursor, AI SDK, etc.) after auth |
-| **Product docs** | [leadmagic.io/docs](https://leadmagic.io/docs), [MCP setup](https://leadmagic.io/docs/mcp/setup) | Authoritative behavior, pricing, and tool reference |
+| **Product docs** | [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi), [MCP setup](https://leadmagic.io/docs/mcp/setup?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) | Authoritative behavior, pricing, and tool reference |
 
-This repo should stay aligned with live API behavior, but [leadmagic.io/docs](https://leadmagic.io/docs) remains the source of truth when the product moves ahead of the snapshot.
+This repo should stay aligned with live API behavior, but [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) remains the source of truth when the product moves ahead of the snapshot.
 
 ## Hosted MCP tool surface
 
-The hosted MCP exposes **35+ tools** covering the whole product: people/company/jobs search, decision-makers, email find/validate, mobile, account intelligence, technographics, competitors, job-change detection, ads research, bulk jobs, and credits — plus the `leadmagic://docs` resource and built-in prompts (`account_research`, `contact_lookup`). Full tool reference: [leadmagic.io/docs/mcp/tools](https://leadmagic.io/docs/mcp/tools).
+The hosted MCP exposes **35+ tools** covering the whole product: people/company/jobs search, decision-makers, email find/validate, mobile, account intelligence, technographics, competitors, job-change detection, ads research, bulk jobs, and credits — plus the `leadmagic://docs` resource and built-in prompts (`account_research`, `contact_lookup`). Full tool reference: [leadmagic.io/docs/mcp/tools](https://leadmagic.io/docs/mcp/tools?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi).
 
 Agent skills that teach correct usage (plans, cursors, credit safety): [LeadMagic/leadmagic-skills](https://github.com/LeadMagic/leadmagic-skills) — `npx skills add LeadMagic/leadmagic-skills`.
 
@@ -316,13 +316,13 @@ npm run lint:openapi
 
 If you update route names, auth expectations, pricing notes, or endpoint coverage here, keep those changes consistent with:
 
-- [LeadMagic MCP setup](https://leadmagic.io/docs/mcp/setup) and [MCP tools](https://leadmagic.io/docs/mcp/tools) on the docs site
+- [LeadMagic MCP setup](https://leadmagic.io/docs/mcp/setup?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) and [MCP tools](https://leadmagic.io/docs/mcp/tools?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) on the docs site
 - [LeadMagic Cursor plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) (`mcp.json`, OAuth-default auth, README, and changelog)
 - Hosted MCP: `https://mcp.leadmagic.io/mcp` and discovery at `https://mcp.leadmagic.io/clients`
 
 ## Support
-- API docs: [https://leadmagic.io/docs](https://leadmagic.io/docs)
-- Official site: [https://leadmagic.io](https://leadmagic.io)
+- API docs: [https://leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
+- Official site: [https://leadmagic.io](https://leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
 - Support: [support@leadmagic.io](mailto:support@leadmagic.io)
 
 ## License
