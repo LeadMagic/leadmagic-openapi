@@ -1,86 +1,90 @@
 # LeadMagic API
 
-> LeadMagic is a B2B data enrichment API. The live source of truth is `https://leadmagic.io/docs`, and current API routes are versioned under `/v1/...`.
+> LeadMagic is a B2B data enrichment and search API — 400M+ people profiles, 25M+ companies, 46M+ job postings, plus email finding/validation, mobile numbers, ads intelligence, and bulk CSV jobs. The live source of truth is `https://leadmagic.io/docs`. This repo's OpenAPI snapshot (`leadmagic-openapi-3.1.yaml`, 81 paths) is synced from that contract.
 
 Base URL: `https://api.leadmagic.io`
 
-Authentication: send `X-API-Key` on every request.
+Authentication: send `X-API-Key` on every request. Hosted MCP (`https://mcp.leadmagic.io/mcp`) uses OAuth instead — no key.
 
-Important: do not assume all responses use the same field naming style. Current public docs show a mix of snake_case and camelCase depending on the endpoint.
+Agent guide (hand this to your AI): `https://leadmagic.io/docs/mcp/agent-guide`
+Agent skills: `npx skills add LeadMagic/leadmagic-skills`
 
-## Core Routes In This Repo
+## Unlimited search on Professional & Ultimate plans
+
+`POST /v3/people/search`, `POST /v3/companies/search`, and `POST /v3/jobs/search` are **credit-free with no volume cap** on Professional (5 req/s sustained) and Ultimate (10 req/s) plans — rate-limited only. Other plans pay ~1 credit per returned row. Contact-detail unlocks, lookalikes, exports, and enrichment endpoints are credit-metered on every plan.
+
+## Cursor pagination (all v3 search endpoints)
+
+First page: filters + `limit` (≤50). Response returns `next_cursor` + `has_more`. Next page: identical filters + `cursor: <next_cursor>`. Never combine `cursor` with a nonzero `offset` (a cursor is only minted at offset 0). Stop when `has_more` is false.
+
+## Search (V3)
+
+### People — 400M+ profiles
+- [People Search](https://leadmagic.io/docs/api-reference/people-search): `POST /v3/people/search` — canonical; aliases `/v3/person/search`, `/v3/people/{company-search,full-search,mixed-search,icp-search,employees,by-title,contacts-by-title,lookalike}`
+
+### Companies — 25M+
+- [Company Search](https://leadmagic.io/docs/api-reference/company-search-v3): `POST /v3/companies/search` — aliases `/company-search`, `/lookup`, `/enrich`, `/domain-lookup`, `/funding`
+- [Company Lookalike](https://leadmagic.io/docs/api-reference/company-lookalike): `POST /v3/companies/lookalike` — aliases `/competitors`, `/competitors-search` (metered, 5 credits)
+
+### Jobs — 46M+ postings
+- [Job Search](https://leadmagic.io/docs/api-reference/job-search): `POST /v3/jobs/search` — modes: vector (default, `titles.vector`), facets (`includeFacets`), deep (`mode: "deep"`)
+- [Job Search Export](https://leadmagic.io/docs/api-reference/job-search-export): `POST /v3/jobs/search/export` — ≤5,000 rows, metered on all plans
+- [Resolve Filters](https://leadmagic.io/docs/api-reference/job-search-helpers): `POST /v3/jobs/search/resolve` — free
+- Free GET helpers: `/v3/jobs/search/{companies,titles,roles,tags,locations,occupation-taxonomy,catalogs,stats}`
+- [Search Stats](https://leadmagic.io/docs/api-reference/search-stats): `POST /v3/search/stats`
+
+## Enrichment (V1)
 
 ### Credits
-- [Check Credits](https://leadmagic.io/docs/v1/reference/check-credits): `GET /v1/credits`
+- [Check Credits](https://leadmagic.io/docs/api-reference/check-credits): `GET /v1/credits` — free
 
 ### People
-- [Email Validation](https://leadmagic.io/docs/v1/reference/email-validation): `POST /v1/people/email-validation`
-- [Email Finder](https://leadmagic.io/docs/v1/reference/email-finder): `POST /v1/people/email-finder`
-- [Personal Email Finder](https://leadmagic.io/docs/v1/reference/personal-email-finder): `POST /v1/people/personal-email-finder`
-- [B2B Social to Email](https://leadmagic.io/docs/v1/reference/profile-to-email): `POST /v1/people/b2b-profile-email`
-- [Email to B2B Profile](https://leadmagic.io/docs/v1/reference/email-to-profile): `POST /v1/people/b2b-profile`
-- [Mobile Finder](https://leadmagic.io/docs/v1/reference/mobile-finder): `POST /v1/people/mobile-finder`
-- [Profile Search](https://leadmagic.io/docs/v1/reference/profile-search): `POST /v1/people/profile-search`
-- [Role Finder](https://leadmagic.io/docs/v1/reference/role-finder): `POST /v1/people/role-finder`
-- [Employee Finder](https://leadmagic.io/docs/v1/reference/employee-finder): `POST /v1/people/employee-finder`
+- [Email Validation](https://leadmagic.io/docs/api-reference/email-validation): `POST /v1/people/email-validation` (0.25 credits)
+- [Email Finder](https://leadmagic.io/docs/api-reference/email-finder): `POST /v1/people/email-finder` (1)
+- [Personal Email Finder](https://leadmagic.io/docs/api-reference/personal-email-finder): `POST /v1/people/personal-email-finder` (2)
+- [B2B Profile to Email](https://leadmagic.io/docs/api-reference/profile-to-email): `POST /v1/people/b2b-profile-email` (5)
+- [Email to B2B Profile](https://leadmagic.io/docs/api-reference/email-to-profile): `POST /v1/people/b2b-profile` (10)
+- [Mobile Finder](https://leadmagic.io/docs/api-reference/mobile-finder): `POST /v1/people/mobile-finder` (5)
+- [Profile Search](https://leadmagic.io/docs/api-reference/profile-search): `POST /v1/people/profile-search` (1)
+- [Role Finder](https://leadmagic.io/docs/api-reference/role-finder): `POST /v1/people/role-finder` (2)
+- [Employee Finder](https://leadmagic.io/docs/api-reference/employee-finder): `POST /v1/people/employee-finder`
+- [Job Change Detector](https://leadmagic.io/docs/api-reference/job-change-detector): `POST /v1/people/job-change-detector`
 
 ### Companies
-- [Company Search](https://leadmagic.io/docs/v1/reference/company-search): `POST /v1/companies/company-search`
-- [Company Funding](https://leadmagic.io/docs/v1/reference/company-funding): `POST /v1/companies/company-funding`
+- [Company Search](https://leadmagic.io/docs/api-reference/company-search): `POST /v1/companies/company-search` (1)
+- [Company Funding](https://leadmagic.io/docs/api-reference/company-funding): `POST /v1/companies/company-funding` (4)
+- [Technographics](https://leadmagic.io/docs/api-reference/technographics): `POST /v1/companies/technographics`
+- [Competitors Search](https://leadmagic.io/docs/api-reference/competitors-search): `POST /v1/companies/competitors-search`
 
-### Jobs
-- [Jobs Finder](https://leadmagic.io/docs/v1/reference/jobs-finder): `POST /v1/jobs/jobs-finder`
-- [Job Country](https://leadmagic.io/docs/v1/reference/job-country): `GET /v1/jobs/countries`
-- [Job Type](https://leadmagic.io/docs/v1/reference/job-types): `GET /v1/jobs/job-types`
+### Jobs (V1)
+- [Jobs Finder](https://leadmagic.io/docs/api-reference/jobs-finder): `POST /v1/jobs/jobs-finder`
+- Catalogs: `GET /v1/jobs/{countries,regions,industries,job-types,company-types}`
 
 ### Ads
-- [Google Ads Search](https://leadmagic.io/docs/v1/reference/google-ads-search): `POST /v1/ads/google-ads-search`
-- [Meta Ads Search](https://leadmagic.io/docs/v1/reference/meta-ads-search): `POST /v1/ads/meta-ads-search`
-- [B2B Ads Search](https://leadmagic.io/docs/v1/reference/b2b-ads-search): `POST /v1/ads/b2b-ads-search`
-- [B2B Ad Details](https://leadmagic.io/docs/v1/reference/b2b-ad-details): `POST /v1/ads/b2b-ads-details`
+- [Google Ads Search](https://leadmagic.io/docs/api-reference/google-ads-search): `POST /v1/ads/google-ads-search`
+- [Meta Ads Search](https://leadmagic.io/docs/api-reference/meta-ads-search): `POST /v1/ads/meta-ads-search`
+- [B2B Ads Search](https://leadmagic.io/docs/api-reference/b2b-ads-search): `POST /v1/ads/b2b-ads-search`
+- [B2B Ad Details](https://leadmagic.io/docs/api-reference/b2b-ad-details): `POST /v1/ads/b2b-ads-details`
 
-## Current MCP Surface
+## Bulk & Batch
 
-The hosted LeadMagic MCP exposes:
+- [Bulk Submit](https://leadmagic.io/docs/api-reference/bulk-jobs-submit): `POST /bulk/submit` — plus job lifecycle under `GET /bulk/jobs/*` (status, results, errors, events, stream, progress) and `POST /bulk/validate`
+- Batch campaigns: `POST /v1/batch` — budgets, clients, suppression lists, webhooks, metrics under `/v1/batch/*`
 
-- 10 tools (see README for the full mapping to REST endpoints)
-- 1 shared docs resource: `leadmagic://docs`
-- 2 built-in prompts (for example `account_research`, `contact_lookup`)
+## Analytics
 
-The MCP surface covers credits, people enrichment, company research, technographics, competitors, job-change detection, and role lookup.
+- [Dashboard](https://leadmagic.io/docs/api-reference/analytics): `GET /v1/analytics/dashboard` — free usage/spend reporting
 
-Important distinction: ads endpoints and some jobs endpoints exist in the broader REST API and this snapshot, but they are not part of the current MCP tool surface.
+## Hosted MCP
 
-## Hosted MCP Sign-In
-
-- Entrypoint: `https://mcp.leadmagic.io/mcp` (streamable HTTP)
-- Per-client install snippets (canonical): `https://mcp.leadmagic.io/clients`
-- OAuth authorization server metadata: `https://mcp.leadmagic.io/.well-known/oauth-authorization-server`
-- OAuth protected resource metadata: `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp`
-- Registration endpoint (DCR): `https://mcp.leadmagic.io/oauth/register`
-- OAuth scopes: `openid profile email offline_access`
-- Static public OAuth client (no DCR): client ID `4b9eLjoGVCJ1Dvnc`, secret blank (PKCE, S256). This ID is public by design.
-- API-key fallback header: `x-leadmagic-key: <YOUR_API_KEY>`
-- Bearer fallback header: `Authorization: Bearer <YOUR_LEADMAGIC_TOKEN>`
-
-Supported clients (all streamable-HTTP against the same URL): Cursor, Claude Desktop / Code / claude.ai, ChatGPT Developer Mode + Responses API, VS Code / GitHub Copilot, Windsurf, Zed, Cline, Roo Code, OpenCode, Gemini CLI, JetBrains IDEs, Amazon Q Developer, GitHub Copilot Coding Agent, Continue, Amp, Augment Code, Vercel AI SDK.
-
-For Cursor specifically, prefer the official plugin at `https://github.com/LeadMagic/leadmagic-cursor-plugin` (ships `mcp.json`, rules, skills, agent, and commands). Manual alternative is a URL-only `.cursor/mcp.json` entry — Cursor v0.48+ handles OAuth + DCR internally.
-
-## Docs-Only Endpoints Not Yet Modeled Here
-
-- Analytics API
-- Job Change Detector
-- Technographics
-- Competitors Search
-- Job company types
-- Job industries
-- Job regions
-- Credits helper endpoints like refresh and health
+- Entrypoint: `https://mcp.leadmagic.io/mcp` (streamable HTTP, OAuth with dynamic client registration + PKCE)
+- Setup for every client (Claude, Claude Code, ChatGPT, Codex, Cursor, and more): `https://leadmagic.io/docs/mcp/setup`
+- 35+ tools: people/company/jobs search, decision-makers, email find/validate, mobile, account intel, ads research, bulk, credits
+- API-key fallback header: `Authorization: Bearer <key>` (only when OAuth is unavailable)
 
 ## Repository Files
 
-- [README](README.md): Current repo guidance
-- [llms-full.txt](llms-full.txt): Longer LLM-oriented reference
-- [OpenAPI YAML](leadmagic-openapi-3.1.yaml): Local OpenAPI snapshot
-- [OpenAPI JSON](leadmagic-openapi-3.1.json): Local JSON snapshot
+- [README](README.md): repo guidance
+- [OpenAPI YAML](leadmagic-openapi-3.1.yaml) / [JSON](leadmagic-openapi-3.1.json): the 81-path snapshot, synced from leadmagic.io/docs
+- [llms-full.txt](llms-full.txt): longer LLM-oriented reference
+- [test-api.ts](test-api.ts): live smoke tests (`npm run test:api`)
