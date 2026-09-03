@@ -4052,7 +4052,7 @@
     "/v1/people/job-change-detector": {
       "post": {
         "summary": "Job Change Detector",
-        "description": "Monitor employee transitions and detect when someone has changed jobs.",
+        "description": "Monitor employee transitions and detect when someone has changed jobs. Costs 3 credits per check. The submitted company_name is authoritative; a company_domain lookup only adds matcher aliases. job_change_detected is true only when status is JOB_CHANGE_DETECTED. When the profile URL does not resolve, the response is status PROFILE_NOT_FOUND with resolution_reason PROFILE_NOT_FOUND and credits_consumed 0 — nothing is charged.",
         "operationId": "job-change-detector",
         "tags": [
           "Jobs Data"
@@ -4103,19 +4103,40 @@
                   "properties": {
                     "job_change_detected": {
                       "type": "boolean",
+                      "description": "true only when status is JOB_CHANGE_DETECTED.",
                       "examples": [
                         false
                       ]
                     },
                     "status": {
                       "type": "string",
+                      "description": "NO_CHANGE — the expected employer is a current role. JOB_CHANGE_DETECTED — a different primary employer is current, or the matched role has an explicit end date with nothing current, or the expected employer is absent from history while another primary employer is current. NEVER_WORKED_THERE — the expected employer is absent from history and no primary current role is listed. AMBIGUOUS_CURRENT_EMPLOYMENT — multiple substantive current roles; not safe to call. CURRENT_EMPLOYMENT_UNKNOWN — the expected employer matched but the role carries no dates; unknown, not a change. PROFILE_NOT_FOUND — the profile URL did not resolve; credits_consumed is 0.",
                       "enum": [
                         "NO_CHANGE",
                         "JOB_CHANGE_DETECTED",
-                        "NEVER_WORKED_THERE"
+                        "NEVER_WORKED_THERE",
+                        "AMBIGUOUS_CURRENT_EMPLOYMENT",
+                        "CURRENT_EMPLOYMENT_UNKNOWN",
+                        "PROFILE_NOT_FOUND"
                       ],
                       "examples": [
                         "NEVER_WORKED_THERE"
+                      ]
+                    },
+                    "resolution_reason": {
+                      "type": "string",
+                      "description": "Why the status was chosen. PROFILE_NOT_FOUND accompanies status PROFILE_NOT_FOUND.",
+                      "enum": [
+                        "CURRENT_COMPANY_MATCHES_EXPECTED",
+                        "CURRENT_COMPANY_DIFFERS_FROM_EXPECTED",
+                        "EXPECTED_COMPANY_NOT_FOUND_IN_HISTORY",
+                        "NO_CURRENT_POSITION_FOUND",
+                        "NO_EXPERIENCE_HISTORY_FOUND",
+                        "MULTIPLE_CURRENT_POSITIONS_FOUND",
+                        "PROFILE_NOT_FOUND"
+                      ],
+                      "examples": [
+                        "EXPECTED_COMPANY_NOT_FOUND_IN_HISTORY"
                       ]
                     },
                     "summary": {
@@ -4310,8 +4331,9 @@
                     },
                     "credits_consumed": {
                       "type": "integer",
+                      "description": "3 per check; 0 when status is PROFILE_NOT_FOUND.",
                       "examples": [
-                        2
+                        3
                       ]
                     }
                   }
