@@ -114,6 +114,7 @@ These values reflect the current public docs for the core endpoints covered in t
 | `POST /v1/people/profile-search` | 1 | Docs show 100 req/min |
 | `POST /v1/people/role-finder` | 2 | Free if not found |
 | `POST /v1/people/employee-finder` | 0.05 per employee | 20 employees per credit |
+| `POST /v1/people/job-change-detector` | 3 | Free when `status` is `PROFILE_NOT_FOUND` |
 | `POST /v1/companies/company-search` | 1 | Free if not found |
 | `POST /v1/companies/company-funding` | 4 | Free if not found |
 | `POST /v1/jobs/jobs-finder` | 1 per job | Free if no jobs found |
@@ -297,6 +298,31 @@ Typical fields:
 - `credits_consumed`
 - `message`
 
+#### `POST /v1/people/job-change-detector`
+Check whether a person still works at an expected company. Costs 3 credits per check; `PROFILE_NOT_FOUND` is never charged.
+
+Minimal request (`company_domain` or `company_name` is required):
+```json
+{
+  "profile_url": "https://example.com/in/johndoe",
+  "company_domain": "oldcompany.com"
+}
+```
+
+Typical fields:
+- `job_change_detected` (`true` only when `status` is `JOB_CHANGE_DETECTED`)
+- `status`: `NO_CHANGE`, `JOB_CHANGE_DETECTED`, `NEVER_WORKED_THERE`, `AMBIGUOUS_CURRENT_EMPLOYMENT`, `CURRENT_EMPLOYMENT_UNKNOWN`, `PROFILE_NOT_FOUND`
+- `resolution_reason`
+- `summary`
+- `employee_name`
+- `expected_company`
+- `current_company`
+- `current_position`
+- `work_history`
+- `credits_consumed` (`3`, or `0` for `PROFILE_NOT_FOUND`)
+
+Treat `AMBIGUOUS_CURRENT_EMPLOYMENT` and `CURRENT_EMPLOYMENT_UNKNOWN` as "recheck later", not as a change.
+
 ### Companies
 
 #### `POST /v1/companies/company-search`
@@ -413,14 +439,15 @@ Typical fields:
 - `impressions`
 - `credits_consumed`
 
+## Other Endpoints In This Snapshot
+Included in `leadmagic-openapi-3.1.json` but not summarized above — use the spec and the public docs for field names:
+- Analytics API (`GET /v1/analytics/*`)
+- Competitors Search (`POST /v1/companies/competitors-search`)
+- Technographics (`POST /v1/companies/technographics`)
+- Job metadata lookups (`GET /v1/jobs/company-types`, `GET /v1/jobs/industries`, `GET /v1/jobs/regions`)
+- v3 search, bulk, and batch endpoints
+
 ## Docs-Only Endpoints Outside This Snapshot
-- Analytics API
-- Job Change Detector
-- Competitors Search
-- Technographics
-- Job company types
-- Job industries
-- Job regions
 - Credits refresh and health endpoints
 
 ## Guidance For Tools
