@@ -5,13 +5,10 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    paths:
-      - 'leadmagic-openapi-3.1.yaml'
-      - 'leadmagic-openapi-3.1.json'
-      - 'test-api.ts'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'tsconfig.json'
+
+# Least-privilege token for every job: the workflow only reads the checkout.
+permissions:
+  contents: read
 
 jobs:
   validate-spec:
