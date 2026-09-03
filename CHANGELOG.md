@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- `POST /v1/people/job-change-detector`: `status` enum now includes `AMBIGUOUS_CURRENT_EMPLOYMENT`, `CURRENT_EMPLOYMENT_UNKNOWN` (expected employer matched but the role carries no dates — unknown, not a change), and `PROFILE_NOT_FOUND` (profile URL did not resolve — `credits_consumed` is `0`); added the `resolution_reason` enum; documented that `job_change_detected` is `true` only for `JOB_CHANGE_DETECTED` and that an absent expected employer with another primary current role is `JOB_CHANGE_DETECTED` (`NEVER_WORKED_THERE` only when nothing is current); `credits_consumed` example corrected to `3`
 - README: companion-surfaces table and pairing copy for [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) (skills, rules, agent, commands, OAuth MCP); contrast with local stdio plugins (e.g. Encore); hosted MCP section lists **10 tools** with REST hints and jobs/ads API-only note
 - Synced top-level repository docs to the current `leadmagic.io/docs` route layout under `/v1/...`
 - Reworked the smoke-test utility as `test-api.ts` with typed test cases, secure interactive API-key entry, compact output previews, and pass/fail reporting against current documented endpoints
