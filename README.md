@@ -1,8 +1,10 @@
-# LeadMagic OpenAPI — B2B enrichment and search API
+# LeadMagic OpenAPI: B2B Data Enrichment REST API
 
 OpenAPI 3.1 JSON and YAML for the documented LeadMagic REST API: people and company enrichment, email finding and validation, search, jobs, advertising, and bulk workflows. Import the specification into API tooling or use it to generate a client.
 
-[Documentation](https://leadmagic.io/docs) · [Published schema](https://leadmagic.io/docs/api-reference/openapi.yml) · [Dashboard](https://app.leadmagic.io)
+[LeadMagic B2B enrichment](https://leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro) · [API documentation](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro) · [Pricing and credits](https://leadmagic.io/pricing?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro)
+
+[Published schema](https://leadmagic.io/docs/api-reference/openapi.yml) · [Dashboard](https://app.leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro)
 
 ## Public contract
 
@@ -29,11 +31,11 @@ Do not put API keys or customer response data into public issues, examples, or r
 
 `https://api.leadmagic.io`
 
-For hosted MCP, use [OAuth setup](https://leadmagic.io/docs/mcp/setup) at `https://mcp.leadmagic.io/mcp`. For the terminal, install [lm-tui](https://leadmagic.io/docs/cli/installation) and run `lm login`. REST API keys are not needed for those normal OAuth flows.
+For hosted MCP, use [OAuth setup](https://leadmagic.io/docs/mcp/setup?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-base-url) at `https://mcp.leadmagic.io/mcp`. For the terminal, install [lm-tui](https://leadmagic.io/docs/cli/installation?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-base-url) and run `lm login`. REST API keys are not needed for those normal OAuth flows.
 
 ## Credit Consumption
 
-Costs vary by endpoint and account entitlement. Read [credits documentation](https://leadmagic.io/docs/v1/credits) and check `GET /v1/credits` before large runs. The [agent guide](https://leadmagic.io/docs/mcp/agent-guide) explains search entitlements, cursor pagination, and paid contact unlocks.
+Costs vary by endpoint and account entitlement. Read [credits documentation](https://leadmagic.io/docs/v1/credits?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-credit-consumption) and check `GET /v1/credits` before large runs. The [agent guide](https://leadmagic.io/docs/mcp/agent-guide?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-credit-consumption) explains search entitlements, cursor pagination, and paid contact unlocks.
 
 Email Finder returns validated work emails. Email Validation is for addresses obtained elsewhere; avoid paying to revalidate a fresh finder result.
 
@@ -79,7 +81,6 @@ Reports retain HTTP status, result shape, and credit accounting while omitting r
 
 | Repository | Purpose |
 | --- | --- |
-| [leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Public REST API specification and validation |
 | [leadmagic-n8n](https://github.com/LeadMagic/leadmagic-n8n) | n8n community node for enrichment workflows |
 | [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Cursor plugin using hosted MCP |
 | [leadmagic-claude-plugin](https://github.com/LeadMagic/leadmagic-claude-plugin) | Claude Code plugin using hosted MCP |
