@@ -41,8 +41,8 @@ Email Finder returns validated work emails. Email Validation is for addresses ob
 
 ## Use Case Examples
 
-- Find a work email: `POST /v1/people/email-finder`.
-- Validate an existing email: `POST /v1/people/email-validation`.
+- [Find a work email with LeadMagic Email Finder](https://leadmagic.io/product/email-finder?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-use-case-examples): `POST /v1/people/email-finder`.
+- [Validate an existing email address](https://leadmagic.io/docs/api-reference/email-validation?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-use-case-examples): `POST /v1/people/email-validation`.
 - Enrich a company: `POST /v1/companies/company-search`.
 - Search people, companies, or jobs: the documented `/v3/*/search` operations.
 
