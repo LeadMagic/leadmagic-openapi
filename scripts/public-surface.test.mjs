@@ -27,3 +27,10 @@ test('broken references fail',()=>assert.notEqual(validate(s=>{s.paths['/v1/cred
 test('app-only options fail',()=>assert.notEqual(validate(s=>{s.paths['/v3/companies/lookalike'].post.requestBody.content['application/json'].schema.properties.preview={type:'boolean'};}),0));
 
 test('anonymous alternative fails',()=>assert.notEqual(validate(s=>{s.paths['/v1/credits'].get.security=[{}];}),0));
+
+test('non-synthetic contact samples fail',()=>assert.notEqual(validate(s=>{
+ s.paths['/v1/people/email-validation'].post.requestBody.content['application/json'].examples.synthetic.value.email=['person','customer.invalid'].join('@');
+}),0));
+test('non-synthetic profile samples fail',()=>assert.notEqual(validate(s=>{
+ s.paths['/v1/people/email-validation'].post.requestBody.content['application/json'].examples.synthetic.value.profile_url='https://customer.invalid/profile/123';
+}),0));

@@ -10,7 +10,9 @@ This snapshot contains 81 reviewed public paths. The route inventory matches the
 
 `public-surface.json` records the approved methods and paths. Adding an operation requires an explicit manifest update and review against public product documentation. `npm run check:public` checks that inventory, authentication, references, server origins, and YAML/JSON equality. A route being present in an internal codebase is not authorization to publish it.
 
-Public batch-provider registration configures a customer's external provider; it does not reveal LeadMagic's private supplier infrastructure. Endpoint visibility is not an access control: the deployed API must enforce authentication and authorization independently.
+Endpoint visibility is not an access control: the deployed API must enforce authentication and authorization independently.
+
+Examples use fictional identities and reserved example domains. They illustrate request shapes and are not suitable for live enrichment tests.
 
 ## Authentication
 
@@ -90,3 +92,7 @@ Reports retain HTTP status, result shape, and credit accounting while omitting r
 See [SECURITY.md](SECURITY.md). Report vulnerabilities privately to [security@leadmagic.io](mailto:security@leadmagic.io); send product questions to [support@leadmagic.io](mailto:support@leadmagic.io).
 
 MIT licensed.
+
+## Public examples and publication
+
+Examples are fictional unless an explicit public source is cited. See [PUBLICATION.md](PUBLICATION.md) for data, claims, attribution, and disclosure requirements.

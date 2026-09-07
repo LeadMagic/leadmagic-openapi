@@ -39,3 +39,21 @@ function visit(value) {
 }
 visit(spec);
 console.log(`Public contract validated: ${Object.keys(spec.paths).length} paths, ${actual.length} operations; YAML/JSON match.`);
+
+// Public sample payloads must never copy real contact records or profile URLs.
+function checkSamples(value, insideSample = false) {
+  if (typeof value === 'string' && insideSample) {
+    for (const email of value.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) ?? []) {
+      assert.ok(/@(?:[a-z0-9.-]+\.)?example\.(com|org|net)$/i.test(email), 'Use reserved example domains in sample email addresses');
+    }
+    for (const url of value.match(/https?:\/\/[^\s"<>]+/g) ?? []) {
+      const host = new URL(url).hostname;
+      assert.ok(/^(?:[a-z0-9-]+\.)*example\.(com|org|net)$/i.test(host), 'Use synthetic profile URLs in sample payloads');
+    }
+  }
+  if (Array.isArray(value)) value.forEach(item => checkSamples(item, insideSample));
+  else if (value && typeof value === 'object') for (const [key, nested] of Object.entries(value)) {
+    checkSamples(nested, insideSample || key === 'examples' || key === 'example');
+  }
+}
+checkSamples(spec);

@@ -107,8 +107,8 @@ const tests: TestCase[] = [
 		method: "POST",
 		path: "/v1/people/email-finder",
 		payload: {
-			first_name: "Jesse",
-			last_name: "Ouellette",
+			first_name: "Alex",
+			last_name: "Example",
 			domain: TEST_COMPANY_DOMAIN,
 		},
 		summaryLabel: "Finder Status",
