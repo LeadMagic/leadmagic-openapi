@@ -205,52 +205,6 @@ components:
           meta:
             request_id: ea6e3248-f4d2-437d-bca3-20881b529129
             timestamp: 2024-02-01T12:00:00.000Z
-    MissingFieldError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/missing_required_field
-              title: "Missing required field: email. Add this field to your request."
-              status: 400
-              code: missing_required_field
-              param:
-                - email
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    InvalidJsonError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/invalid_json
-              title: Invalid JSON in request body. Check your JSON syntax.
-              status: 400
-              code: invalid_json
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    InvalidParameterError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/invalid_parameter
-              title: "Invalid parameter: experience_level. Valid options: entry, mid, senior, executive."
-              status: 400
-              code: invalid_parameter
-              param:
-                - experience_level
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
     MissingAuthenticationError:
       allOf:
         - $ref: "#/components/schemas/ErrorResponse"
@@ -275,20 +229,6 @@ components:
               title: Invalid API key. The key does not exist or is incorrect.
               status: 401
               code: invalid_api_key
-              docs: https://leadmagic.io/docs/v1/authentication
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    InsufficientPermissionsError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/insufficient_permissions
-              title: Access denied to this resource. Upgrade your plan or contact support.
-              status: 403
-              code: insufficient_permissions
               docs: https://leadmagic.io/docs/v1/authentication
           meta:
             request_id: ea6e3248-f4d2-437d-bca3-20881b529129
@@ -379,237 +319,12 @@ components:
           meta:
             request_id: ea6e3248-f4d2-437d-bca3-20881b529129
             timestamp: 2024-02-01T12:00:00.000Z
-    ExternalServiceError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/external_service_error
-              title: Error communicating with external service. Please try again.
-              status: 502
-              code: external_service_error
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    ServiceUnavailableError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/service_unavailable
-              title: Service temporarily unavailable. Please try again later.
-              status: 503
-              code: service_unavailable
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    ConflictError:
-      allOf:
-        - $ref: "#/components/schemas/ErrorResponse"
-      examples:
-        - success: false
-          errors:
-            - type: https://api.leadmagic.io/errors/conflict
-              title: Resource conflict detected.
-              status: 409
-              code: conflict
-              docs: https://leadmagic.io/docs/v1/making-api-calls#error-handling
-          meta:
-            request_id: ea6e3248-f4d2-437d-bca3-20881b529129
-            timestamp: 2024-02-01T12:00:00.000Z
-    EmailValidationMessages:
-      type: string
-      description: Possible success messages for email validation
-      enum:
-        - Email is valid.
-        - Email is invalid.
-        - Unable to determine email validity.
-    EmailFinderMessages:
-      type: string
-      description: Possible success messages for email finder
-      enum:
-        - Valid email found.
-        - No email found for this person at this company.
-    MobileFinderMessages:
-      type: string
-      description: Possible success messages for mobile finder
-      enum:
-        - Mobile number found.
-        - No mobile number found for this contact.
-    ProfileSearchMessages:
-      type: string
-      description: Possible success messages for profile search
-      enum:
-        - Profile found.
-        - Profile not found or not accessible.
-    CompanySearchMessages:
-      type: string
-      description: Possible success messages for company search
-      enum:
-        - Company found.
-        - Company not found
-    RoleFinderMessages:
-      type: string
-      description: Possible success messages for role finder
-      enum:
-        - Role found.
-        - No matching role found at this company.
     EmployeeFinderMessages:
       type: string
       description: Possible success messages for employee finder
       enum:
         - Employees found.
         - No employees found for this company.
-    JobChangeDetectorMessages:
-      type: string
-      description: Possible success messages for job change detector
-      enum:
-        - No job change detected. Still employed at expected company.
-        - Job change detected. Person has moved to a new company.
-        - Never worked at the expected company.
-    CompetitorsSearchMessages:
-      type: string
-      description: Possible success messages for competitors search
-      enum:
-        - Competitors found.
-        - No competitors found for this company.
-    CompanyFundingMessages:
-      type: string
-      description: Possible success messages for company funding
-      enum:
-        - Funding data found.
-        - Company funding data not found
-    TechnographicsMessages:
-      type: string
-      description: Possible success messages for technographics
-      enum:
-        - Technologies found.
-        - No technology data found for this domain.
-    AdsSearchMessages:
-      type: string
-      description: Possible success messages for ads search endpoints
-      enum:
-        - Ads found.
-        - No ads found for this company.
-    PersonalEmailFinderMessages:
-      type: string
-      description: Possible success messages for personal email finder
-      enum:
-        - Personal email found.
-        - No personal email found for this contact.
-    B2BProfileToEmailMessages:
-      type: string
-      description: Possible success messages for B2B profile to email
-      enum:
-        - Email found for this profile.
-        - No email found for this profile.
-    EmailToB2BProfileMessages:
-      type: string
-      description: Possible success messages for email to B2B profile
-      enum:
-        - Profile URL found.
-        - No profile found for this email.
-    RateLimitHeaders:
-      type: object
-      description: Rate limit headers returned with every response
-      properties:
-        RateLimit-Limit:
-          type: integer
-          description: IETF Standard - Maximum requests per minute
-          examples:
-            - 600
-        RateLimit-Remaining:
-          type: integer
-          description: IETF Standard - Requests remaining this minute
-          examples:
-            - 587
-        RateLimit-Reset:
-          type: integer
-          description: IETF Standard - Seconds until limit resets
-          examples:
-            - 42
-        X-RateLimit-Limit:
-          type: integer
-          description: Legacy - Maximum requests per minute
-          examples:
-            - 600
-        X-RateLimit-Remaining:
-          type: integer
-          description: Legacy - Requests remaining this minute
-          examples:
-            - 587
-        X-RateLimit-Reset:
-          type: integer
-          description: Legacy - Unix timestamp when limit resets
-          examples:
-            - 1706745600
-        X-RateLimit-Limit-Daily:
-          type: integer
-          description: Daily request limit
-          examples:
-            - 500000
-        X-RateLimit-Remaining-Daily:
-          type: integer
-          description: Requests remaining today
-          examples:
-            - 485000
-        X-RateLimit-Reset-Daily:
-          type: integer
-          description: Unix timestamp when daily limit resets
-          examples:
-            - 1706832000
-        X-Credits-Remaining:
-          type: number
-          description: Wallet credits remaining after this request
-          examples:
-            - 15432.5
-        X-Credits-Cost:
-          type: number
-          description: Credits reserved for this route before finalization (may exceed credits actually charged)
-          examples:
-            - 1
-        X-Credits-Consumed:
-          type: number
-          description: Credits actually charged after finalization (matches body credits_consumed)
-          examples:
-            - 1
-        X-Credits-Total:
-          type: number
-          description: Wallet credit balance at authorization
-          examples:
-            - 15433.5
-        X-Credits-Max-Cost:
-          type: number
-          description: Maximum credits that could be charged for this request
-          examples:
-            - 1
-        X-Request-Id:
-          type: string
-          description: Correlation id for support troubleshooting
-        X-RateLimit-Soft-Mode:
-          type: string
-          description: Whether soft mode is enabled (warn but don't block)
-          examples:
-            - "true"
-        X-RateLimit-Daily-Usage-Percent:
-          type: integer
-          description: Daily usage as percentage
-          examples:
-            - 15
-        X-RateLimit-RPM-Usage-Percent:
-          type: integer
-          description: Current minute usage as percentage
-          examples:
-            - 5
-        Retry-After:
-          type: integer
-          description: Seconds to wait before retrying (only on 429 responses)
-          examples:
-            - 42
     BulkSubmissionRequest:
       type: object
       description: Request body for submitting a bulk enrichment job via POST /bulk/submit. Provide exactly one of rows, csv, fileUrl, or scrape.
@@ -1199,17 +914,6 @@ components:
             oneOf:
               - $ref: "#/components/schemas/MissingAuthenticationError"
               - $ref: "#/components/schemas/InvalidApiKeyError"
-    Forbidden:
-      description: |
-        Forbidden - You don't have permission to access this resource.
-
-        **Common causes:**
-        - API key doesn't have access to this endpoint
-        - Plan limitations
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/InsufficientPermissionsError"
     PaymentRequired:
       description: |
         Payment Required - Insufficient credits for this request.
@@ -1233,13 +937,6 @@ components:
             oneOf:
               - $ref: "#/components/schemas/ResourceNotFoundError"
               - $ref: "#/components/schemas/ProfileNotFoundError"
-    Conflict:
-      description: |
-        Conflict - The request conflicts with the current state of the resource.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ConflictError"
     RateLimitExceeded:
       description: |
         Too Many Requests - Rate limit exceeded.
@@ -1281,24 +978,6 @@ components:
         application/problem+json:
           schema:
             $ref: "#/components/schemas/InternalServerError"
-    BadGateway:
-      description: |
-        Bad Gateway - Error communicating with an upstream service.
-
-        **Action required:** Retry after a brief delay.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ExternalServiceError"
-    ServiceUnavailable:
-      description: |
-        Service Unavailable - The service is temporarily unavailable.
-
-        **Action required:** Retry after a brief delay.
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ServiceUnavailableError"
 security:
   - ApiKeyAuth: []
 tags:
@@ -5175,8 +4854,7 @@ paths:
         Find similar companies from a seed domain or description with full company output.
         Costs **5 credits** when one or more lookalikes are returned; **free** when empty.
         Common aliases (`domain`, `website`, `company_website`, `name`) and misspellings
-        (`companny_domain`, `limmit`, …) are accepted and remapped. `preview: true` is
-        chatbot-UI only — API keys receive 400.
+        (`companny_domain`, `limmit`, …) are accepted and remapped.
       operationId: company-lookalike-v3
       tags:
         - Company Data
@@ -5226,10 +4904,6 @@ paths:
                   type: object
                   additionalProperties: true
                   description: Alias for company_filters.
-                preview:
-                  type: boolean
-                  default: false
-                  description: Free preview — chatbot UI only. API/MCP clients receive 400.
                 limit:
                   type: integer
                   minimum: 1

@@ -91,3 +91,12 @@ results/
 reports/
 test-output.json
 api-responses.json
+
+# Local credentials and diagnostic output
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+reports/
+*.log
