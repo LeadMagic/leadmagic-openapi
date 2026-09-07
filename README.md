@@ -1,329 +1,98 @@
-# LeadMagic OpenAPI Snapshot
+# LeadMagic OpenAPI — B2B enrichment and search API
 
-OpenAPI 3.1 specification, LLM-friendly reference (`llms.txt`), and live smoke tests for the **LeadMagic B2B data enrichment API** — people search (400M+ profiles), company search (25M+), job-postings search (46M+), email finding & validation, mobile numbers, ads intelligence, and bulk CSV enrichment. Use it for codegen, Postman/Insomnia imports, agent/LLM context, and API integration testing.
+OpenAPI 3.1 JSON and YAML for the documented LeadMagic REST API: people and company enrichment, email finding and validation, search, jobs, advertising, and bulk workflows. Import the specification into API tooling or use it to generate a client.
 
-**Pairing:** For **Cursor** and hosted **MCP** (OAuth by default), use the official plugin repo: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin). That package follows the usual Cursor plugin layout (rules, skills, **agent**, **commands**, and MCP)—similar in shape to community examples such as [encoredev/cursor-plugin](https://github.com/encoredev/cursor-plugin), but with **remote HTTP MCP** to LeadMagic’s cloud instead of a local stdio server.
+[Documentation](https://leadmagic.io/docs) · [Published schema](https://leadmagic.io/docs/api-reference/openapi.yml) · [Dashboard](https://app.leadmagic.io)
 
-The authoritative product documentation is the public docs site:
+## Public contract
 
-- Docs: [https://leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
-- Docs index: [https://leadmagic.io/docs/llms.txt](https://leadmagic.io/docs/llms.txt)
-- Dashboard: [https://app.leadmagic.io](https://app.leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
+This snapshot contains 81 reviewed public paths. The route inventory matches the published schema checked on 2026-09-06. App-only request options are excluded. This repository does not publish backend router inventories, infrastructure URLs, administrative routes, credentials, or private implementation contracts.
 
-## Status
+`public-surface.json` records the approved methods and paths. Adding an operation requires an explicit manifest update and review against public product documentation. `npm run check:public` checks that inventory, authentication, references, server origins, and YAML/JSON equality. A route being present in an internal codebase is not authorization to publish it.
 
-The snapshot models the **full current public surface — 81 paths** — synced from the live docs contract at [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi): versioned `/v1/*` enrichment routes, the `/v3/*` search family (people, companies, jobs — with route aliases), `/bulk/*` and `/v1/batch/*` job pipelines, analytics, and ads.
+Endpoint visibility is not an access control: the deployed API must enforce authentication and authorization independently.
 
-**Unlimited search on Professional & Ultimate plans:** `POST /v3/people/search`, `POST /v3/companies/search`, and `POST /v3/jobs/search` are credit-free with no volume cap — rate-limited only (5 req/s Professional, 10 req/s Ultimate). See the [agent guide](https://leadmagic.io/docs/mcp/agent-guide?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) for pagination and best practices.
-
-When the product moves ahead of this snapshot, [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) is the source of truth.
-
-## Companion surfaces
-
-LeadMagic's developer surface spans a few aligned entry points:
-
-| Surface | Repository / URL | Use when |
-| --- | --- | --- |
-| **REST OpenAPI snapshot** | **This repo** — [github.com/LeadMagic/leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Integrating `https://api.leadmagic.io`, codegen, LLM context from `llms.txt`, or running `test-api` smoke tests |
-| **Cursor plugin + MCP config** | [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Installing LeadMagic in Cursor (marketplace or team marketplace), OAuth-default `mcp.json`, skills, rules, enrichment **agent**, and **commands** |
-| **MCP endpoint** | `https://mcp.leadmagic.io/mcp` | Any MCP client (Cursor, AI SDK, etc.) after auth |
-| **Product docs** | [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi), [MCP setup](https://leadmagic.io/docs/mcp/setup?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) | Authoritative behavior, pricing, and tool reference |
-
-This repo should stay aligned with live API behavior, but [leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) remains the source of truth when the product moves ahead of the snapshot.
-
-## Hosted MCP tool surface
-
-The hosted MCP exposes **35+ tools** covering the whole product: people/company/jobs search, decision-makers, email find/validate, mobile, account intelligence, technographics, competitors, job-change detection, ads research, bulk jobs, and credits — plus the `leadmagic://docs` resource and built-in prompts (`account_research`, `contact_lookup`). Full tool reference: [leadmagic.io/docs/mcp/tools](https://leadmagic.io/docs/mcp/tools?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi).
-
-Agent skills that teach correct usage (plans, cursors, credit safety): [LeadMagic/leadmagic-skills](https://github.com/LeadMagic/leadmagic-skills) — `npx skills add LeadMagic/leadmagic-skills`.
-
-## Hosted MCP sign-in
-
-Connect any MCP-compatible client to LeadMagic at:
-
-```
-https://mcp.leadmagic.io/mcp
-```
-
-The public client discovery manifest (canonical source for per-client install snippets) lives at [`https://mcp.leadmagic.io/clients`](https://mcp.leadmagic.io/clients).
-
-### Authentication modes
-
-OAuth (Authorization Code + PKCE, S256) is the recommended path — your MCP client opens a browser, you sign in through Clerk, and a short-lived bearer token is returned. Static API-key headers are supported as a fallback for environments where OAuth is blocked.
-
-| Mode | How it works | When to use |
-| --- | --- | --- |
-| **OAuth via Dynamic Client Registration (DCR)** | Client auto-registers at `https://mcp.leadmagic.io/oauth/register`, then runs the standard OAuth 2.1 flow. | Default path for Cursor, Claude, VS Code/Copilot, Amazon Q, Gemini CLI, and any client that implements MCP OAuth + DCR. |
-| **OAuth with the static public client** | Skip DCR and reuse the published public client. Client ID: `4b9eLjoGVCJ1Dvnc`, secret: _(blank — PKCE)_. Consent screen shows **LeadMagic MCP & CLI (static)**. | Workspaces that block DCR but still want browser OAuth (e.g. legacy Claude.ai connectors). |
-| **API key header** | Send `x-leadmagic-key: <YOUR_API_KEY>` on every MCP request. | CI, server-to-server agents, AI SDK tools, and clients that don't support OAuth yet. |
-| **Bearer token** | Send `Authorization: Bearer <YOUR_LEADMAGIC_TOKEN>`. | When you've already minted a `lm-ui` token (e.g. from Claude Code's `/mcp` sign-in) and want to pass it to another runtime. |
-
-OAuth metadata (for clients that need it explicitly):
-
-- Authorization server: `https://mcp.leadmagic.io/.well-known/oauth-authorization-server`
-- Protected resource: `https://mcp.leadmagic.io/.well-known/oauth-protected-resource/mcp`
-- Registration endpoint: `https://mcp.leadmagic.io/oauth/register`
-- Scopes: `openid profile email offline_access`
-- Issuer: `https://clerk.leadmagic.io` (Clerk-hosted OAuth 2.1 + OIDC)
-
-### Cursor
-
-Use the official plugin whenever possible — it ships `mcp.json`, rules, skills, an enrichment agent, and commands together:
-
-- Marketplace / local install: [github.com/LeadMagic/leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin)
-
-If you'd rather wire it up by hand, Cursor v0.48+ accepts a URL-only remote MCP entry (Cursor handles OAuth + DCR internally — fully quit and reopen Cursor after saving):
-
-```json
-{
-  "mcpServers": {
-    "leadmagic": {
-      "url": "https://mcp.leadmagic.io/mcp"
-    }
-  }
-}
-```
-
-- Project scope: `.cursor/mcp.json` at the project root
-- User scope: `~/.cursor/mcp.json`
-
-When OAuth is blocked, use the API-key variant and read the key from the environment (never commit the literal key):
-
-```json
-{
-  "mcpServers": {
-    "leadmagic": {
-      "type": "http",
-      "url": "https://mcp.leadmagic.io/mcp",
-      "headers": {
-        "x-leadmagic-key": "${LEADMAGIC_API_KEY}"
-      }
-    }
-  }
-}
-```
-
-### Other MCP clients
-
-All of these speak the same streamable-HTTP transport against `https://mcp.leadmagic.io/mcp`. The discovery endpoint at [`/clients`](https://mcp.leadmagic.io/clients) returns the exact, per-client JSON/CLI snippet (with the right config file name and location) and is the source of truth if a client's CLI changes shape.
-
-| Client | Recommended auth | Notes |
-| --- | --- | --- |
-| Claude Desktop / Claude.ai | OAuth | Remote MCP must be added via **Customize → Connectors** on claude.ai — not via `claude_desktop_config.json`. |
-| Claude Code CLI | OAuth | `claude mcp add --transport http leadmagic https://mcp.leadmagic.io/mcp`, then `/mcp` to sign in. |
-| ChatGPT (Developer Mode) / Responses API | OAuth (DCR, PKCE) for ChatGPT; API key for Responses API server SDK | ChatGPT registers callbacks like `https://chatgpt.com/connector/oauth/{callback_id}`. |
-| VS Code / GitHub Copilot | OAuth | Uses the `servers` key (VS Code convention) — not `mcpServers` (Cursor-only). |
-| Windsurf, Zed, Cline, Roo Code, Continue, Amp, Augment, JetBrains | API key header | All accept `x-leadmagic-key`; most also support OAuth DCR. |
-| OpenCode | Bearer token | Uses `Authorization: Bearer` and `"oauth": false` in `opencode.json`. |
-| Gemini CLI | API key header | `gemini mcp add --transport http leadmagic https://mcp.leadmagic.io/mcp -H "x-leadmagic-key: YOUR_API_KEY"`. |
-| Amazon Q Developer, GitHub Copilot Coding Agent | API key header | Copilot Coding Agent snippet goes into the repo's **Settings → Copilot → Coding agent** MCP config. |
-
-### Vercel AI SDK
-
-For programmatic access from AI SDK agents and apps (server-side), use a per-request API key header:
-
-```ts
-import { createMCPClient } from "@ai-sdk/mcp";
-
-const leadmagicMcp = await createMCPClient({
-  transport: {
-    type: "http",
-    url: "https://mcp.leadmagic.io/mcp",
-    headers: {
-      "x-leadmagic-key": process.env.LEADMAGIC_API_KEY!,
-    },
-    redirect: "error",
-  },
-});
-
-try {
-  const tools = await leadmagicMcp.tools();
-  // Pass `tools` into generateText, streamText, or your agent runtime.
-} finally {
-  await leadmagicMcp.close();
-}
-```
-
-### Security reminders
-
-- Never commit real API keys or bearer tokens. Use `LEADMAGIC_API_KEY` (or another secret store) and reference it with `${LEADMAGIC_API_KEY}` in committed config.
-- The static OAuth client ID (`4b9eLjoGVCJ1Dvnc`) is **public by design** (PKCE, no secret). Do not treat it as a credential.
-- Only install LeadMagic-branded MCP servers, skills, or plugins from the official locations listed in [`SECURITY.md`](SECURITY.md). The authoritative install paths are `github.com/LeadMagic/*` and `mcp.leadmagic.io`.
-
-## Files
-- `leadmagic-openapi-3.1.yaml`: Local OpenAPI snapshot (normalized to strict 3.1 `examples` style via `scripts/normalize-31-examples.mjs`)
-- `leadmagic-openapi-3.1.json`: JSON form of the local snapshot
-- `.spectral.yml`: OpenAPI lint configuration
-- `llms.txt`: Short, current LLM-oriented overview
-- `llms-full.txt`: Longer current LLM-oriented reference
-- `test-api.ts`: Live smoke-test script against current documented `/v1/...` routes
+Examples use fictional identities and reserved example domains. They illustrate request shapes and are not suitable for live enrichment tests.
 
 ## Authentication
-All endpoints require an `X-API-Key` header.
+
+Set `LEADMAGIC_API_KEY` through your shell or secret manager, then make a free balance request:
 
 ```bash
-curl 'https://api.leadmagic.io/v1/credits' \
-  -H 'X-API-Key: YOUR_API_KEY'
+curl --fail-with-body 'https://api.leadmagic.io/v1/credits' \
+  -H "X-API-Key: ${LEADMAGIC_API_KEY}"
 ```
 
-Never commit API keys. Use `LEADMAGIC_API_KEY` or your own secrets manager.
+Do not put API keys or customer response data into public issues, examples, or reports.
 
 ## Base URL
+
 `https://api.leadmagic.io`
 
-Current docs group routes under:
-
-- `/v1/credits`
-- `/v1/people/*`
-- `/v1/companies/*`
-- `/v1/jobs/*`
-- `/v1/ads/*`
-
-## Legacy → current route map
-
-The snapshot no longer carries the old unversioned routes; this map is for migrating pre-`/v1` integrations.
-
-| Legacy repo route | Current documented route |
-| --- | --- |
-| `POST /credits` | `GET /v1/credits` |
-| `POST /email-validate` | `POST /v1/people/email-validation` |
-| `POST /email-finder` | `POST /v1/people/email-finder` |
-| `POST /personal-email-finder` | `POST /v1/people/personal-email-finder` |
-| `POST /b2b-social-email` | `POST /v1/people/b2b-profile-email` |
-| `POST /b2b-profile` | `POST /v1/people/b2b-profile` |
-| `POST /mobile-finder` | `POST /v1/people/mobile-finder` |
-| `POST /profile-search` | `POST /v1/people/profile-search` |
-| `POST /role-finder` | `POST /v1/people/role-finder` |
-| `POST /employee-finder` | `POST /v1/people/employee-finder` |
-| `POST /company-search` | `POST /v1/companies/company-search` |
-| `POST /company-funding` | `POST /v1/companies/company-funding` |
-| `POST /jobs-finder` | `POST /v1/jobs/jobs-finder` |
-| `GET /job-country` | `GET /v1/jobs/countries` |
-| `GET /job-types` | `GET /v1/jobs/job-types` |
-| `POST /google/searchads` | `POST /v1/ads/google-ads-search` |
-| `POST /meta/searchads` | `POST /v1/ads/meta-ads-search` |
-| `POST /b2b/searchads` | `POST /v1/ads/b2b-ads-search` |
-| `POST /b2b/ad-details` | `POST /v1/ads/b2b-ads-details` |
+For hosted MCP, use [OAuth setup](https://leadmagic.io/docs/mcp/setup) at `https://mcp.leadmagic.io/mcp`. For the terminal, install [lm-tui](https://leadmagic.io/docs/cli/installation) and run `lm login`. REST API keys are not needed for those normal OAuth flows.
 
 ## Credit Consumption
 
-These values are aligned to the public docs as of this cleanup pass.
+Costs vary by endpoint and account entitlement. Read [credits documentation](https://leadmagic.io/docs/v1/credits) and check `GET /v1/credits` before large runs. The [agent guide](https://leadmagic.io/docs/mcp/agent-guide) explains search entitlements, cursor pagination, and paid contact unlocks.
 
-| Endpoint | Cost | Notes |
-| --- | --- | --- |
-| `GET /v1/credits` | 0 | Free, no rate limit called out |
-| `POST /v1/people/email-validation` | 0.25 | 4 validations per credit |
-| `POST /v1/people/email-finder` | 1 | Free on null result |
-| `POST /v1/people/personal-email-finder` | 2 | Free if not found |
-| `POST /v1/people/b2b-profile-email` | 5 | Free if not found |
-| `POST /v1/people/b2b-profile` | 10 | Free if not found |
-| `POST /v1/people/mobile-finder` | 5 | Free if not found |
-| `POST /v1/people/profile-search` | 1 | Docs currently show 100 req/min |
-| `POST /v1/people/role-finder` | 2 | Free if no match |
-| `POST /v1/people/employee-finder` | 0.05 per employee | 20 employees per credit |
-| `POST /v1/companies/company-search` | 1 | Free if not found |
-| `POST /v1/companies/company-funding` | 4 | Free if not found |
-| `POST /v1/jobs/jobs-finder` | 1 per job | Free if no jobs found |
-| `GET /v1/jobs/countries` | 0 | Metadata |
-| `GET /v1/jobs/job-types` | 0 | Metadata |
-| `POST /v1/ads/google-ads-search` | 0.2 | 5 searches per credit |
-| `POST /v1/ads/meta-ads-search` | 0.2 | 5 searches per credit |
-| `POST /v1/ads/b2b-ads-search` | 0.2 | 5 searches per credit |
-| `POST /v1/ads/b2b-ads-details` | 2 | Free if not found |
-
-V3 search pricing: 1 credit per returned row on metered plans; **credit-free and volume-unlimited on Professional (5 req/s) and Ultimate (10 req/s)**. Contact-detail unlocks, lookalikes (5), and jobs export stay metered on every plan.
+Email Finder returns validated work emails. Email Validation is for addresses obtained elsewhere; avoid paying to revalidate a fresh finder result.
 
 ## Use Case Examples
 
-```javascript
-// Sales prospecting workflow
-await fetch("https://api.leadmagic.io/v1/people/email-finder", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/people/email-validation", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/companies/company-search", { /* ... */ });
-```
+- Find a work email: `POST /v1/people/email-finder`.
+- Validate an existing email: `POST /v1/people/email-validation`.
+- Enrich a company: `POST /v1/companies/company-search`.
+- Search people, companies, or jobs: the documented `/v3/*/search` operations.
 
-```javascript
-// Recruiting workflow
-await fetch("https://api.leadmagic.io/v1/people/role-finder", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/people/employee-finder", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/people/profile-search", { /* ... */ });
-```
-
-```javascript
-// Competitive intelligence workflow
-await fetch("https://api.leadmagic.io/v1/companies/company-funding", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/jobs/jobs-finder", { /* ... */ });
-await fetch("https://api.leadmagic.io/v1/ads/google-ads-search", { /* ... */ });
-```
+Consult each operation's request schema for required fields. Response shapes and credit costs vary by operation.
 
 ## Testing & Validation
 
-Set your API key or let the script prompt you securely at runtime:
-
 ```bash
-export LEADMAGIC_API_KEY=your-api-key-here
-npm install
-npm run test:api
-```
-
-Or run the script without exporting the key first:
-
-```bash
-npm install
-npm run test:api
-```
-
-The script will prompt for the key in an interactive terminal with hidden input, will not print the key back to the console, and uses the current documented `/v1/...` endpoints to print per-endpoint status, key fields, compact response previews, and a final pass/fail summary.
-
-The default smoke-test fixtures now use live, overridable values instead of placeholder domains, because some endpoints reject placeholders such as `example.com` with validation errors. You can override them with `LEADMAGIC_TEST_COMPANY_NAME`, `LEADMAGIC_TEST_COMPANY_DOMAIN`, `LEADMAGIC_TEST_WORK_EMAIL`, `LEADMAGIC_TEST_PROFILE_URL`, and `LEADMAGIC_TEST_AD_URL`.
-
-Useful flags:
-
-```bash
-# Only run one endpoint group
-npm run test:api -- --group people
-
-# Write a JSON report without storing the API key
-npm run test:api -- --report reports/smoke-test.json
-
-# Combine both
-npm run test:api -- --group companies --report reports/companies.json
-```
-
-The report file includes status, summary fields, credits consumed, preview data, and pass/fail results. It does not include the API key or request headers.
-
-## Notes On Field Shapes
-
-The current docs are no longer uniformly snake_case across every endpoint. Some responses remain snake_case while others use mixed or camelCase field names in examples. Do not assume a single naming convention across the entire API surface without checking the endpoint-specific docs.
-
-## OpenAPI 3.1 Notes
-
-This snapshot now follows the key OpenAPI 3.1 and JSON Schema 2020-12 patterns recommended by Zuplo/OpenAPI migration guidance:
-
-- declares `jsonSchemaDialect`
-- uses JSON Schema union types like `["string", "null"]` instead of `nullable: true`
-- uses `examples` arrays instead of legacy `example`
-- keeps YAML and JSON snapshots synchronized
-
-Lint the spec with:
-
-```bash
-npm install
+npm ci --ignore-scripts
+npm run check:public
 npm run lint:openapi
+npm run typecheck
 ```
 
-## Cursor and MCP alignment
+The optional live smoke script requires your own API key:
 
-If you update route names, auth expectations, pricing notes, or endpoint coverage here, keep those changes consistent with:
+```bash
+npm run test:api                       # free credits check only
+npm run test:api -- --group companies  # explicit paid endpoint group
+npm run test:api -- --group credits --report reports/credits.json
+```
 
-- [LeadMagic MCP setup](https://leadmagic.io/docs/mcp/setup?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) and [MCP tools](https://leadmagic.io/docs/mcp/tools?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi) on the docs site
-- [LeadMagic Cursor plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) (`mcp.json`, OAuth-default auth, README, and changelog)
-- Hosted MCP: `https://mcp.leadmagic.io/mcp` and discovery at `https://mcp.leadmagic.io/clients`
+Paid groups can consume credits and require suitable fixtures. Configure `LEADMAGIC_TEST_COMPANY_NAME`, `LEADMAGIC_TEST_COMPANY_DOMAIN`, `LEADMAGIC_TEST_WORK_EMAIL`, `LEADMAGIC_TEST_PROFILE_URL`, and `LEADMAGIC_TEST_AD_URL` for data you are authorized to use. Placeholder profile and ad URLs are not live test fixtures.
 
-## Support
-- API docs: [https://leadmagic.io/docs](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
-- Official site: [https://leadmagic.io](https://leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi)
-- Support: [support@leadmagic.io](mailto:support@leadmagic.io)
+Reports retain HTTP status, result shape, and credit accounting while omitting response values and payloads. No live paid requests run in CI. `reports/` is ignored by Git.
 
-## License
-MIT
+## Files
+
+- `leadmagic-openapi-3.1.yaml` and `.json`: equivalent API snapshots.
+- `public-surface.json`: reviewed public methods and paths.
+- `llms.txt` and `llms-full.txt`: public documentation entry points.
+- `scripts/check-public-surface.mjs`: contract and publication checks.
+- `test-api.ts`: optional live smoke tests.
+
+## Related integrations
+
+| Repository | Purpose |
+| --- | --- |
+| [leadmagic-openapi](https://github.com/LeadMagic/leadmagic-openapi) | Public REST API specification and validation |
+| [leadmagic-n8n](https://github.com/LeadMagic/leadmagic-n8n) | n8n community node for enrichment workflows |
+| [leadmagic-cursor-plugin](https://github.com/LeadMagic/leadmagic-cursor-plugin) | Cursor plugin using hosted MCP |
+| [leadmagic-claude-plugin](https://github.com/LeadMagic/leadmagic-claude-plugin) | Claude Code plugin using hosted MCP |
+| [leadmagic-skills](https://github.com/LeadMagic/leadmagic-skills) | LeadMagic API and workflow skills |
+| [gtm-skills](https://github.com/LeadMagic/gtm-skills) | Go-to-market playbooks and agent skills |
+| [leadmagic-mcp](https://github.com/LeadMagic/leadmagic-mcp) | Local stdio MCP integration for the documented enrichment subset |
+
+## Security and support
+
+See [SECURITY.md](SECURITY.md). Report vulnerabilities privately to [security@leadmagic.io](mailto:security@leadmagic.io); send product questions to [support@leadmagic.io](mailto:support@leadmagic.io).
+
+MIT licensed.
+
+## Public examples and publication
+
+Examples are fictional unless an explicit public source is cited. See [PUBLICATION.md](PUBLICATION.md) for data, claims, attribution, and disclosure requirements.

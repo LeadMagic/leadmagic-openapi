@@ -10,7 +10,7 @@ const TEST_COMPANY_NAME =
 const TEST_COMPANY_DOMAIN =
 	process.env.LEADMAGIC_TEST_COMPANY_DOMAIN ?? "leadmagic.io";
 const TEST_WORK_EMAIL =
-	process.env.LEADMAGIC_TEST_WORK_EMAIL ?? "jesse@leadmagic.io";
+	process.env.LEADMAGIC_TEST_WORK_EMAIL ?? "person@example.com";
 const TEST_PROFILE_URL =
 	process.env.LEADMAGIC_TEST_PROFILE_URL ??
 	"https://profiles.example.com/test-user";
@@ -107,8 +107,8 @@ const tests: TestCase[] = [
 		method: "POST",
 		path: "/v1/people/email-finder",
 		payload: {
-			first_name: "Jesse",
-			last_name: "Ouellette",
+			first_name: "Alex",
+			last_name: "Example",
 			domain: TEST_COMPANY_DOMAIN,
 		},
 		summaryLabel: "Finder Status",
@@ -292,7 +292,7 @@ function isGroup(value: string): value is TestGroup {
 }
 
 function parseArgs(argv: string[]): CliOptions {
-	const options: CliOptions = {};
+	const options: CliOptions = { group: "credits" };
 
 	for (let index = 0; index < argv.length; index += 1) {
 		const arg = argv[index];
@@ -337,7 +337,7 @@ function parseArgs(argv: string[]): CliOptions {
 function printHelp(): void {
 	console.log("LeadMagic OpenAPI smoke test");
 	console.log("");
-	console.log("Usage: npm run test:api -- [--group <group>] [--report <path>]");
+	console.log("Usage: npm run test:api -- [--group <group>] [--report <path>] (default: free credits check; other groups may spend credits)");
 	console.log("");
 	console.log("Groups: credits, people, companies, jobs, ads");
 	console.log("");
@@ -446,47 +446,6 @@ function getBodyKeys(body: JsonValue): string[] {
 	return isObject(body) ? Object.keys(body) : [];
 }
 
-function shallowPreview(body: JsonObject): JsonObject {
-	const preview: JsonObject = {};
-
-	for (const [key, value] of Object.entries(body).slice(0, 8)) {
-		if (Array.isArray(value)) {
-			preview[key] = `[${value.length} item(s)]`;
-			continue;
-		}
-
-		if (isObject(value)) {
-			preview[key] = "{...}";
-			continue;
-		}
-
-		preview[key] = value;
-	}
-
-	return preview;
-}
-
-function compactPreview(body: JsonValue): JsonValue {
-	if (Array.isArray(body)) {
-		if (body.length === 0) {
-			return [];
-		}
-
-		const firstItem = body[0];
-		if (!isObject(firstItem)) {
-			return body.slice(0, 3);
-		}
-
-		return [shallowPreview(firstItem)];
-	}
-
-	if (!isObject(body)) {
-		return body;
-	}
-
-	return shallowPreview(body);
-}
-
 function getCreditsConsumed(body: JsonValue): JsonValue | undefined {
 	return pickValue(body, [["credits_consumed"]]);
 }
@@ -508,10 +467,10 @@ function buildResponseSnapshot(test: TestCase, response: ResponseData) {
 	return {
 		bodyKeys: getBodyKeys(response.body),
 		bodyKind: getBodyKind(response.body),
-		summary: pickValue(response.body, test.summaryPaths),
+		summary: "[response values omitted]",
 		creditsConsumed: getCreditsConsumed(response.body),
 		remainingCreditsHeader: getRemainingCreditsHeader(response),
-		preview: compactPreview(response.body),
+		preview: "[response payload omitted]",
 	};
 }
 
@@ -531,7 +490,7 @@ function summarizeResponse(test: TestCase, response: ResponseData): void {
 	const body = response.body;
 	const snapshot = buildResponseSnapshot(test, response);
 
-	console.log(`   ✅ HTTP ${response.statusCode}`);
+	console.log(`   HTTP ${response.statusCode}`);
 
 	if (Array.isArray(body)) {
 		console.log(`   📦 Array response with ${body.length} item(s)`);
