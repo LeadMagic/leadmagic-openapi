@@ -112,7 +112,11 @@ components:
           description: Link to relevant documentation
         context:
           type: object
-          description: Additional context specific to this error type
+          description: >-
+            Additional context specific to this error type. 404 route_not_found
+            errors include suggested_endpoint (canonical path to use instead)
+            in this object; validation errors include the offending field and
+            received value.
           additionalProperties: true
     ResponseMeta:
       type: object
@@ -1437,6 +1441,14 @@ paths:
           application/json:
             schema:
               type: object
+              description: >-
+                Forgiving on purpose: CRM synonyms and common misspellings are
+                remapped server-side, and aliases apply only when the canonical
+                field is absent. A LinkedIn person profile URL passed in a name
+                field (first_name/last_name/full_name) is remapped to
+                profile_url. The company can be given via domain aliases
+                (company_domain, website, url, companyUrl) or company_name
+                (company, organization, employer, businessName).
               properties:
                 first_name:
                   type: string
@@ -1452,13 +1464,17 @@ paths:
                   nullable: true
                   description: Full name of the person (alternative to first_name + last_name)
                   default: Alex Rivera
+                profile_url:
+                  type: string
+                  nullable: true
+                  description: LinkedIn person profile URL (alternative to a name; CRM synonym keys like linkedin_url are accepted and normalized server-side)
                 domain:
                   type: string
-                  description: Company domain name (required if company_name not provided)
+                  description: Company domain name (required if company_name not provided; aliases company_domain, website, url accepted)
                   default: leadmagic.io
                 company_name:
                   type: string
-                  description: Company name (required if domain not provided)
+                  description: Company name (required if domain not provided; aliases company, organization, employer accepted)
                   default: LeadMagic
             examples:
               synthetic:
@@ -1630,6 +1646,10 @@ paths:
           application/json:
             schema:
               type: object
+              description: >-
+                CRM synonym keys for profile_url (linkedin_url, linkedinUrl,
+                li_url) are accepted and normalized server-side; a full URL or
+                bare /in/{slug} both work.
               properties:
                 profile_url:
                   type: string
@@ -1874,6 +1894,10 @@ paths:
           application/json:
             schema:
               type: object
+              description: >-
+                At least one identifier is required. CRM synonym keys for
+                profile_url (e.g. linkedin_url) are accepted and normalized
+                server-side; a full URL or bare /in/{slug} both work.
               properties:
                 profile_url:
                   type: string

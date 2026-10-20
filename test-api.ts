@@ -13,10 +13,10 @@ const TEST_WORK_EMAIL =
 	process.env.LEADMAGIC_TEST_WORK_EMAIL ?? "person@example.com";
 const TEST_PROFILE_URL =
 	process.env.LEADMAGIC_TEST_PROFILE_URL ??
-	"https://profiles.example.com/test-user";
+	"https://www.linkedin.com/in/jesseoue";
 const TEST_AD_URL =
 	process.env.LEADMAGIC_TEST_AD_URL ??
-	"https://ads.example.com/library/detail/633872143";
+	"/ad-library/detail/633872143";
 
 type HttpMethod = "GET" | "POST";
 type TestGroup = "credits" | "people" | "companies" | "jobs" | "ads";
