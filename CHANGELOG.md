@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — input-unification documentation sync
+
+Documented the gateway's forgiving-input behavior (description-level only; no schema restructuring): email-finder accepts a `profile_url` alternative and domain/company aliases; mobile-finder and b2b-profile-email note CRM synonym keys normalized server-side; `ErrorDetail.context` documents `suggested_endpoint` on 404 `route_not_found` errors. Fixed smoke-test fixtures to use the real LinkedIn fixture `https://www.linkedin.com/in/jesseoue` and a valid `b2b-ads-details` `ad_url` path form (`/ad-library/detail/633872143`).
+
 ## Public-content privacy review — 2026-09-06
 
 Use synthetic contact examples, remove unnecessary identity and credential-like samples, and clarify publication, attribution, and claims requirements.
