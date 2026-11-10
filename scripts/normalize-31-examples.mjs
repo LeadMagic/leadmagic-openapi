@@ -6,8 +6,12 @@
  * - Parameter objects:  example: v            -> examples: {default: {value: v}}
  * - Media type objects: example: v            -> examples: {default: {value: v}}
  *
+ * - Schema objects:     type: T, nullable: true -> type: [T, "null"]
+ *
  * The docs-site source spec keeps the 3.0-style singular `example` fields
- * (its renderer expects them); this repo publishes the strict-3.1 form.
+ * (its renderer expects them) and the 3.0 `nullable` flag; this repo publishes
+ * the strict-3.1 form. `nullable` is not a keyword in OpenAPI 3.1, so leaving
+ * it in place documents nullable fields as non-null.
  *
  * Usage: node scripts/normalize-31-examples.mjs <in.yaml> <out.yaml> <out.json>
  */
@@ -77,6 +81,33 @@ for (const param of Object.values(doc.components?.parameters ?? {})) walk(param,
 walk(doc.components?.responses ?? {}, "responses", false);
 walk(doc.components?.requestBodies ?? {}, "requestBodies", false);
 
+// OpenAPI 3.0 `nullable: true` -> JSON Schema type union. A `properties` map's
+// keys are field names, so a field literally named "nullable" is left alone.
+let nullableCount = 0;
+let nullableLeftovers = 0;
+(function convertNullable(node, parentKey) {
+	if (Array.isArray(node)) return node.forEach((n) => convertNullable(n, parentKey));
+	if (!node || typeof node !== "object") return;
+	if (parentKey !== "properties" && Object.hasOwn(node, "nullable")) {
+		if (node.nullable === true && typeof node.type === "string") {
+			node.type = [node.type, "null"];
+			nullableCount++;
+		} else if (node.nullable === true && Array.isArray(node.type)) {
+			if (!node.type.includes("null")) node.type.push("null");
+			nullableCount++;
+		} else if (node.nullable !== false) {
+			// e.g. nullable next to $ref / oneOf: needs a hand-written anyOf.
+			nullableLeftovers++;
+			return;
+		}
+		delete node.nullable;
+	}
+	for (const [key, value] of Object.entries(node)) {
+		if (parentKey !== "properties" && key === "examples") continue;
+		convertNullable(value, key);
+	}
+})({ paths: doc.paths, components: doc.components }, null);
+
 // Anything left (e.g. bare `example` outside recognized contexts) still needs
 // to satisfy the strict-3.1 CI check — report and fail loudly if any remain.
 let leftovers = 0;
@@ -92,5 +123,7 @@ let leftovers = 0;
 
 fs.writeFileSync(outYaml, stringify(doc, { lineWidth: 0 }));
 fs.writeFileSync(outJson, `${JSON.stringify(doc, null, 2)}\n`);
-console.log(`schema examples: ${schemaCount}, named examples: ${namedCount}, leftovers: ${leftovers}`);
-if (leftovers > 0) process.exit(1);
+console.log(
+	`schema examples: ${schemaCount}, named examples: ${namedCount}, leftovers: ${leftovers}; nullable converted: ${nullableCount}, nullable leftovers: ${nullableLeftovers}`,
+);
+if (leftovers > 0 || nullableLeftovers > 0) process.exit(1);

@@ -38,6 +38,17 @@ function visit(value) {
   for (const nested of Object.values(value)) visit(nested);
 }
 visit(spec);
+// OpenAPI 3.1 has no `nullable` keyword: validators ignore it and treat the field as non-null.
+(function rejectNullable(value, parentKey) {
+  if (!value || typeof value !== 'object') return;
+  if (!Array.isArray(value) && parentKey !== 'properties') {
+    assert.ok(!Object.hasOwn(value, 'nullable'), 'Use a type union such as ["string", "null"] instead of nullable');
+  }
+  for (const [key, nested] of Object.entries(value)) {
+    if (parentKey !== 'properties' && (key === 'examples' || key === 'example')) continue;
+    rejectNullable(nested, Array.isArray(value) ? parentKey : key);
+  }
+})({ paths: spec.paths, components: spec.components }, null);
 console.log(`Public contract validated: ${Object.keys(spec.paths).length} paths, ${actual.length} operations; YAML/JSON match.`);
 
 // Public sample payloads must never copy real contact records or profile URLs.

@@ -235,6 +235,13 @@
           }
         ]
       },
+      "ServiceUnavailableError": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ErrorResponse"
+          }
+        ]
+      },
       "EmployeeFinderMessages": {
         "type": "string",
         "description": "Possible success messages for employee finder",
@@ -427,8 +434,10 @@
             "description": "The enrichment product this job is running."
           },
           "endpoint": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "totalRows": {
             "type": "integer",
@@ -526,19 +535,25 @@
             "type": "string"
           },
           "products": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string"
-            },
-            "nullable": true
+            }
           },
           "submission_product": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "submission_endpoint": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "total_rows": {
             "type": "integer"
@@ -553,31 +568,41 @@
             "type": "integer"
           },
           "total_credits_consumed": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "created_at": {
             "type": "string",
             "format": "date-time"
           },
           "started_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "completed_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "last_progress_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "file_name": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -624,23 +649,31 @@
             "type": "string"
           },
           "products": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
               "type": "string"
-            },
-            "nullable": true
+            }
           },
           "submission_product": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "submission_endpoint": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "execution_mode": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "total_rows": {
             "type": "integer"
@@ -658,47 +691,65 @@
             "type": "integer"
           },
           "total_credits_consumed": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "total_duration_ms": {
-            "type": "integer",
-            "nullable": true
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "created_at": {
             "type": "string",
             "format": "date-time"
           },
           "started_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "completed_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "last_progress_at": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
           },
           "file_name": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "callback_url": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "callback_event": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "priority": {
-            "type": "integer",
-            "nullable": true
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "output_transform": {
             "type": [
@@ -804,32 +855,46 @@
             "type": "string"
           },
           "lm_input": {
-            "type": "object",
-            "nullable": true
+            "type": [
+              "object",
+              "null"
+            ]
           },
           "lm_output": {
-            "type": "object",
-            "nullable": true
+            "type": [
+              "object",
+              "null"
+            ]
           },
           "credits_consumed": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "error_message": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "http_status_code": {
-            "type": "integer",
-            "nullable": true
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "response_time_ms": {
-            "type": "integer",
-            "nullable": true
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "completed_at": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -919,8 +984,10 @@
             "type": "integer"
           },
           "creditsPerItem": {
-            "type": "number",
-            "nullable": true
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "totalCredits": {
             "type": "number"
@@ -949,8 +1016,10 @@
             }
           },
           "clientCreditRemaining": {
-            "type": "string",
-            "nullable": true
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "willExceedBudget": {
             "type": "boolean"
@@ -1116,6 +1185,16 @@
           "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/InternalServerError"
+            }
+          }
+        }
+      },
+      "ServiceUnavailable": {
+        "description": "Service Unavailable - The service is temporarily unavailable.\n\n**Action required:** Retry after a brief delay.\n",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ServiceUnavailableError"
             }
           }
         }
@@ -1712,14 +1791,18 @@
                       "type": "number"
                     },
                     "first_request": {
-                      "type": "string",
-                      "format": "date-time",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
                     },
                     "last_request": {
-                      "type": "string",
-                      "format": "date-time",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
                     }
                   }
                 }
@@ -1973,13 +2056,17 @@
                       "type": "string"
                     },
                     "mx_gateway": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Security gateway vendor name"
                     },
                     "mx_gateway_type": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Security gateway type"
                     },
                     "mx_security_gateway": {
@@ -2025,15 +2112,19 @@
                           "type": "string"
                         },
                         "address_line_2": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "postal_code": {
                           "type": "string"
                         },
                         "geo": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -2045,12 +2136,16 @@
                       "type": "string"
                     },
                     "company_facebook_url": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "company_twitter_url": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   }
                 }
@@ -2096,20 +2191,26 @@
                     "default": "Alex"
                   },
                   "last_name": {
-                    "type": "string",
-                    "nullable": true,
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "Last name of the person (optional)",
                     "default": "Rivera"
                   },
                   "full_name": {
-                    "type": "string",
-                    "nullable": true,
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "Full name of the person (alternative to first_name + last_name)",
                     "default": "Alex Rivera"
                   },
                   "profile_url": {
-                    "type": "string",
-                    "nullable": true,
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "LinkedIn person profile URL (alternative to a name; CRM synonym keys like linkedin_url are accepted and normalized server-side)"
                   },
                   "domain": {
@@ -2121,6 +2222,11 @@
                     "type": "string",
                     "description": "Company name (required if domain not provided; aliases company, organization, employer accepted)",
                     "default": "LeadMagic"
+                  },
+                  "allow_domain_mismatch": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "By default, an email found on a domain unrelated to the requested one is returned as a free not-found (`domain_mismatch: true`, `credits_consumed: 0`). Set to `true` to return that email instead, flagged `domain_mismatch: true` and charged like any other valid find.\n"
                   }
                 },
                 "description": "Forgiving on purpose: CRM synonyms and common misspellings are remapped server-side, and aliases apply only when the canonical field is absent. A LinkedIn person profile URL passed in a name field (first_name/last_name/full_name) is remapped to profile_url. The company can be given via domain aliases (company_domain, website, url, companyUrl) or company_name (company, organization, employer, businessName)."
@@ -2258,9 +2364,25 @@
                       "type": "string"
                     },
                     "employment_verified": {
-                      "type": "boolean",
-                      "nullable": true,
+                      "type": [
+                        "boolean",
+                        "null"
+                      ],
                       "description": "Whether the employment at the domain was verified"
+                    },
+                    "requested_domain": {
+                      "type": "string",
+                      "description": "The domain that was searched. Present when the result is on a different domain.",
+                      "examples": [
+                        "leadmagic.io"
+                      ]
+                    },
+                    "domain_mismatch": {
+                      "type": "boolean",
+                      "description": "True when the only email found is on a domain unrelated to `requested_domain`. Free not-found by default; returned and charged only with `allow_domain_mismatch: true`.\n",
+                      "examples": [
+                        false
+                      ]
                     }
                   }
                 }
@@ -2485,57 +2607,83 @@
                       "type": "integer"
                     },
                     "first_name": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "last_name": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "full_name": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "professional_title": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "bio": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "company_name": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "company_industry": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "company_website": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "total_tenure_months": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "total_tenure_days": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "total_tenure_years": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "followers_range": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Follower count range for privacy (e.g. \"45K-50K\", \"1M+\")"
                     },
                     "personal_website": {
-                      "type": "object",
-                      "nullable": true,
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "properties": {
                         "name": {
                           "type": "string"
@@ -2546,16 +2694,22 @@
                       }
                     },
                     "country": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "location": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "work_experience": {
-                      "type": "array",
-                      "nullable": true,
+                      "type": [
+                        "array",
+                        "null"
+                      ],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -2569,21 +2723,27 @@
                             "type": "string"
                           },
                           "company_website": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Only included when domain is available"
                           },
                           "company_logo_url": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Only included when domain is available"
                           }
                         }
                       }
                     },
                     "education": {
-                      "type": "array",
-                      "nullable": true,
+                      "type": [
+                        "array",
+                        "null"
+                      ],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -2600,8 +2760,10 @@
                       }
                     },
                     "certifications": {
-                      "type": "array",
-                      "nullable": true,
+                      "type": [
+                        "array",
+                        "null"
+                      ],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -2618,8 +2780,10 @@
                       }
                     },
                     "honors": {
-                      "type": "array",
-                      "nullable": true,
+                      "type": [
+                        "array",
+                        "null"
+                      ],
                       "items": {
                         "type": "object",
                         "properties": {
@@ -2776,17 +2940,23 @@
                   "type": "object",
                   "properties": {
                     "profile_url": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "email": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Email address used in lookup (if provided)"
                     },
                     "mobile_number": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Mobile phone number if found"
                     },
                     "credits_consumed": {
@@ -3094,8 +3264,10 @@
                             "type": "string"
                           },
                           "line2": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "description": {
                             "type": "string"
@@ -3169,8 +3341,10 @@
                           "type": "string"
                         },
                         "line2": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "description": {
                           "type": "string"
@@ -3181,15 +3355,19 @@
                       "type": "object",
                       "properties": {
                         "month": {
-                          "type": "integer",
-                          "nullable": true
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
                         },
                         "year": {
                           "type": "integer"
                         },
                         "day": {
-                          "type": "integer",
-                          "nullable": true
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -3203,92 +3381,137 @@
                       "type": "string"
                     },
                     "logo_url": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Company logo URL from logo.leadmagic.io (generated from company domain)"
                     },
                     "founded_year": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Year the company was founded"
                     },
                     "ownership_status": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Ownership type (Public, Private, or Acquired)"
                     },
                     "revenue": {
-                      "type": "number",
-                      "nullable": true,
+                      "type": [
+                        "number",
+                        "null"
+                      ],
                       "description": "Estimated annual revenue"
                     },
                     "revenue_formatted": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Human-readable revenue format"
                     },
                     "employee_range": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Employee count range"
                     },
                     "total_funding": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Total funding raised"
                     },
                     "funding_rounds": {
-                      "type": "integer",
-                      "nullable": true,
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
                       "description": "Number of funding rounds completed"
                     },
                     "last_funding_round": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Type of most recent funding round"
                     },
                     "last_funding_amount": {
-                      "type": "number",
-                      "nullable": true,
+                      "type": [
+                        "number",
+                        "null"
+                      ],
                       "description": "Amount raised in most recent funding round"
                     },
                     "last_funding_date": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Date of most recent funding round"
                     },
                     "competitors": {
-                      "type": "array",
-                      "nullable": true,
+                      "type": [
+                        "array",
+                        "null"
+                      ],
                       "description": "List of competitor company names",
                       "items": {
                         "type": "string"
                       }
                     },
                     "acquisitions_count": {
-                      "type": "integer",
-                      "nullable": true,
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
                       "description": "Number of acquisitions made by the company"
                     },
                     "twitter_url": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Twitter/X profile URL"
                     },
                     "b2b_profile_url": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "B2B company profile URL"
                     },
                     "facebook_url": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Facebook page URL"
                     },
                     "stock_ticker": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Stock ticker symbol (if publicly traded)"
+                    },
+                    "data_source": {
+                      "type": "string",
+                      "enum": [
+                        "live",
+                        "stored"
+                      ],
+                      "description": "`live` when the company profile page was read for this request; `stored` when the answer came from the LeadMagic company database, including while the live source is at capacity. Both are charged the same; a miss is `Company not found` and free.",
+                      "examples": [
+                        "stored"
+                      ]
                     }
                   }
                 }
@@ -3803,16 +4026,22 @@
                                 "type": "integer"
                               },
                               "cost_of_goods_sold": {
-                                "type": "integer",
-                                "nullable": true
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
                               },
                               "gross_profit": {
-                                "type": "integer",
-                                "nullable": true
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
                               },
                               "net_income": {
-                                "type": "integer",
-                                "nullable": true
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
                               }
                             }
                           },
@@ -3834,8 +4063,10 @@
                                   "type": "string"
                                 },
                                 "currency_code": {
-                                  "type": "string",
-                                  "nullable": true
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
                                 }
                               }
                             }
@@ -4040,6 +4271,9 @@
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -4061,7 +4295,7 @@
                 "properties": {
                   "company_name": {
                     "type": "string",
-                    "description": "Business Profile URL (with url or public_identifier)",
+                    "description": "Company name",
                     "default": "leadmagic"
                   },
                   "company_domain": {
@@ -4074,7 +4308,10 @@
                     "description": "Enter the job title you want to find in the company.",
                     "default": "ceo"
                   }
-                }
+                },
+                "required": [
+                  "job_title"
+                ]
               }
             }
           }
@@ -4164,6 +4401,8 @@
                   },
                   "limit": {
                     "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000,
                     "description": "Maximum number of employees to return",
                     "default": 10
                   }
@@ -4246,7 +4485,7 @@
     "/v3/people/search": {
       "post": {
         "summary": "People Search",
-        "description": "Canonical V3 people lookup with all company, title, role, people, channel, and contact-detail filters.",
+        "description": "Find professional profiles by company, title, role, seniority, and recorded profile attributes. Search never returns email addresses or phone numbers; request Email Finder or Mobile Finder separately for the people you choose.",
         "operationId": "people-search",
         "tags": [
           "People Enrichment"
@@ -4303,53 +4542,9 @@
                     "type": "string",
                     "description": "Free-text people/title query."
                   },
-                  "required_email": {
-                    "type": "boolean",
-                    "description": "Only return people with email availability."
-                  },
-                  "required_mobile": {
-                    "type": "boolean",
-                    "description": "Only return people with mobile availability."
-                  },
-                  "channels": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "email",
-                        "phone"
-                      ]
-                    },
-                    "description": "Legacy alias for contactability requirements."
-                  },
-                  "channel_match": {
-                    "type": "string",
-                    "enum": [
-                      "any",
-                      "all"
-                    ],
-                    "default": "any"
-                  },
                   "include_company": {
                     "type": "boolean",
                     "default": true
-                  },
-                  "include_domain_intel": {
-                    "type": "boolean",
-                    "default": true
-                  },
-                  "include_contact_details": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Opt in to paid raw email/mobile fields (alias — full_search). Bills 1 extra credit per returned email and 5 per returned mobile; base results are 1 credit per returned person. Search RPS / unmetered people-search plans cannot unlock email or mobile (403); unlocks require a credit-metered plan.\n"
-                  },
-                  "include_email": {
-                    "type": "boolean",
-                    "description": "When contact details are on, return and bill raw emails (+1 credit each). If neither include_email nor include_mobile is set, both default to true. If either flag is set, the omitted flag defaults to false (include_email=true alone is email-only).\n"
-                  },
-                  "include_mobile": {
-                    "type": "boolean",
-                    "description": "When contact details are on, return and bill raw mobiles (+5 credits each). Same default rules as include_email.\n"
                   },
                   "confirm_credit_charge": {
                     "type": "boolean",
@@ -4425,169 +4620,227 @@
                         "additionalProperties": true,
                         "properties": {
                           "contact_linkedin_url": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_linkedin_username": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_first_name": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_last_name": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_full_name": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "contact_email": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "contact_email_domain": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "contact_mobile_phone": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "contact_direct_phone": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_linkedin_headline": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_linkedin_industry": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_linkedin_about_me": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_city": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_state": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_state_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_country": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_country_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_region": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_continent": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_title": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_function": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Standard department label for the person's current role (e.g. Sales & Business Development). Filter requests may use short chips such as Sales; responses always return this standard label.\n"
                           },
                           "contact_job_level": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_description": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_start_date": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "contact_persona": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_city": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_country": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_country_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_region": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_continent": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_state": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_job_state_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_company_name": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_domain": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_education": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_skills": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_certifications": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_languages": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "contact_websites": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "seniority_score": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "has_email": {
                             "type": "boolean"
@@ -4599,74 +4852,108 @@
                             "type": "boolean"
                           },
                           "is_cio": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_it_leader": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_security": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_revops": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_recruiting": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_engineering": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_sales": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_marketing": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "is_operations": {
-                            "type": "boolean",
-                            "nullable": true
+                            "type": [
+                              "boolean",
+                              "null"
+                            ]
                           },
                           "contactability_score": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "profile_completeness_score": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "job_observation_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "distinct_company_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "followers": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "company": {
-                            "type": "object",
-                            "nullable": true,
+                            "type": [
+                              "object",
+                              "null"
+                            ],
                             "additionalProperties": true
                           },
                           "domain_intel": {
-                            "type": "object",
-                            "nullable": true,
+                            "type": [
+                              "object",
+                              "null"
+                            ],
                             "additionalProperties": true
                           },
                           "unlock": {
-                            "type": "object",
-                            "nullable": true,
+                            "type": [
+                              "object",
+                              "null"
+                            ],
                             "additionalProperties": true
                           }
                         }
@@ -4695,8 +4982,10 @@
                       "type": "boolean"
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Opaque signed token for the next page, or null on the last page. Send back as cursor with offset 0. Cursor pagination is stable and cached."
                     },
                     "metadata": {
@@ -4713,6 +5002,20 @@
                           "description": "snapshot/cursor for cursor/first-page responses; offset for legacy offset responses."
                         }
                       }
+                    },
+                    "ignored_filters": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Qualified keys of selected criteria that were not applied."
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Explanations of unavailable or unapplied criteria."
                     }
                   }
                 }
@@ -4891,110 +5194,158 @@
                             "type": "string"
                           },
                           "hq_street": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "hq_postcode": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "hq_region": {
                             "type": "string"
                           },
                           "hq_continent": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "location_city": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "location_country_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "location_region": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "location_state_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "founded_year": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "specialties": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "total_funding": {
-                            "type": "number",
-                            "nullable": true
+                            "type": [
+                              "number",
+                              "null"
+                            ]
                           },
                           "funding_investor_count": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "last_funding_type": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "last_funding_date": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "last_funding_amount": {
-                            "type": "number",
-                            "nullable": true
+                            "type": [
+                              "number",
+                              "null"
+                            ]
                           },
                           "lead_investors": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Not returned in standard company search responses."
                           },
                           "linkedin_followers": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "growth_rate": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "linkedin_url": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "linkedin_claimed": {
                             "type": "boolean"
                           },
                           "company_headline": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_about": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_phone": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_entity_type": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_legal_type": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "has_tech_stack": {
                             "type": "boolean"
                           },
                           "profile_completeness_score": {
-                            "type": "integer",
-                            "nullable": true
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
                           },
                           "total_contacts": {
                             "type": "integer"
@@ -5015,24 +5366,34 @@
                             "type": "boolean"
                           },
                           "sic_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "naics_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "sic_description": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "naics_description": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "predicted_naics_2022_code": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "domain_tld": {
                             "type": "string"
@@ -5041,68 +5402,100 @@
                             "type": "integer"
                           },
                           "crm_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "marketing_automation_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "sales_automation_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "analytics_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "cloud_provider_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "development_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "ecommerce_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "erp_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "email_hosting_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "email_security_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "abm_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "cms_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "conversation_intelligence_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "app_security_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "cloud_security_tech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "company_martech": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "category": {
                             "type": "array",
@@ -5118,29 +5511,39 @@
                       "description": "Present for one-company lookup requests."
                     },
                     "company": {
-                      "type": "object",
-                      "nullable": true,
+                      "type": [
+                        "object",
+                        "null"
+                      ],
                       "additionalProperties": true,
                       "description": "Present for one-company lookup requests. Contains the first returned company row."
                     },
                     "companyName": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Present for one-company lookup requests. Alias for company.company_name."
                     },
                     "companyDomain": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Present for one-company lookup requests. Alias for company.company_domain."
                     },
                     "websiteUrl": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Present for one-company lookup requests. Alias for company.company_website."
                     },
                     "linkedinUrl": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Present for one-company lookup requests. Alias for company.linkedin_url."
                     },
                     "count": {
@@ -5159,8 +5562,10 @@
                       "type": "boolean"
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true,
+                      "type": [
+                        "string",
+                        "null"
+                      ],
                       "description": "Opaque signed token for the next page, or null on the last page. Send back as cursor with offset 0. Cursor pagination is stable and cached."
                     },
                     "interpreted_search": {
@@ -5181,6 +5586,20 @@
                           "description": "snapshot/cursor for cursor/first-page responses; offset for legacy offset responses."
                         }
                       }
+                    },
+                    "ignored_filters": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Qualified keys of selected criteria that were not applied."
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Explanations of unavailable or unapplied criteria."
                     }
                   }
                 }
@@ -5275,7 +5694,9 @@
                   "offset": {
                     "type": "integer",
                     "minimum": 0,
-                    "default": 0
+                    "maximum": 2000,
+                    "default": 0,
+                    "description": "Offset into the similarity ranking (100, 200, …). Lookalike has no cursor. Deeper pages take longer."
                   }
                 }
               }
@@ -5434,6 +5855,29 @@
                         "preview": {
                           "type": "boolean"
                         },
+                        "has_more": {
+                          "type": "boolean",
+                          "description": "True when this page came back full; request metadata.next_offset next"
+                        },
+                        "next_offset": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Offset for the next page, or null when has_more is false"
+                        },
+                        "limit_clamped": {
+                          "type": "boolean",
+                          "description": "Present (true) when the requested limit exceeded the 100-row page"
+                        },
+                        "requested_limit": {
+                          "type": "integer",
+                          "description": "The limit sent, when clamped"
+                        },
+                        "applied_limit": {
+                          "type": "integer",
+                          "description": "The page size used, when clamped"
+                        },
                         "degraded": {
                           "type": "boolean",
                           "description": "True when upstream was briefly unavailable and an empty free response was returned"
@@ -5556,6 +6000,8 @@
                   },
                   "per_page": {
                     "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50,
                     "description": "Provide number of results needed per page. (Maximum per_page can be 50)",
                     "default": 20
                   }
@@ -5607,16 +6053,22 @@
                                 "type": "string"
                               },
                               "b2b_profile_url": {
-                                "type": "string",
-                                "nullable": true
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               },
                               "twitter_handle": {
-                                "type": "string",
-                                "nullable": true
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               },
                               "github_url": {
-                                "type": "string",
-                                "nullable": true
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             }
                           },
@@ -5717,24 +6169,32 @@
                             "type": "string"
                           },
                           "language": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "clearance_required": {
                             "type": "boolean",
                             "default": true
                           },
                           "salary_min": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "salary_max": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "salary_currency": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "experience_level": {
                             "type": "string"
@@ -6117,8 +6577,10 @@
                           "type": "boolean"
                         },
                         "next_cursor": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -6126,8 +6588,10 @@
                       "type": "boolean"
                     },
                     "next_cursor": {
-                      "type": "string",
-                      "nullable": true
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "resolved": {
                       "type": "object"
@@ -6151,6 +6615,9 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable"
           }
         }
       }
@@ -6941,12 +7408,25 @@
         },
         "responses": {
           "200": {
-            "description": "Exported jobs",
-            "content": {
-              "application/json": {
+            "description": "CSV file of the matching jobs, sent as an attachment. The `X-Exported-Count` and `X-Credits-Consumed` response headers report the row count and the credits charged.",
+            "headers": {
+              "X-Exported-Count": {
+                "description": "Number of jobs in the file.",
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true
+                  "type": "integer"
+                }
+              },
+              "X-Credits-Consumed": {
+                "description": "Credits charged for this export.",
+                "schema": {
+                  "type": "number"
+                }
+              }
+            },
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -7229,12 +7709,16 @@
                                   "type": "string"
                                 },
                                 "height": {
-                                  "type": "integer",
-                                  "nullable": true
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
                                 },
                                 "width": {
-                                  "type": "integer",
-                                  "nullable": true
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
                                 }
                               }
                             }
@@ -7417,41 +7901,59 @@
                       "type": "object",
                       "properties": {
                         "name": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "domain": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "industry": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "company_size": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "linkedin_url": {
-                          "type": "string",
-                          "nullable": true,
+                          "type": [
+                            "string",
+                            "null"
+                          ],
                           "description": "B2B company profile URL (/company/{slug})"
                         },
                         "logo_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "city": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "state": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "country": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -7464,12 +7966,16 @@
                             "type": "string"
                           },
                           "headline": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "description": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "content": {
                             "type": "string"
@@ -7481,8 +7987,10 @@
                             "type": "string"
                           },
                           "image_url": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "carousel_images": {
                             "type": "array",
@@ -7491,29 +7999,41 @@
                             }
                           },
                           "ad_type": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "creative_type": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "advertiser": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "advertiser_linkedin_url": {
-                            "type": "string",
-                            "nullable": true,
+                            "type": [
+                              "string",
+                              "null"
+                            ],
                             "description": "Advertiser B2B company profile URL (/company/{slug})"
                           },
                           "cta_text": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "landing_page_url": {
-                            "type": "string",
-                            "nullable": true
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           }
                         }
                       }
@@ -7586,40 +8106,58 @@
                       "type": "object",
                       "properties": {
                         "name": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "domain": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "industry": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "company_size": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "linkedin_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "logo_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "city": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "state": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "country": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       }
                     },
@@ -7631,12 +8169,16 @@
                           "type": "string"
                         },
                         "headline": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "description": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "content": {
                           "type": "string"
@@ -7648,32 +8190,46 @@
                           "type": "string"
                         },
                         "ad_type": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "creative_type": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "advertiser": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "advertiser_linkedin_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "cta_text": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "landing_page_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "image_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "carousel_images": {
                           "type": "array",
@@ -7682,24 +8238,32 @@
                           }
                         },
                         "video_url": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "targeting": {
-                          "type": "object",
-                          "nullable": true
+                          "type": [
+                            "object",
+                            "null"
+                          ]
                         },
                         "total_impressions": {
-                          "type": "string",
-                          "nullable": true
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "impressions_by_country": {
                           "type": "array",
                           "items": {}
                         },
                         "message_ad": {
-                          "type": "object",
-                          "nullable": true
+                          "type": [
+                            "object",
+                            "null"
+                          ]
                         },
                         "raw": {
                           "type": "object",
@@ -8165,7 +8729,7 @@
     "/bulk/local-leads": {
       "post": {
         "summary": "Submit a Local Leads Search",
-        "description": "Submit long-running local-leads searches to the dedicated bulk queue.",
+        "description": "Find local businesses for keyword × location combinations. Each unique combination is one search. Your balance must cover every search at submit time (otherwise 402); each search is then charged 200 credits only when it completes with at least one lead. US ZIP codes are resolved to their city first. Set `dryRun` to preview the resolved grid and cost without charging.",
         "operationId": "bulk-local-leads",
         "tags": [
           "Bulk Jobs"
@@ -8183,28 +8747,54 @@
                 "properties": {
                   "keywords": {
                     "type": "array",
-                    "description": "Search terms. Expanded against every city — one search row per keyword × city pair.",
+                    "description": "Business types to search (max 25). Each keyword runs once per location; duplicates are charged once.",
+                    "maxItems": 25,
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "examples": [
+                      [
+                        "plumber",
+                        "hvac contractor"
+                      ]
+                    ]
                   },
                   "cities": {
                     "type": "array",
-                    "description": "Cities to search. Expanded against every keyword.",
+                    "description": "Locations to search (max 100): city names (\"Austin\", \"Austin, TX\", \"Toronto\") or US ZIP codes (\"78704\"). ZIPs resolve to their city; unrecognized ZIPs and non-US postal codes return 400. Outside the US, use the city name and set the country with countryCodes.",
+                    "maxItems": 100,
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "examples": [
+                      [
+                        "Austin, TX",
+                        "75201"
+                      ]
+                    ]
                   },
                   "countryCodes": {
                     "type": "array",
-                    "description": "Two-letter country code per city, aligned by index. Defaults to `US` when omitted.",
+                    "description": "Two-letter country codes aligned by index with `cities`, or a single code applied to every city. Defaults to `US`.",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "examples": [
+                      [
+                        "US"
+                      ]
+                    ]
                   },
                   "fileName": {
                     "type": "string",
-                    "description": "Label for the resulting job, shown in the dashboard."
+                    "description": "Label for the resulting job, shown in the dashboard.",
+                    "examples": [
+                      "texas-trades"
+                    ]
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "description": "Return the resolved searches, `creditsRequired`, and remaining daily capacity without charging or queueing."
                   },
                   "magicKey": {
                     "type": "string",
@@ -8216,12 +8806,122 @@
           }
         },
         "responses": {
+          "200": {
+            "description": "Dry-run preview (only when `dryRun` is true). Nothing is charged.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "dryRun": true,
+                      "totalSearches": 2,
+                      "creditsPerSearch": 200,
+                      "creditsRequired": 400,
+                      "locations": [
+                        {
+                          "input": "78704",
+                          "resolved": "Austin, TX",
+                          "country": "US"
+                        }
+                      ],
+                      "fitsCapacity": true
+                    }
+                  }
+                }
+              }
+            }
+          },
           "202": {
             "description": "Local-leads job accepted.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BulkSubmissionResponse"
+                  "type": "object",
+                  "required": [
+                    "jobId",
+                    "product",
+                    "totalSearches",
+                    "status",
+                    "creditsCharged",
+                    "locations"
+                  ],
+                  "properties": {
+                    "jobId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "product": {
+                      "type": "string",
+                      "examples": [
+                        "local_leads_finder"
+                      ]
+                    },
+                    "totalSearches": {
+                      "type": "integer",
+                      "description": "Unique keyword × location searches in the job."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Job status. `processing` or `queued` on a new submission; a repeated request with the same idempotency key returns the job's current status."
+                    },
+                    "position": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "description": "Queue position when status is queued; null on a repeated request."
+                    },
+                    "creditsCharged": {
+                      "type": "integer",
+                      "description": "The most this run can cost (totalSearches × 200, or 0 when a magic key waives it). Each search is billed only when it completes with at least one lead."
+                    },
+                    "locations": {
+                      "type": "array",
+                      "description": "Each input location with the value that was searched.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "input": {
+                            "type": "string"
+                          },
+                          "resolved": {
+                            "type": "string"
+                          },
+                          "country": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "jobId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                      "product": "local_leads_finder",
+                      "totalSearches": 2,
+                      "status": "processing",
+                      "position": 0,
+                      "creditsCharged": 400,
+                      "locations": [
+                        {
+                          "input": "78704",
+                          "resolved": "Austin, TX",
+                          "country": "US"
+                        },
+                        {
+                          "input": "Winston-Salem, NC",
+                          "resolved": "Winston, NC",
+                          "country": "US"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -8231,6 +8931,12 @@
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "description": "Not enough credits for the search grid. Nothing was queued."
+          },
+          "429": {
+            "description": "The run exceeds today's remaining Local Leads capacity (`local_leads_capacity`). Nothing was charged; retry later or with fewer searches."
           }
         }
       }
@@ -8238,7 +8944,7 @@
     "/bulk/progress": {
       "get": {
         "summary": "Get Lightweight Bulk Job Progress",
-        "description": "Return a compact progress snapshot for frequent polling.",
+        "description": "Return a compact progress snapshot for frequent polling. This route authenticates with the signed `token`, `exp`, and `subject` query parameters from the submit response, not with `X-API-Key`. Call the `progressUrl` returned by `POST /bulk/submit` as-is. Until the first shard reports, the route returns 404; use `GET /bulk/jobs/{jobId}` with your API key for status in the meantime.",
         "operationId": "bulk-job-progress",
         "tags": [
           "Bulk Jobs"
@@ -8257,8 +8963,26 @@
           {
             "name": "token",
             "in": "query",
+            "required": true,
+            "description": "Signed progress token returned as `token` when the job was submitted.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exp",
+            "in": "query",
+            "required": true,
+            "description": "Token expiry (Unix seconds) returned as `exp` when the job was submitted.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "subject",
+            "in": "query",
             "required": false,
-            "description": "Signed progress token returned when the job was submitted.",
+            "description": "Token subject embedded in the submitted `progressUrl`. Required for current tokens; omitted only by legacy web-app tokens.",
             "schema": {
               "type": "string"
             }
@@ -8272,9 +8996,28 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "jobId": "8ad9bffd-bbcd-4561-b5fe-b222a2c6f998",
+                      "status": "completed",
+                      "totalShards": 1,
+                      "completedShards": 1,
+                      "succeeded": 1,
+                      "failed": 0,
+                      "skipped": 0,
+                      "creditsConsumed": 0.13,
+                      "pipelineStep": 1,
+                      "pipelineTotal": 1
+                    }
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -8585,11 +9328,12 @@
                 ],
                 "properties": {
                   "priority": {
-                    "type": "string",
-                    "enum": [
-                      "low",
-                      "normal",
-                      "high"
+                    "type": "integer",
+                    "minimum": -1000,
+                    "maximum": 1000,
+                    "description": "Integer priority from -1000 to 1000. Jobs start at 0. Strings such as `\"low\"` are rejected with 400.",
+                    "examples": [
+                      10
                     ]
                   }
                 }
