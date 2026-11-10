@@ -34,3 +34,6 @@ test('non-synthetic contact samples fail',()=>assert.notEqual(validate(s=>{
 test('non-synthetic profile samples fail',()=>assert.notEqual(validate(s=>{
  s.paths['/v1/people/email-validation'].post.requestBody.content['application/json'].examples.synthetic.value.profile_url='https://customer.invalid/profile/123';
 }),0));
+test('OpenAPI 3.0 nullable flag fails',()=>assert.notEqual(validate(s=>{
+ s.paths['/v1/credits'].get.responses['200'].content['application/json'].schema.properties.credits={type:'number',nullable:true};
+}),0));

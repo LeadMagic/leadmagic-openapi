@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — contract corrections (2026-11-10 audit)
+
+No routes were added or removed; `public-surface.json` is unchanged.
+
+- **Nullable fields:** 249 schemas used the OpenAPI 3.0 `nullable: true` flag, which OpenAPI 3.1 ignores, so nullable response fields were documented as non-null. They now use type unions such as `["string", "null"]`. `scripts/normalize-31-examples.mjs` converts the flag on sync and `npm run check:public` rejects it.
+- **Brought in line with the published schema:** `POST /v1/people/email-finder` (`allow_domain_mismatch`, `requested_domain`, `domain_mismatch`); `POST /v1/companies/company-search` (`data_source`); `POST /v3/people/search` and `POST /v3/companies/search` (`ignored_filters`, `warnings`); `POST /v3/companies/lookalike` (`offset` maximum 2000 and paging metadata); `PATCH /bulk/jobs/{jobId}/priority` (`priority` is an integer from -1000 to 1000, not a string); `GET /bulk/progress` (`token` and `exp` are required, `subject` added, 400 documented); `POST /bulk/local-leads` (`dryRun`, array limits, the 200/202/402/429 responses); 503 on `POST /v1/companies/technographics` and `POST /v3/jobs/search`.
+- **Removed from `POST /v3/people/search`:** the request options `required_email`, `required_mobile`, `channels`, `channel_match`, `include_domain_intel`, `include_contact_details`, `include_email`, `include_mobile`, and the response fields `contact_email`, `contact_email_domain`, `contact_mobile_phone`, `contact_direct_phone`. Search does not return contact values; asking for them returns 400.
+- **Corrected against API behavior:** `POST /v1/people/role-finder` requires `job_title` and `company_name` is a company name; `POST /v1/people/employee-finder` `limit` is 1 to 1000; `POST /v1/jobs/jobs-finder` `per_page` is 1 to 50; `POST /v3/jobs/search/export` returns `text/csv`, not JSON.
+- The YAML file is now written by the normalize script's serializer, which puts each description on one line.
+
 ## Unreleased — input-unification documentation sync
 
 Documented the gateway's forgiving-input behavior (description-level only; no schema restructuring): email-finder accepts a `profile_url` alternative and domain/company aliases; mobile-finder and b2b-profile-email note CRM synonym keys normalized server-side; `ErrorDetail.context` documents `suggested_endpoint` on 404 `route_not_found` errors. Fixed smoke-test fixtures to use the real LinkedIn fixture `https://www.linkedin.com/in/jesseoue` and a valid `b2b-ads-details` `ad_url` path form (`/ad-library/detail/633872143`).
