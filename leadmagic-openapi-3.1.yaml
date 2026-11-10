@@ -5834,7 +5834,7 @@ paths:
   /bulk/local-leads:
     post:
       summary: Submit a Local Leads Search
-      description: Find local businesses for keyword × location combinations. Each unique combination is one search, charged 200 credits up front. US ZIP codes are resolved to their city before anything is charged. Set `dryRun` to preview the resolved grid and cost without charging.
+      description: Find local businesses for keyword × location combinations. Each unique combination is one search. Your balance must cover every search at submit time (otherwise 402); each search is then charged 200 credits only when it completes with at least one lead. US ZIP codes are resolved to their city first. Set `dryRun` to preview the resolved grid and cost without charging.
       operationId: bulk-local-leads
       tags:
         - Bulk Jobs
@@ -5905,7 +5905,7 @@ paths:
                         country: US
                     fitsCapacity: true
         "202":
-          description: Local-leads job accepted and credits charged.
+          description: Local-leads job accepted.
           content:
             application/json:
               schema:
@@ -5930,15 +5930,15 @@ paths:
                     description: Unique keyword × location searches in the job.
                   status:
                     type: string
-                    enum:
-                      - processing
-                      - queued
+                    description: "Job status. `processing` or `queued` on a new submission; a repeated request with the same idempotency key returns the job's current status."
                   position:
-                    type: integer
-                    description: Queue position when status is queued.
+                    type:
+                      - integer
+                      - "null"
+                    description: Queue position when status is queued; null on a repeated request.
                   creditsCharged:
                     type: integer
-                    description: Credits charged up front (totalSearches × 200, or 0 with a valid magic key).
+                    description: The most this run can cost (totalSearches × 200, or 0 when a magic key waives it). Each search is billed only when it completes with at least one lead.
                   locations:
                     type: array
                     description: Each input location with the value that was searched.
