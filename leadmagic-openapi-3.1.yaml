@@ -847,6 +847,12 @@ components:
         application/problem+json:
           schema:
             $ref: "#/components/schemas/ServiceUnavailableError"
+    BadGateway:
+      description: An external service could not complete the request. Retry after a brief delay.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
 security:
   - ApiKeyAuth: []
 tags:
@@ -2805,6 +2811,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/companies/technographics:
     post:
       summary: Company Technographics
@@ -2948,6 +2958,8 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/people/employee-finder:
     post:
       summary: Employee Finder
@@ -5193,6 +5205,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/meta-ads-search:
     post:
       summary: Meta Ads Search
@@ -5249,6 +5265,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/b2b-ads-search:
     post:
       summary: B2B Search Ads
@@ -5394,6 +5414,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/b2b-ads-details:
     post:
       summary: B2B Ad Details
@@ -5550,6 +5574,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /bulk/submit:
     post:
       summary: Submit Bulk Job

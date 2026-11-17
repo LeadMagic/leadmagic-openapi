@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — error responses
+
+- Documented `502` and `503` responses for Competitors Search and the four Ads operations, and `503` for Role Finder.
+
 ## Unreleased — contract corrections (2026-11-10 audit)
 
 No routes were added or removed; `public-surface.json` is unchanged.
