@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-09-06",
+  "reviewedAt": "2026-11-17",
   "source": "https://leadmagic.io/docs/api-reference/openapi.yml",
   "operations": [
     "DELETE /v1/batch/budgets/{id}",
@@ -47,6 +47,7 @@
     "GET /v3/jobs/search/stats",
     "GET /v3/jobs/search/tags",
     "GET /v3/jobs/search/titles",
+    "GET /v3/local-leads/categories",
     "PATCH /bulk/jobs/{jobId}/priority",
     "PATCH /v1/batch/budgets/{id}",
     "PATCH /v1/{product}/batch/{batchId}",
@@ -90,6 +91,7 @@
     "POST /v3/jobs/search",
     "POST /v3/jobs/search/export",
     "POST /v3/jobs/search/resolve",
+    "POST /v3/local-leads/search",
     "POST /v3/people/search",
     "POST /v3/search/stats"
   ]

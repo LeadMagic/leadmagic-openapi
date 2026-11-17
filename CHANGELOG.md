@@ -1,8 +1,10 @@
 # Changelog
 
-## Unreleased — error responses
+## Unreleased — public contract updates
 
 - Documented `502` and `503` responses for Competitors Search and the four Ads operations, and `503` for Role Finder.
+- Synced Role Finder's company profile URL input and nullable job title with the published API reference.
+- Added the published Local Leads Search and category-list operations to both snapshot formats and the reviewed public inventory.
 
 ## Unreleased — contract corrections (2026-11-10 audit)
 
