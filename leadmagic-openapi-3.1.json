@@ -393,9 +393,20 @@
           },
           "outputTransform": {
             "type": "object",
+            "required": [
+              "model",
+              "prompt",
+              "jsonSchema"
+            ],
             "properties": {
               "model": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "@cf/deepseek-ai/deepseek-v4.1-flash-1017",
+                  "@cf/meta/llama-3.1-8b-instruct"
+                ],
+                "description": "Use the current model for new transforms. Existing requests with the legacy Llama ID use the current model.",
+                "example": "@cf/deepseek-ai/deepseek-v4.1-flash-1017"
               },
               "prompt": {
                 "type": "string"
