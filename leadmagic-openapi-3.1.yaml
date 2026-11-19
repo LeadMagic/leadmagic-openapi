@@ -851,6 +851,12 @@ components:
         application/problem+json:
           schema:
             $ref: "#/components/schemas/ServiceUnavailableError"
+    BadGateway:
+      description: An external service could not complete the request. Retry after a brief delay.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
 security:
   - ApiKeyAuth: []
 tags:
@@ -862,6 +868,8 @@ tags:
     description: Find and validate contact information for individuals
   - name: Company Data
     description: Discover company information and intelligence
+  - name: Local Leads
+    description: Search local business listings by location, category, name or map radius
   - name: Jobs Data
     description: Search job listings and detect career changes
   - name: Ads Data
@@ -1492,7 +1500,6 @@ paths:
           application/json:
             schema:
               type: object
-              description: "Forgiving on purpose: CRM synonyms and common misspellings are remapped server-side, and aliases apply only when the canonical field is absent. A LinkedIn person profile URL passed in a name field (first_name/last_name/full_name) is remapped to profile_url. The company can be given via domain aliases (company_domain, website, url, companyUrl) or company_name (company, organization, employer, businessName)."
               properties:
                 first_name:
                   type: string
@@ -1528,6 +1535,7 @@ paths:
                   default: false
                   description: |
                     By default, an email found on a domain unrelated to the requested one is returned as a free not-found (`domain_mismatch: true`, `credits_consumed: 0`). Set to `true` to return that email instead, flagged `domain_mismatch: true` and charged like any other valid find.
+              description: "Forgiving on purpose: CRM synonyms and common misspellings are remapped server-side, and aliases apply only when the canonical field is absent. A LinkedIn person profile URL passed in a name field (first_name/last_name/full_name) is remapped to profile_url. The company can be given via domain aliases (company_domain, website, url, companyUrl) or company_name (company, organization, employer, businessName)."
             examples:
               synthetic:
                 summary: Fictional documentation input; not a live customer fixture
@@ -1710,7 +1718,6 @@ paths:
           application/json:
             schema:
               type: object
-              description: CRM synonym keys for profile_url (linkedin_url, linkedinUrl, li_url) are accepted and normalized server-side; a full URL or bare /in/{slug} both work.
               properties:
                 profile_url:
                   type: string
@@ -1718,6 +1725,7 @@ paths:
                   default: alex-rivera
               required:
                 - profile_url
+              description: CRM synonym keys for profile_url (linkedin_url, linkedinUrl, li_url) are accepted and normalized server-side; a full URL or bare /in/{slug} both work.
       responses:
         "200":
           description: Successful response with profile and email details
@@ -1976,7 +1984,6 @@ paths:
           application/json:
             schema:
               type: object
-              description: At least one identifier is required. CRM synonym keys for profile_url (e.g. linkedin_url) are accepted and normalized server-side; a full URL or bare /in/{slug} both work.
               properties:
                 profile_url:
                   type: string
@@ -1990,6 +1997,7 @@ paths:
                   type: string
                   description: Provide the Personal Email of the person
                   default: person@example.com
+              description: At least one identifier is required. CRM synonym keys for profile_url (e.g. linkedin_url) are accepted and normalized server-side; a full URL or bare /in/{slug} both work.
       responses:
         "200":
           description: Successful response with mobile details
@@ -2809,6 +2817,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/companies/technographics:
     post:
       summary: Company Technographics
@@ -2891,7 +2903,7 @@ paths:
   /v1/people/role-finder:
     post:
       summary: Role Finder
-      description: Provide the company name or domain and the required job title, and retrieve the corresponding person.
+      description: Provide a job title and a company name, company domain, or company profile URL to find a matching person.
       operationId: role-finder
       tags:
         - People Enrichment
@@ -2901,6 +2913,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - job_title
               properties:
                 company_name:
                   type: string
@@ -2910,12 +2924,13 @@ paths:
                   type: string
                   description: Company domain
                   default: leadmagic.io
+                linkedin_url:
+                  type: string
+                  description: Company profile URL
                 job_title:
                   type: string
                   description: Enter the job title you want to find in the company.
                   default: ceo
-              required:
-                - job_title
       responses:
         "200":
           description: Successful response with role details
@@ -2926,20 +2941,42 @@ paths:
                 properties:
                   name:
                     type: string
+                    examples:
+                      - Alex Rivera
                   profile_url:
                     type: string
+                    examples:
+                      - https://example.com/in/alex-rivera
                   first_name:
                     type: string
+                    examples:
+                      - Alex
                   last_name:
                     type: string
+                    examples:
+                      - Rivera
                   message:
                     type: string
+                    description: Role Found on a match or Role not found. on a miss.
+                    examples:
+                      - Role Found
                   credits_consumed:
-                    type: integer
+                    type: number
+                    examples:
+                      - 2
+                  job_title:
+                    type:
+                      - string
+                      - "null"
+                    description: Current job title reported by the source.
                   company_name:
                     type: string
+                    examples:
+                      - Leadmagic
                   company_website:
                     type: string
+                    examples:
+                      - leadmagic.io
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2952,6 +2989,8 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/people/employee-finder:
     post:
       summary: Employee Finder
@@ -4230,6 +4269,533 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+  /v3/local-leads/search:
+    post:
+      summary: Search Local Leads
+      description: |
+        Search 59 million local business listings by location, category, name or map radius.
+        Each lead is the full listing: address, coordinates, phones, emails, website and socials.
+
+        Pages hold **25 leads** and the size is fixed: `limit`, `offset` and `page` return 400.
+        Page with `next_cursor`. A search holds up to 1,000 leads for 30 minutes.
+
+        **Zero credits** on Professional (5 requests/second) and Ultimate (10 requests/second),
+        within the fair-use ceilings of 10 million records/month and 13,333 searches/day shared
+        across People, Company, Jobs and Local Leads Search. Other plans pay **1 credit per page**
+        at 5 requests/second. A page that is read again within 30 minutes is not charged again.
+
+        Every search needs a `country`, a point (`lat` and `lon`), a `website_domain`,
+        `email_domain` or `email`, or a `name` of five or more characters.
+      operationId: local-leads-search-v3
+      tags:
+        - Local Leads
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                country:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 5
+                      items:
+                        type: string
+                  description: Two-letter country code. Up to 5 per search.
+                region_code:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: State or region code, such as TX. Alias region. Needs country.
+                city:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: City name. Needs country.
+                postal_code:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Postal code. A 5-digit US ZIP also matches ZIP+4 listings. Needs country.
+                street:
+                  type: string
+                  description: Text contained in the street address. Needs country.
+                category:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Exact category name, from GET /v3/local-leads/categories.
+                category_contains:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Text contained in the category name. roof matches roofing.
+                category_group:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Broader category group, such as food_and_drink.
+                kind:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: business, civic or place.
+                name:
+                  type: string
+                  description: Text contained in the business name.
+                website_domain:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Website host. A bare host, a www. host or a URL. Alias domain.
+                email_domain:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: Domain of an email on the listing.
+                email:
+                  type: string
+                  description: An exact email address on the listing.
+                phone:
+                  type: string
+                  description: A phone number in any format, 7 to 15 digits. Needs country.
+                has_email:
+                  type: boolean
+                has_business_email:
+                  type: boolean
+                  description: An email on the business's own domain, not a free mailbox.
+                has_phone:
+                  type: boolean
+                has_website:
+                  type: boolean
+                has_social:
+                  type: boolean
+                is_chain:
+                  type: boolean
+                min_confidence:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                confidence_tier:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: high or medium.
+                operating_status:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      maxItems: 50
+                      items:
+                        type: string
+                  description: open, unknown, temporarily_closed or permanently_closed.
+                exclude_closed:
+                  type: boolean
+                  description: True keeps open and unknown listings only.
+                lat:
+                  type: number
+                  minimum: -90
+                  maximum: 90
+                  description: Latitude of a point search. Send with lon. Results are nearest first.
+                lon:
+                  type: number
+                  minimum: -180
+                  maximum: 180
+                  description: Longitude of a point search. Send with lat.
+                radius_m:
+                  type: integer
+                  minimum: 1
+                  maximum: 500000
+                  default: 50000
+                  description: Radius of a point search, in metres.
+                sort:
+                  type: string
+                  enum:
+                    - confidence
+                    - name
+                  default: confidence
+                  description: Not allowed with a point search.
+                cursor:
+                  type: string
+                  description: next_cursor from the previous page, sent with the same filters.
+            examples:
+              default:
+                value:
+                  country: US
+                  region_code: TX
+                  city:
+                    - Austin
+                    - Dallas
+                  category: plumbing
+                  has_email: true
+      responses:
+        "200":
+          description: "One page of local leads (flat JSON body: not wrapped in data)"
+          headers:
+            X-LeadMagic-Search-Tier:
+              schema:
+                type: string
+                enum:
+                  - unmetered
+                  - metered
+              description: unmetered on Professional and Ultimate, metered on other plans
+            X-LeadMagic-Search-Cache:
+              schema:
+                type: string
+                enum:
+                  - cold
+                  - hit
+              description: cold for a new search, hit when the stored result list was reused
+            X-Credits-Consumed:
+              schema:
+                type: number
+              description: Credits charged by this request (0 or 1)
+            X-Credits-Remaining:
+              schema:
+                type: number
+              description: Wallet credits remaining after this request
+            X-RateLimit-RPS-Limit:
+              $ref: "#/components/headers/SearchRpsLimit"
+            X-RateLimit-RPS-Remaining:
+              $ref: "#/components/headers/SearchRpsRemaining"
+            X-Request-Id:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                required:
+                  - message
+                  - credits_consumed
+                  - leads
+                  - count
+                  - page_size
+                  - has_more
+                properties:
+                  message:
+                    type: string
+                    examples:
+                      - Local leads found
+                  credits_consumed:
+                    type: number
+                    description: 0 on Professional and Ultimate, and 0 when the page was already paid for
+                    examples:
+                      - 1
+                  credits_previously_consumed:
+                    type: number
+                    description: Present when the page was first read by an earlier request
+                  leads:
+                    type: array
+                    maxItems: 25
+                    items:
+                      type: object
+                      additionalProperties: true
+                      properties:
+                        id:
+                          type: string
+                          description: Stable listing id. Use it to remove duplicates.
+                        name:
+                          type: string
+                        kind:
+                          type: string
+                          enum:
+                            - business
+                            - civic
+                            - place
+                        is_chain:
+                          type: boolean
+                        category:
+                          type: string
+                          examples:
+                            - plumbing
+                        category_group:
+                          type: string
+                          examples:
+                            - services_and_business
+                        categories:
+                          type: array
+                          items:
+                            type: string
+                        category_inferred:
+                          type: boolean
+                          description: True when the category was read from the business name.
+                        street:
+                          type: string
+                        city:
+                          type: string
+                        region:
+                          type: string
+                        region_code:
+                          type: string
+                        postal_code:
+                          type: string
+                        country:
+                          type: string
+                          examples:
+                            - US
+                        lat:
+                          type: number
+                        lon:
+                          type: number
+                        distance_m:
+                          type: number
+                          description: Metres from the point. Point searches only.
+                        filled:
+                          type: array
+                          description: Address fields filled in from neighbouring listings.
+                          items:
+                            type: string
+                        phone:
+                          type:
+                            - string
+                            - "null"
+                        phones:
+                          type: array
+                          items:
+                            type: string
+                        email:
+                          type:
+                            - string
+                            - "null"
+                        emails:
+                          type: array
+                          items:
+                            type: string
+                        email_domain:
+                          type: string
+                        website:
+                          type:
+                            - string
+                            - "null"
+                        website_domain:
+                          type: string
+                        socials:
+                          type: array
+                          items:
+                            type: string
+                        has_email:
+                          type: boolean
+                        has_phone:
+                          type: boolean
+                        has_website:
+                          type: boolean
+                        has_social:
+                          type: boolean
+                        has_business_email:
+                          type: boolean
+                        confidence:
+                          type: number
+                          description: 0 to 1
+                        confidence_tier:
+                          type: string
+                          enum:
+                            - high
+                            - medium
+                        operating_status:
+                          type: string
+                          enum:
+                            - open
+                            - unknown
+                            - temporarily_closed
+                            - permanently_closed
+                  count:
+                    type: integer
+                    description: Leads in this page
+                    examples:
+                      - 25
+                  page_size:
+                    type: integer
+                    description: Always 25
+                    examples:
+                      - 25
+                  total:
+                    type:
+                      - integer
+                      - "null"
+                    description: Every listing the search matches; null when the count did not finish in time
+                    examples:
+                      - 20627
+                  has_more:
+                    type: boolean
+                    description: More pages remain in the stored result list
+                  next_cursor:
+                    type:
+                      - string
+                      - "null"
+                    description: Send back as cursor for the next page; null on the last page
+                  has_more_beyond_snapshot:
+                    type: boolean
+                    description: The search matches more than the 1,000 leads it holds
+                  snapshot_limit_reached:
+                    type: boolean
+                    description: This is the last page of the 1,000 and more listings exist
+                  interpreted_search:
+                    type: object
+                    additionalProperties: true
+                    description: The filters as they were applied
+                  metadata:
+                    type: object
+                    additionalProperties: true
+                    properties:
+                      query_name:
+                        type: string
+                        examples:
+                          - local_leads_search_v3
+                      pagination:
+                        type: string
+                        examples:
+                          - snapshot
+                      snapshot_id:
+                        type: string
+                      snapshot_page_start:
+                        type: integer
+                      snapshot_cache_status:
+                        type: string
+                        enum:
+                          - cold
+                          - hit
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/PaymentRequired"
+        "410":
+          description: The cursor expired (restart_required) or the search is past its 1,000 leads (snapshot_limit_reached)
+        "429":
+          $ref: "#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /v3/local-leads/categories:
+    get:
+      summary: List Local Lead Categories
+      description: |
+        The category names Local Leads Search uses, most common first, with the number of
+        listings in each. **Free** on every plan.
+      operationId: local-leads-categories-v3
+      tags:
+        - Local Leads
+      parameters:
+        - name: country
+          in: query
+          required: false
+          description: Two-letter country code. Comma-separate up to 5.
+          schema:
+            type: string
+          examples:
+            default:
+              value: US
+        - name: category_group
+          in: query
+          required: false
+          description: Keep categories in one group. Comma-separate several.
+          schema:
+            type: string
+          examples:
+            default:
+              value: food_and_drink
+        - name: q
+          in: query
+          required: false
+          description: Text contained in the category name.
+          schema:
+            type: string
+          examples:
+            default:
+              value: plumb
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 1000
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10000
+            default: 0
+      responses:
+        "200":
+          description: Categories with listing counts
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                required:
+                  - results
+                  - count
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                          examples:
+                            - plumbing
+                        category_group:
+                          type: string
+                          examples:
+                            - services_and_business
+                        places:
+                          type: integer
+                          description: Listings in this category
+                          examples:
+                            - 38268
+                  count:
+                    type: integer
+                    examples:
+                      - 1
+                  credits_consumed:
+                    type: number
+                    examples:
+                      - 0
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
   /v3/jobs/search:
     post:
       summary: Job Search
@@ -5197,6 +5763,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/meta-ads-search:
     post:
       summary: Meta Ads Search
@@ -5253,6 +5823,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/b2b-ads-search:
     post:
       summary: B2B Search Ads
@@ -5398,6 +5972,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /v1/ads/b2b-ads-details:
     post:
       summary: B2B Ad Details
@@ -5554,6 +6132,10 @@ paths:
           $ref: "#/components/responses/RateLimitExceeded"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "502":
+          $ref: "#/components/responses/BadGateway"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /bulk/submit:
     post:
       summary: Submit Bulk Job
@@ -5934,7 +6516,7 @@ paths:
                     description: Unique keyword × location searches in the job.
                   status:
                     type: string
-                    description: "Job status. `processing` or `queued` on a new submission; a repeated request with the same idempotency key returns the job's current status."
+                    description: Job status. `processing` or `queued` on a new submission; a repeated request with the same idempotency key returns the job's current status.
                   position:
                     type:
                       - integer

@@ -541,6 +541,7 @@ function promptForSecret(promptText: string): Promise<string> {
 		const cleanup = () => {
 			stdin.removeListener("keypress", onKeypress);
 			stdin.setRawMode(Boolean(originalRawMode));
+			stdin.pause();
 			stdout.write("\n");
 		};
 

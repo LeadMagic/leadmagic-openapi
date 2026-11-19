@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/LeadMagic/.github/main/profile/assets/leadmagic.svg" width="64" height="64" alt="LeadMagic logo">
 
-OpenAPI 3.1 JSON and YAML for the documented LeadMagic REST API: people and company enrichment, email finding and validation, search, jobs, advertising, and bulk workflows. Import the specification into API tooling or use it to generate a client.
+OpenAPI 3.1 JSON and YAML for the documented LeadMagic REST API: people and company enrichment, email finding and validation, local business search, jobs, advertising, and bulk workflows. Import the specification into API tooling or use it to generate a client.
 
 [LeadMagic B2B enrichment](https://leadmagic.io?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro) · [API documentation](https://leadmagic.io/docs?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro) · [Pricing and credits](https://leadmagic.io/pricing?utm_source=github&utm_medium=readme&utm_campaign=leadmagic-openapi&utm_content=readme-intro)
 
@@ -10,7 +10,7 @@ OpenAPI 3.1 JSON and YAML for the documented LeadMagic REST API: people and comp
 
 ## Public contract
 
-This snapshot contains 81 reviewed public paths. The route inventory matches the published schema checked on 2026-09-06. App-only request options are excluded. This repository does not publish backend router inventories, infrastructure URLs, administrative routes, credentials, or private implementation contracts.
+This snapshot contains 83 reviewed public paths. The route inventory matches the published schema checked on 2026-11-17. App-only request options are excluded. This repository does not publish backend router inventories, infrastructure URLs, administrative routes, credentials, or private implementation contracts.
 
 `public-surface.json` records the approved methods and paths. Adding an operation requires an explicit manifest update and review against public product documentation. `npm run check:public` checks that inventory, authentication, references, server origins, and YAML/JSON equality. A route being present in an internal codebase is not authorization to publish it.
 
